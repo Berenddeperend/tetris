@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+}
+
+.stage svg {
+  fill: black;
+}
+
+.gridBlock {
+  fill: green;
+  stroke: white;
+}
+
+.gridblocks {
+  z-index: 2;
+}
+
+svg {
+  overflow: visible;
+}
+
+.rows, .columns {
+  stroke: red;
+  stroke-width: 1px; 
+  stroke-linecap: square;
+}

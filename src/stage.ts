@@ -10,7 +10,12 @@ export default class Stage {
   // grid: number[][];
   activeBlock: Block;
 
-  constructor({ width = 10, height = 10, blockSize = 10, gridGutterSize = 1 } = {}) {
+  constructor({
+    width = 10,
+    height = 10,
+    blockSize = 10,
+    gridGutterSize = 1,
+  } = {}) {
     this.width = width;
     this.height = height;
     this.blockSize = blockSize;
@@ -22,19 +27,19 @@ export default class Stage {
   }
 
   setEventListeners() {
-    document.addEventListener('keydown', (e:any)=> {
-      switch(e.code) {
+    document.addEventListener("keydown", (e: any) => {
+      switch (e.code) {
         case "ArrowRight":
           return this.activeBlock.moveX(1);
         case "ArrowLeft":
           return this.activeBlock.moveX(-1);
         case "ArrowDown":
           return this.activeBlock.moveDown();
-          
-    })
+        case "Space":
+          return this.activeBlock.rotate();
+      }
+    });
   }
-
-
 
   tick() {
     this.activeBlock.moveDown();

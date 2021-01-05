@@ -17,8 +17,26 @@ const possibleForms: number[][][] = [
     [1, 1],
     [1, 1],
   ],
+
+  [
+    [0, 0, 1, 0, 0],
+    [0, 1, 0, 1, 0],
+    [0, 1, 1, 1, 0],
+    [0, 1, 0, 1, 0],
+    [1, 1, 0, 1, 1],
+    [1, 0, 0, 0, 1],
+    [0, 1, 1, 1, 0],
+  ],
   [
     [1, 1, 1, 1],
+  ],
+  [
+    [1, 0, 0],
+    [1, 1, 1],
+  ],
+  [
+    [0, 0, 1],
+    [1, 1, 1],
   ],
 ];
 
@@ -27,14 +45,34 @@ export default class Block {
   x: number = 0;
   y: number = 0;
   d3Self: any;
-  d3Atoms: any;
+  // d3Atoms: any;
 
   rotate() {
-    console.log("rotate the block");
+    const columnCount = this.value[0].length;
+    const rowCount = this.value.length;
+
+    let newVal = []
+    for(let x = 0; x < columnCount; x++) { //create empty flipped placeholder arrays
+      newVal.push([])
+    }
+
+    for(let row = 0; row < rowCount; row++) {
+      for (let column = 0; column < columnCount; column++) {
+        newVal[column][row] = this.value[row][column]
+      }
+    }
+        
+    this.value = newVal.map(row => row.reverse())
+    this.draw();
   }
 
   init() {
     this.d3Self = selectAll(".stage svg").append("g").attr("class", "block");
+    this.draw();
+  }
+
+  draw() {
+    this.d3Self.selectAll('rect').remove();
     this.value.map((y, yI) => {
       y.map((x, xI) => {
         if(x&&y) {

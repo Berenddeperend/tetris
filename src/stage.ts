@@ -7,70 +7,62 @@ export default class Stage {
   blockSize: number;
   gridGutterSize: number;
 
-  grid: number[][];
+  // grid: number[][];
   activeBlock: Block;
 
-  constructor(width: number, height: number, blockSize: number, gridGutterSize: number) {
+  constructor({ width = 10, height = 10, blockSize = 10, gridGutterSize = 1 } = {}) {
     this.width = width;
     this.height = height;
     this.blockSize = blockSize;
-    this.grid = new Array(height).fill(new Array(width).fill(0));
     this.activeBlock = new Block();
     this.gridGutterSize = gridGutterSize;
 
-    this.drawGrid();
     this.drawGridLines();
+    this.setEventListeners();
   }
+
+  setEventListeners() {
+    document.addEventListener('keydown', (e:any)=> {
+      switch(e.code) {
+        case "ArrowRight":
+          return this.activeBlock.moveX(1);
+        case "ArrowLeft":
+          return this.activeBlock.moveX(-1);
+        case "ArrowDown":
+          return this.activeBlock.moveDown();
+          
+    })
+  }
+
+
 
   tick() {
-    // this.drawActiveBlock();
-    // this.drawGrid();
+    this.activeBlock.moveDown();
   }
+  // drawGrid(
+  //   x: number = this.width,
+  //   y: number = this.height,
+  //   blockSize: number = this.blockSize
+  // ) {
+  //   const grid = selectAll(".stage svg")
+  //     .append("g")
+  //     .attr("class", "gridblocks")
+  //     .attr("width", x * blockSize)
+  //     .attr("height", y * blockSize)
+  //     .attr("viewBox", `0 0 ${x * blockSize} ${y * blockSize}`);
 
-  drawActiveBlock() {
-    this.grid = this.grid.map((row, rowIndex) => {
-      return row.map((cell, columnIndex) => {
-        return this.activeBlock.value[rowIndex] &&
-          this.activeBlock.value[rowIndex][columnIndex]
-          ? this.activeBlock.value[rowIndex][columnIndex]
-          : cell;
-      });
-
-      return row;
-    });
-  }
-
-  drawGrid(
-    x: number = this.width,
-    y: number = this.height,
-    blockSize: number = this.blockSize
-  ) {
-    const grid = selectAll(".stage svg")
-      .append("g")
-      .attr("class", "gridblocks")
-      .attr("width", x * blockSize)
-      .attr("height", y * blockSize)
-      .attr("viewBox", `0 0 ${x * blockSize} ${y * blockSize}`);
-
-    for (let i = 0; i < y; i++) {
-      const row = grid.append("g");
-      for (let j = 0; j < x; j++) {
-        row
-          .append("rect")
-          .attr("width", blockSize)
-          .attr("height", blockSize)
-          .attr("x", j * blockSize - j + j)
-          .attr("y", i * blockSize - i + i)
-          // .attr("class", "gridBlock")
-          .attr('class', ()=> {
-            return this.grid[i][j] === 1 ? 'active' : null
-          });
-  
-        // symbolSquare.draw(20);
-      }
-    }
-
-  }
+  //   for (let i = 0; i < y; i++) {
+  //     const row = grid.append("g");
+  //     for (let j = 0; j < x; j++) {
+  //       row
+  //         .append("rect")
+  //         .attr("width", blockSize)
+  //         .attr("height", blockSize)
+  //         .attr("x", j * blockSize - j + j)
+  //         .attr("y", i * blockSize - i + i)
+  //     }
+  //   }
+  // }
 
   drawGridLines(
     x: number = this.width,

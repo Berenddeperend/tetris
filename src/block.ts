@@ -1,87 +1,62 @@
 import { selectAll, select } from "d3-selection";
 import constants from "./constants";
-const possibleForms: number[][][] = [
-  [
-    [0, 1, 0],
-    [1, 1, 1],
-  ],
-  [
-    [0, 1, 1],
-    [1, 1, 0],
-  ],
-  [
-    [1, 1, 0],
-    [0, 1, 1],
-  ],
-  [
-    [1, 1],
-    [1, 1],
-  ],
 
-  [
-    [0, 0, 1, 0, 0],
-    [0, 1, 0, 1, 0],
-    [0, 1, 1, 1, 0],
-    [0, 1, 0, 1, 0],
-    [1, 1, 0, 1, 1],
-    [1, 0, 0, 0, 1],
-    [0, 1, 1, 1, 0],
-  ],
-  [
-    [1, 1, 1, 1],
-  ],
-  [
-    [1, 0, 0],
-    [1, 1, 1],
-  ],
-  [
-    [0, 0, 1],
-    [1, 1, 1],
-  ],
-];
+import { possibleForms } from "./possibleForms";
 
 export default class Block {
-  value: number[][];
-  x: number = 0;
+  shape: number[][];
+  color: string;
+  x: number = Math.floor(constants.gridX / 2);
   y: number = 0;
   d3Self: any;
-  // d3Atoms: any;
+
+  constructor() {
+    const randomBlock =
+      possibleForms[Math.floor(Math.random() * possibleForms.length)];
+
+    this.shape = randomBlock.shape;
+    this.color = randomBlock.color;
+
+    this.init();
+  }
 
   rotate() {
-    const columnCount = this.value[0].length;
-    const rowCount = this.value.length;
+    const columnCount = this.shape[0].length;
+    const rowCount = this.shape.length;
 
-    let newVal = []
-    for(let x = 0; x < columnCount; x++) { //create empty flipped placeholder arrays
-      newVal.push([])
+    let newVal = [];
+    for (let x = 0; x < columnCount; x++) {
+      newVal.push([]);
     }
 
-    for(let row = 0; row < rowCount; row++) {
+    for (let row = 0; row < rowCount; row++) {
       for (let column = 0; column < columnCount; column++) {
-        newVal[column][row] = this.value[row][column]
+        newVal[column][row] = this.shape[row][column];
       }
     }
-        
-    this.value = newVal.map(row => row.reverse())
+
+    this.shape = newVal.map((row) => row.reverse());
     this.draw();
   }
 
   init() {
-    this.d3Self = selectAll(".stage svg").append("g").attr("class", "block");
+    this.d3Self = selectAll(".stage svg")
+      .append("g")
+      .attr("class", `block ${this.color}`)
     this.draw();
   }
 
   draw() {
-    this.d3Self.selectAll('rect').remove();
-    this.value.map((y, yI) => {
+    this.d3Self.selectAll("rect").remove();
+    this.shape.map((y, yI) => {
       y.map((x, xI) => {
-        if(x&&y) {
+        if (x && y) {
           this.d3Self
             .append("rect")
             .attr("width", constants.blockSize)
             .attr("height", constants.blockSize)
-            .attr('x', xI * constants.blockSize)
-            .attr('y', yI * constants.blockSize)
+            .attr("x", xI * constants.blockSize)
+            .attr("y", yI * constants.blockSize)
             .attr("class", "atom");
         }
       });
@@ -93,21 +68,26 @@ export default class Block {
     this.updatePosition();
   }
 
-  moveX(x:number) {
-    this.x = this.x + x * constants.blockSize;
+  instantFall() {
+    this.y = constants.gridY - this.shape.length;
+    this.updatePosition();
+  }
+
+  moveX(x: number) {
+    this.x = this.x + x;
     this.updatePosition();
   }
 
   updatePosition() {
     this.d3Self.attr(
       "transform",
-      `translate(${this.x}, ${this.y * constants.blockSize})`
+      `translate(${this.x * constants.blockSize}, ${
+        this.y * constants.blockSize
+      })`
     );
   }
 
-  constructor() {
-    this.value =
-      possibleForms[Math.floor(Math.random() * possibleForms.length)];
-    this.init();
+  checkForCollision() {
+    this.d3Self.selectAll("rect");
   }
 }

@@ -1,5 +1,6 @@
 import Block from "./block";
 import { selectAll } from "d3-selection";
+import constants from "./constants";
 
 export default class Stage {
   width: number;
@@ -7,8 +8,9 @@ export default class Stage {
   blockSize: number;
   gridGutterSize: number;
 
-  // grid: number[][];
+  internalGrid: number[][];
   activeBlock: Block;
+  settledBlocks: Block[] = [];
 
   constructor({
     width = 10,
@@ -22,8 +24,19 @@ export default class Stage {
     this.activeBlock = new Block();
     this.gridGutterSize = gridGutterSize;
 
+    this.initializeInternalGrid();
     this.drawGridLines();
     this.setEventListeners();
+  }
+
+  initializeInternalGrid() {
+    this.internalGrid = [];
+    for (let y = 0; y < this.height; y++) {
+      this.internalGrid.push([]);
+      for (let x = 0; x < this.width; x++) {
+        this.internalGrid[y][x] = 0;
+      }
+    }
   }
 
   setEventListeners() {
@@ -35,6 +48,9 @@ export default class Stage {
           return this.activeBlock.moveX(-1);
         case "ArrowDown":
           return this.activeBlock.moveDown();
+        case "ArrowUp":
+          this.activeBlock.instantFall();
+          return this.tick();
         case "Space":
           return this.activeBlock.rotate();
       }
@@ -42,32 +58,48 @@ export default class Stage {
   }
 
   tick() {
-    this.activeBlock.moveDown();
+    if (this.activeBlockDoesCollide()) {
+      this.settledBlocks.push(this.activeBlock);
+      this.placeActiveBlockInGrid();
+      this.activeBlock = new Block();
+    } else {
+      this.activeBlock.moveDown();
+    }
   }
-  // drawGrid(
-  //   x: number = this.width,
-  //   y: number = this.height,
-  //   blockSize: number = this.blockSize
-  // ) {
-  //   const grid = selectAll(".stage svg")
-  //     .append("g")
-  //     .attr("class", "gridblocks")
-  //     .attr("width", x * blockSize)
-  //     .attr("height", y * blockSize)
-  //     .attr("viewBox", `0 0 ${x * blockSize} ${y * blockSize}`);
 
-  //   for (let i = 0; i < y; i++) {
-  //     const row = grid.append("g");
-  //     for (let j = 0; j < x; j++) {
-  //       row
-  //         .append("rect")
-  //         .attr("width", blockSize)
-  //         .attr("height", blockSize)
-  //         .attr("x", j * blockSize - j + j)
-  //         .attr("y", i * blockSize - i + i)
-  //     }
-  //   }
+  // placeSettledBlocksInGrid() {
+  //   this.settledBlocks.map((settledBlock) => {
+  //     settledBlock.value.map((y, yIndex) => {
+  //       y.map((x, xIndex) => {
+  //         if (x && y) {
+  //           this.internalGrid[yIndex + settledBlock.y][
+  //             xIndex + settledBlock.x
+  //           ] = 1;
+  //         }
+  //       });
+  //     });
+  //   });
   // }
+
+  placeActiveBlockInGrid() {
+    this.activeBlock.shape.map((y, yIndex) => {
+      y.map((x, xIndex) => {
+        if (x && y) {
+          this.internalGrid[yIndex + this.activeBlock.y][
+            xIndex + this.activeBlock.x
+          ] = 1;
+        }
+      });
+    });
+
+    console.log(this.internalGrid)
+  }
+
+  activeBlockDoesCollide() {
+    return (
+      this.activeBlock.y + this.activeBlock.shape.length === constants.gridY
+    );
+  }
 
   drawGridLines(
     x: number = this.width,

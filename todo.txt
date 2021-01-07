@@ -1,0 +1,4 @@
+- Horizontal collision detection
+- Game over logic
+- Random rotation bug
+- Tall block can rotate out of bounds

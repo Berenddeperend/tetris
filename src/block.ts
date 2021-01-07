@@ -1,12 +1,9 @@
-import { selectAll, select } from "d3-selection";
+import { selectAll } from "d3-selection";
 import constants from "./constants";
-
 import { possibleForms } from "./possibleForms";
-
 export default class Block {
   shape: number[][];
   color: string;
-  // x: number = Math.floor(constants.gridX / 2);
   x: number = 0;
   y: number = 0;
   id: number;
@@ -45,7 +42,6 @@ export default class Block {
 
   init() {
     this.d3Self = selectAll(".stage svg")
-      // .append("g")
       .insert("g", constants.gridOverBlocks ? ":first-child" : null)
       .attr("class", `block ${this.color}`);
     this.redraw();

@@ -6,8 +6,6 @@
 // $orange: #f4a261;
 // $red: #e76f51;
 
-
-
 //pico-8
 // $light-blue: #29ADFF;
 // $dark-blue: #1D2B53;
@@ -29,18 +27,12 @@ $green: #88da88;
 $purple: #ab1f65;
 $red: #ff4f69;
 
-
-
 html {
   background: $black;
 }
 
 * {
   box-sizing: border-box;
-}
-
-.stage svg {
-  fill: $black;
 }
 
 .block {
@@ -55,19 +47,9 @@ html {
   &.red{ fill: $red }
 }
 
-// .atom {
-//   &.green { fill: $green; }
-//   &.yellow { fill: $yellow; }
-//   &.orange { fill: $orange; }
-//   &.red { fill: $red; }
-// }
-
-
-
 svg {
   overflow: visible;
 }
-
 
 .gridlines {
   z-index: 2;
@@ -76,6 +58,6 @@ svg {
     stroke: $orange;
     // stroke-width: 1px; 
     stroke-linecap: square;
-    opacity: 0.5;
+    // opacity: 0.5;
   }
 }

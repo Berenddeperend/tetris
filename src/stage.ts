@@ -19,7 +19,9 @@ export default class Stage {
     height = 10,
     blockSize = 10,
     gridGutterSize = 1,
+    element = ".stage"
   } = {}) {
+    selectAll(element).append('svg');
     this.width = width;
     this.height = height;
     this.blockSize = blockSize;
@@ -45,13 +47,15 @@ export default class Stage {
     document.addEventListener("keydown", (e: any) => {
       switch (e.code) {
         case "ArrowRight":
-          // if(!this.activeBlockWillCollideRightOnNextTick()) {
+          if(!this.activeBlockWillCollideXOnNextTick(1)) {
             return this.activeBlock.moveX(1);
-          // }
+          }
+          break;
         case "ArrowLeft":
-          // if(!this.activeBlockWillCollideLeftOnNextTick()) {
+          if(!this.activeBlockWillCollideXOnNextTick(-1)) {
             return this.activeBlock.moveX(-1);
-          // }
+          }
+          break;
         case "ArrowDown":
           return this.tick();
         case "ArrowUp":
@@ -98,7 +102,6 @@ export default class Stage {
           if (!atom) return false;
 
           if (this.activeBlock.y + rowIndex + 1 >= constants.gridY) {
-            console.log("reached bottom of stage");
             return true;
           }
 
@@ -107,7 +110,6 @@ export default class Stage {
             this.internalGrid[this.activeBlock.y + rowIndex+ 1][
               this.activeBlock.x + columnIndex
             ];
-          console.log("targetCellOnGrid: ", targetCellOnGrid);
 
           return targetCellOnGrid;
         });
@@ -116,8 +118,7 @@ export default class Stage {
       .some((d) => d);
   }
 
-  // activeBlockWillCollideXOnNextTick():boolean {}
-
+  activeBlockWillCollideXOnNextTick(dir: number):boolean { return false }
 
   drawGridLines(
     x: number = this.width,

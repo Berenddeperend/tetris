@@ -5,15 +5,14 @@ export default class Block {
   shape: number[][];
   color: string;
   x: number = 0;
-  y: number = 0;
+  y: number = 0; // hoeveel rijen er boven de blok zijn
   id: number;
   d3Self: any;
 
   constructor(id: number = 0) {
-    const randomBlock =
-      possibleForms[Math.floor(Math.random() * possibleForms.length)];
-
-    this.shape = randomBlock.shape;
+    const randomBlock = 
+        possibleForms[Math.floor(Math.random() * possibleForms.length)]
+    this.shape = JSON.parse(JSON.stringify(randomBlock.shape));
     this.color = randomBlock.color;
     this.x = Math.floor((constants.gridX - this.shape[0].length) / 2);
     this.id = id;
@@ -64,6 +63,12 @@ export default class Block {
     });
 
     this.updatePosition();
+  }
+
+  clearRow(rowIndex: number) {
+    const targetShapeRow = this.shape[this.y + this.shape.length - rowIndex];
+    targetShapeRow.fill(0);
+    this.redraw();
   }
 
   moveDown() {

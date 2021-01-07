@@ -12,16 +12,16 @@ export default class Stage {
   activeBlock: Block;
   settledBlocks: Block[] = [];
   queue: Block[] = [];
-  blockCount: number = 0;
+  blockCount: number = 1;
 
   constructor({
     width = 10,
     height = 10,
     blockSize = 10,
     gridGutterSize = 1,
-    element = ".stage"
+    element = ".stage",
   } = {}) {
-    selectAll(element).append('svg');
+    selectAll(element).append("svg");
     this.width = width;
     this.height = height;
     this.blockSize = blockSize;
@@ -29,8 +29,8 @@ export default class Stage {
     this.drawGridLines();
     this.initializeInternalGrid();
     this.setEventListeners();
-    
-    this.activeBlock = new Block();
+
+    this.activeBlock = new Block(this.blockCount);
   }
 
   initializeInternalGrid() {
@@ -47,12 +47,12 @@ export default class Stage {
     document.addEventListener("keydown", (e: any) => {
       switch (e.code) {
         case "ArrowRight":
-          if(!this.activeBlockWillCollideXOnNextTick(1)) {
+          if (!this.activeBlockWillCollideXOnNextTick(1)) {
             return this.activeBlock.moveX(1);
           }
           break;
         case "ArrowLeft":
-          if(!this.activeBlockWillCollideXOnNextTick(-1)) {
+          if (!this.activeBlockWillCollideXOnNextTick(-1)) {
             return this.activeBlock.moveX(-1);
           }
           break;
@@ -62,7 +62,7 @@ export default class Stage {
           while (!this.activeBlockWillCollideYOnNextTick()) {
             this.activeBlock.moveDown();
           }
-          this.finishCurrentBlock();
+          return this.finishCurrentBlock();
         case "Space":
           return this.activeBlock.rotate();
       }
@@ -81,6 +81,25 @@ export default class Stage {
     this.settledBlocks.push(this.activeBlock);
     this.placeActiveBlockInGrid();
     this.activeBlock = new Block(++this.blockCount);
+
+    this.completedRows.map((rowIndex) => {
+      const uniqueBlockIdsInRow = [...new Set(this.internalGrid[rowIndex])];
+
+      const blockThatShouldRemoveSomeAtoms = this.settledBlocks.filter(
+        (settledBlock) => {
+          return uniqueBlockIdsInRow.includes(settledBlock.id);
+        }
+      );
+
+      console.log('blockThatShouldRemoveSomeAtoms: ', blockThatShouldRemoveSomeAtoms);
+
+
+      blockThatShouldRemoveSomeAtoms.forEach((block) =>
+        block.clearRow(rowIndex)
+      );
+
+      this.internalGrid[rowIndex].fill(0);
+    });
   }
 
   placeActiveBlockInGrid() {
@@ -89,7 +108,7 @@ export default class Stage {
         if (x && y) {
           this.internalGrid[yIndex + this.activeBlock.y][
             xIndex + this.activeBlock.x
-          ] = 1;
+          ] = this.activeBlock.id;
         }
       });
     });
@@ -99,26 +118,36 @@ export default class Stage {
     return this.activeBlock.shape
       .map((row, rowIndex, shape) => {
         return row.map((atom, columnIndex) => {
-          if (!atom) return false;
+          if (!atom) return false; //Empty atom in this slot
 
           if (this.activeBlock.y + rowIndex + 1 >= constants.gridY) {
-            return true;
+            return true; //Block reached bottom of stage
           }
 
-          const targetCellOnGrid =
-            this.internalGrid[this.activeBlock.y + rowIndex+ 1] &&
-            this.internalGrid[this.activeBlock.y + rowIndex+ 1][
+          return (
+            this.internalGrid[this.activeBlock.y + rowIndex + 1] &&
+            this.internalGrid[this.activeBlock.y + rowIndex + 1][
               this.activeBlock.x + columnIndex
-            ];
-
-          return targetCellOnGrid;
+            ]
+          );
         });
       })
       .flat()
       .some((d) => d);
   }
 
-  activeBlockWillCollideXOnNextTick(dir: number):boolean { return false }
+  activeBlockWillCollideXOnNextTick(dir: number): boolean {
+    return false;
+  }
+
+  get completedRows(): number[] {
+    return this.internalGrid.reduce((acc, row, rowIndex) => {
+      if (row.every((d) => d)) {
+        acc.push(rowIndex);
+      }
+      return acc;
+    }, []);
+  }
 
   drawGridLines(
     x: number = this.width,

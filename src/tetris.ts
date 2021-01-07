@@ -9,28 +9,13 @@ import Block from './block';
 
 const stage = selectAll(".stage").append('svg');
 
-// const myStage = new Stage(10, 20, 20, 1);
 const myStage = new Stage({
-  // width: 10,
-  // height: 20,
-  // blockSize: 10,
-  // gridGutterSize: 1,
-
   width: constants.gridX,
   height: constants.gridY,
   blockSize: constants.blockSize,
   gridGutterSize: constants.gridLineWidth,
 });
   
-function init() {
-  // myStage.drawGridLines()
-  // drawGridLines(constants.gridX, constants.gridY, constants.blockSize);
-}
-
-
 window.setInterval(() => {
   myStage.tick();
 }, 1000)
-
-
-init();

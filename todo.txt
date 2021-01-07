@@ -1,4 +1,8 @@
 - Horizontal collision detection
 - Game over logic
+- Rotation origin
 - Random rotation bug
 - Tall block can rotate out of bounds
+- Full row logic
+- Reset tick after instafall
+- Reset tick after last-minute rotate

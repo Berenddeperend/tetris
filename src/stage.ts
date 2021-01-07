@@ -11,6 +11,8 @@ export default class Stage {
   internalGrid: number[][];
   activeBlock: Block;
   settledBlocks: Block[] = [];
+  queue: Block[] = [];
+  blockCount: number = 0;
 
   constructor({
     width = 10,
@@ -21,12 +23,12 @@ export default class Stage {
     this.width = width;
     this.height = height;
     this.blockSize = blockSize;
-    this.activeBlock = new Block();
     this.gridGutterSize = gridGutterSize;
-
-    this.initializeInternalGrid();
     this.drawGridLines();
+    this.initializeInternalGrid();
     this.setEventListeners();
+    
+    this.activeBlock = new Block();
   }
 
   initializeInternalGrid() {
@@ -43,14 +45,20 @@ export default class Stage {
     document.addEventListener("keydown", (e: any) => {
       switch (e.code) {
         case "ArrowRight":
-          return this.activeBlock.moveX(1);
+          // if(!this.activeBlockWillCollideRightOnNextTick()) {
+            return this.activeBlock.moveX(1);
+          // }
         case "ArrowLeft":
-          return this.activeBlock.moveX(-1);
+          // if(!this.activeBlockWillCollideLeftOnNextTick()) {
+            return this.activeBlock.moveX(-1);
+          // }
         case "ArrowDown":
-          return this.activeBlock.moveDown();
-        case "ArrowUp":
-          this.activeBlock.instantFall();
           return this.tick();
+        case "ArrowUp":
+          while (!this.activeBlockWillCollideYOnNextTick()) {
+            this.activeBlock.moveDown();
+          }
+          this.finishCurrentBlock();
         case "Space":
           return this.activeBlock.rotate();
       }
@@ -58,28 +66,18 @@ export default class Stage {
   }
 
   tick() {
-    if (this.activeBlockDoesCollide()) {
-      this.settledBlocks.push(this.activeBlock);
-      this.placeActiveBlockInGrid();
-      this.activeBlock = new Block();
+    if (this.activeBlockWillCollideYOnNextTick()) {
+      this.finishCurrentBlock();
     } else {
       this.activeBlock.moveDown();
     }
   }
 
-  // placeSettledBlocksInGrid() {
-  //   this.settledBlocks.map((settledBlock) => {
-  //     settledBlock.value.map((y, yIndex) => {
-  //       y.map((x, xIndex) => {
-  //         if (x && y) {
-  //           this.internalGrid[yIndex + settledBlock.y][
-  //             xIndex + settledBlock.x
-  //           ] = 1;
-  //         }
-  //       });
-  //     });
-  //   });
-  // }
+  finishCurrentBlock() {
+    this.settledBlocks.push(this.activeBlock);
+    this.placeActiveBlockInGrid();
+    this.activeBlock = new Block(++this.blockCount);
+  }
 
   placeActiveBlockInGrid() {
     this.activeBlock.shape.map((y, yIndex) => {
@@ -91,15 +89,35 @@ export default class Stage {
         }
       });
     });
-
-    console.log(this.internalGrid)
   }
 
-  activeBlockDoesCollide() {
-    return (
-      this.activeBlock.y + this.activeBlock.shape.length === constants.gridY
-    );
+  activeBlockWillCollideYOnNextTick(): boolean {
+    return this.activeBlock.shape
+      .map((row, rowIndex, shape) => {
+        return row.map((atom, columnIndex) => {
+          if (!atom) return false;
+
+          if (this.activeBlock.y + rowIndex + 1 >= constants.gridY) {
+            console.log("reached bottom of stage");
+            return true;
+          }
+
+          const targetCellOnGrid =
+            this.internalGrid[this.activeBlock.y + rowIndex+ 1] &&
+            this.internalGrid[this.activeBlock.y + rowIndex+ 1][
+              this.activeBlock.x + columnIndex
+            ];
+          console.log("targetCellOnGrid: ", targetCellOnGrid);
+
+          return targetCellOnGrid;
+        });
+      })
+      .flat()
+      .some((d) => d);
   }
+
+  // activeBlockWillCollideXOnNextTick():boolean {}
+
 
   drawGridLines(
     x: number = this.width,
@@ -111,6 +129,7 @@ export default class Stage {
       .attr("class", "gridlines")
       .attr("width", x * blockSize)
       .attr("height", y * blockSize)
+      .attr("style", `stroke-width: ${this.gridGutterSize}px`)
       .attr("viewBox", `0 0 ${x * blockSize} ${y * blockSize}`);
 
     const rows = grid.append("g").attr("class", "rows");

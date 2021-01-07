@@ -6,16 +6,20 @@ import { possibleForms } from "./possibleForms";
 export default class Block {
   shape: number[][];
   color: string;
-  x: number = Math.floor(constants.gridX / 2);
+  // x: number = Math.floor(constants.gridX / 2);
+  x: number = 0;
   y: number = 0;
+  id: number;
   d3Self: any;
 
-  constructor() {
+  constructor(id: number = 0) {
     const randomBlock =
       possibleForms[Math.floor(Math.random() * possibleForms.length)];
 
     this.shape = randomBlock.shape;
     this.color = randomBlock.color;
+    this.x = Math.floor((constants.gridX - this.shape[0].length) / 2);
+    this.id = id;
 
     this.init();
   }
@@ -36,17 +40,18 @@ export default class Block {
     }
 
     this.shape = newVal.map((row) => row.reverse());
-    this.draw();
+    this.redraw();
   }
 
   init() {
     this.d3Self = selectAll(".stage svg")
-      .append("g")
-      .attr("class", `block ${this.color}`)
-    this.draw();
+      // .append("g")
+      .insert("g", constants.gridOverBlocks ? ":first-child" : null)
+      .attr("class", `block ${this.color}`);
+    this.redraw();
   }
 
-  draw() {
+  redraw() {
     this.d3Self.selectAll("rect").remove();
     this.shape.map((y, yI) => {
       y.map((x, xI) => {
@@ -61,6 +66,8 @@ export default class Block {
         }
       });
     });
+
+    this.updatePosition();
   }
 
   moveDown() {
@@ -68,12 +75,10 @@ export default class Block {
     this.updatePosition();
   }
 
-  instantFall() {
-    this.y = constants.gridY - this.shape.length;
-    this.updatePosition();
-  }
-
   moveX(x: number) {
+    if (this.x + x + this.shape[0].length > constants.gridX || this.x + x < 0) {
+      return; //block moves out of bounds
+    }
     this.x = this.x + x;
     this.updatePosition();
   }
@@ -85,9 +90,5 @@ export default class Block {
         this.y * constants.blockSize
       })`
     );
-  }
-
-  checkForCollision() {
-    this.d3Self.selectAll("rect");
   }
 }

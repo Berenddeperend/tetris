@@ -21,8 +21,7 @@ const myStage = new Stage({
   blockSize: constants.blockSize,
   gridGutterSize: constants.gridLineWidth,
 });
-console.log('myStage: ', myStage);
-
+  
 function init() {
   // myStage.drawGridLines()
   // drawGridLines(constants.gridX, constants.gridY, constants.blockSize);

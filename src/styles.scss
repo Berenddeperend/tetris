@@ -62,16 +62,20 @@ html {
 //   &.red { fill: $red; }
 // }
 
-.gridblocks {
-  z-index: 2;
-}
+
 
 svg {
   overflow: visible;
 }
 
-.rows, .columns {
-  stroke: $orange;
-  stroke-width: 1px; 
-  stroke-linecap: square;
+
+.gridlines {
+  z-index: 2;
+
+  .rows, .columns {
+    stroke: $orange;
+    // stroke-width: 1px; 
+    stroke-linecap: square;
+    opacity: 0.5;
+  }
 }

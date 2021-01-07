@@ -1,6 +1,7 @@
 export default {
   gridX: 10,
   gridY: 20,
-  gridLineWidth: 2,
-  blockSize: 24
+  gridLineWidth: 1,
+  blockSize: 24,
+  gridOverBlocks: true
 }

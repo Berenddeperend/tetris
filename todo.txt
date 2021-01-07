@@ -1,10 +1,17 @@
+Bugs:
+- Stack fall after row clear
 - Horizontal collision detection
 - Game over logic
-- Rotation origin
-- Random rotation bug
-- Tall block can rotate out of bounds
+- Rotate out of bounds
 - Reset tick after instafall
+- Rotation origin
 - Reset tick after last-minute rotate
+
+Features:
+- UI
+- Stats
+- Start screen
 
 done:
 - Full row logic
+- Random rotation bug

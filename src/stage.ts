@@ -91,12 +91,11 @@ export default class Stage {
         }
       );
 
-      console.log('blockThatShouldRemoveSomeAtoms: ', blockThatShouldRemoveSomeAtoms);
-
-
       blockThatShouldRemoveSomeAtoms.forEach((block) =>
         block.clearRow(rowIndex)
       );
+
+      //todo: shuffle stuff down one row
 
       this.internalGrid[rowIndex].fill(0);
     });

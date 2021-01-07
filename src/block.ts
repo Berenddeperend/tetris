@@ -66,7 +66,7 @@ export default class Block {
   }
 
   clearRow(rowIndex: number) {
-    const targetShapeRow = this.shape[this.y + this.shape.length - rowIndex];
+    const targetShapeRow = this.shape[rowIndex - this.y];
     targetShapeRow.fill(0);
     this.redraw();
   }

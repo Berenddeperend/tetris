@@ -28,7 +28,6 @@ export const possibleForms: { shape: number[][]; color: string }[] = [
     ],
   },
 
-  { color: "light-blue", shape: [[1, 1, 1, 1]] },
   {
     color: "dark-blue",
     shape: [
@@ -43,6 +42,7 @@ export const possibleForms: { shape: number[][]; color: string }[] = [
       [1, 1, 1],
     ],
   },
+  { color: "light-blue", shape: [[1, 1, 1, 1]] },
   // {
   //   color: "red",
   //   shape: [

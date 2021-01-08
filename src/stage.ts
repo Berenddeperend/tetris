@@ -1,6 +1,7 @@
-import Block from "./block";
+import Block, {Shape} from "./block";
 import { selectAll } from "d3-selection";
 import constants from "./constants";
+import { uniq } from "./utils";
 
 export default class Stage {
   width: number;
@@ -12,7 +13,7 @@ export default class Stage {
   activeBlock: Block;
   settledBlocks: Block[] = [];
   queue: Block[] = [];
-  blockCount: number = 1;
+  blockIndex: number = 1;
 
   constructor({
     width = 10,
@@ -30,7 +31,7 @@ export default class Stage {
     this.initializeInternalGrid();
     this.setEventListeners();
 
-    this.activeBlock = new Block(this.blockCount);
+    this.activeBlock = new Block(this.blockIndex);
   }
 
   initializeInternalGrid() {
@@ -80,10 +81,10 @@ export default class Stage {
   finishCurrentBlock() {
     this.settledBlocks.push(this.activeBlock);
     this.placeActiveBlockInGrid();
-    this.activeBlock = new Block(++this.blockCount);
+    this.activeBlock = new Block(++this.blockIndex);
 
     this.completedRows.map((rowIndex) => {
-      const uniqueBlockIdsInRow = [...new Set(this.internalGrid[rowIndex])];
+      const uniqueBlockIdsInRow = uniq(this.internalGrid[rowIndex]);
 
       const blockThatShouldRemoveSomeAtoms = this.settledBlocks.filter(
         (settledBlock) => {
@@ -95,9 +96,19 @@ export default class Stage {
         block.clearRow(rowIndex)
       );
 
-      //todo: shuffle stuff down one row
+      this.internalGrid.splice(rowIndex, 1);
+      this.internalGrid.unshift(new Array(constants.gridX).fill(0));
 
-      this.internalGrid[rowIndex].fill(0);
+      //dit is het nog niet maar wel bijna.
+      // const blockIds = uniq(
+      //   this.internalGrid
+      //     .filter((row, i) => i > rowIndex)
+      // ).filter((blockId) => !uniqueBlockIdsInRow.includes(blockId));
+      // blockIds.forEach((blockId) => this.settledBlocks[blockId].moveDown());
+
+
+      //todo: alle blokken die volledig boven de 'rowindex' vallen moeten ook Y++
+      // optical only, het interne grid werkt al wel goed.
     });
   }
 

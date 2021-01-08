@@ -1,8 +1,10 @@
 import { selectAll } from "d3-selection";
 import constants from "./constants";
 import { possibleForms } from "./possibleForms";
+
+export type Shape = number[][];
 export default class Block {
-  shape: number[][];
+  shape: Shape;
   color: string;
   x: number = 0;
   y: number = 0; // hoeveel rijen er boven de blok zijn
@@ -66,8 +68,15 @@ export default class Block {
   }
 
   clearRow(rowIndex: number) {
-    const targetShapeRow = this.shape[rowIndex - this.y];
-    targetShapeRow.fill(0);
+    const targetShapeRowIndex = rowIndex - this.y
+    // const targetShapeRow = this.shape[targetShapeRowIndex];
+    // targetShapeRow.fill(0);
+    this.shape.splice(targetShapeRowIndex, 1)
+    this.shape.push(new Array(this.shape[0].length).fill(0))
+
+    // if(targetShapeRowIndex === this.shape.length) {
+    //   this.y++;
+    // }
     this.redraw();
   }
 

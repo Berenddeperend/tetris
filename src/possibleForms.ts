@@ -1,4 +1,5 @@
-export const possibleForms: { shape: number[][]; color: string }[] = [
+import {Shape} from './block'
+export const possibleForms: { shape: Shape; color: string }[] = [
   {
     color: "purple",
     shape: [

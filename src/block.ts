@@ -1,6 +1,7 @@
 import { selectAll } from "d3-selection";
 import constants from "./constants";
 import { possibleForms } from "./possibleForms";
+import { cloneDeep } from './utils';
 
 export type Shape = number[][];
 export default class Block {
@@ -14,7 +15,7 @@ export default class Block {
   constructor(id: number = 0) {
     const randomBlock = 
         possibleForms[Math.floor(Math.random() * possibleForms.length)]
-    this.shape = JSON.parse(JSON.stringify(randomBlock.shape));
+    this.shape = cloneDeep(randomBlock.shape);
     this.color = randomBlock.color;
     this.x = Math.floor((constants.gridX - this.shape[0].length) / 2);
     this.id = id;
@@ -71,8 +72,8 @@ export default class Block {
     const targetShapeRowIndex = rowIndex - this.y
     // const targetShapeRow = this.shape[targetShapeRowIndex];
     // targetShapeRow.fill(0);
-    this.shape.splice(targetShapeRowIndex, 1)
-    this.shape.push(new Array(this.shape[0].length).fill(0))
+    this.shape.unshift(new Array(this.shape[0].length).fill(0))
+    this.shape.splice(targetShapeRowIndex+1, 1)
 
     // if(targetShapeRowIndex === this.shape.length) {
     //   this.y++;

@@ -8,7 +8,7 @@ export default class Block {
   shape: Shape;
   color: string;
   x: number = 0;
-  y: number = 0; // hoeveel rijen er boven de blok zijn
+  y: number = 0;
   id: number;
   d3Self: any;
 
@@ -39,6 +39,14 @@ export default class Block {
     }
 
     this.shape = newVal.map((row) => row.reverse());
+    
+    //sorta inefficient but ok
+    this.shape[0].map((x, xIndex) => {
+      if(xIndex + this.x >= constants.gridX ) {
+        this.moveX(-1, true);
+      }
+    })
+
     this.redraw();
   }
 
@@ -93,9 +101,11 @@ export default class Block {
     this.updatePosition();
   }
 
-  moveX(x: number) {
-    if (this.x + x + this.shape[0].length > constants.gridX || this.x + x < 0) {
-      return; //block moves out of bounds
+  moveX(x: number, bypassCollision: boolean = false) {
+    if (!bypassCollision) {
+      if (this.x + x + this.shape[0].length > constants.gridX || this.x + x < 0) {
+        return; //block moves out of bounds
+      }
     }
     this.x = this.x + x;
     this.updatePosition();

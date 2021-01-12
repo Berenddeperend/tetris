@@ -1900,8 +1900,7 @@ function () {
     }
 
     this.x = 0;
-    this.y = 0; // hoeveel rijen er boven de blok zijn
-
+    this.y = 0;
     var randomBlock = possibleForms_1.possibleForms[Math.floor(Math.random() * possibleForms_1.possibleForms.length)];
     this.shape = utils_1.cloneDeep(randomBlock.shape);
     this.color = randomBlock.color;
@@ -1911,6 +1910,8 @@ function () {
   }
 
   Block.prototype.rotate = function () {
+    var _this = this;
+
     var columnCount = this.shape[0].length;
     var rowCount = this.shape.length;
     var newVal = [];
@@ -1927,6 +1928,12 @@ function () {
 
     this.shape = newVal.map(function (row) {
       return row.reverse();
+    }); //sorta inefficient but ok
+
+    this.shape[0].map(function (x, xIndex) {
+      if (xIndex + _this.x >= constants_1.default.gridX) {
+        _this.moveX(-1, true);
+      }
     });
     this.redraw();
   };
@@ -1969,9 +1976,15 @@ function () {
     this.updatePosition();
   };
 
-  Block.prototype.moveX = function (x) {
-    if (this.x + x + this.shape[0].length > constants_1.default.gridX || this.x + x < 0) {
-      return; //block moves out of bounds
+  Block.prototype.moveX = function (x, bypassCollision) {
+    if (bypassCollision === void 0) {
+      bypassCollision = false;
+    }
+
+    if (!bypassCollision) {
+      if (this.x + x + this.shape[0].length > constants_1.default.gridX || this.x + x < 0) {
+        return; //block moves out of bounds
+      }
     }
 
     this.x = this.x + x;
@@ -2085,6 +2098,11 @@ function () {
   };
 
   Stage.prototype.tick = function () {
+    if (this.isGameOver) {
+      console.log('game over!');
+      return;
+    }
+
     if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
       this.finishBlock(this.activeBlock);
     } else {
@@ -2183,6 +2201,13 @@ function () {
 
         return acc;
       }, []);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Stage.prototype, "isGameOver", {
+    get: function get() {
+      return false;
     },
     enumerable: false,
     configurable: true

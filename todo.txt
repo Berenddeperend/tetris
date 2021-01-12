@@ -1,6 +1,5 @@
 Bugs:
 - Game over logic
-- Rotate out of bounds
 - Reset tick after instafall
 - Rotation origin
 - Reset tick after last-minute rotate

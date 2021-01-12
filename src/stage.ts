@@ -71,6 +71,11 @@ export default class Stage {
   }
 
   tick() {
+    if(this.isGameOver) {
+      console.log('game over!')
+      return;
+    }
+
     if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
       this.finishBlock(this.activeBlock);
     } else {
@@ -160,6 +165,10 @@ export default class Stage {
       }
       return acc;
     }, []);
+  }
+
+  get isGameOver() {
+    return false
   }
 
   drawGridLines(

@@ -79,50 +79,47 @@ export default class Stage {
   }
 
   finishBlock(block: Block) {
-    this.settledBlocks.push(this.activeBlock);
-    this.placeBlockInGrid(this.activeBlock);
+    this.settledBlocks.push(block);
+    this.placeBlockInGrid(block);
     this.activeBlock = new Block(++this.blockIndex);
 
     this.completedRows.map((rowIndex) => {
       const uniqueBlockIdsInRow = uniq(this.internalGrid[rowIndex]);
 
-      const blockThatShouldRemoveSomeAtoms = this.settledBlocks.filter(
-        (settledBlock) => {
-          return uniqueBlockIdsInRow.includes(settledBlock.id);
-        }
+      const blocksIdsThatShouldFall = uniq(
+        this.internalGrid
+          .filter((row, i) => i < rowIndex) //
+          .flat()
+          .filter((cell) => cell > 0)
+          .filter((gridCel) => !uniqueBlockIdsInRow.includes(gridCel))
       );
 
-      blockThatShouldRemoveSomeAtoms.forEach((block) =>
-        block.clearRow(rowIndex)
+      // if (blocksIdsThatShouldFall) {
+      //   debugger;
+      // }
+
+
+
+      //Dit blok werkt, zeker weten
+      this.settledBlocks
+        .filter((settledBlock) => uniqueBlockIdsInRow.includes(settledBlock.id))
+        .forEach((blockWithClearedRow) =>
+          blockWithClearedRow.clearRow(rowIndex)
+        );
+      // t/m hier
+
+        
+
+
+
+      console.log("blocksIdsThatShouldFall: ", blocksIdsThatShouldFall);
+
+      blocksIdsThatShouldFall.forEach((blockId: number) =>
+        this.settledBlocks[blockId -1].moveDown()
       );
 
       this.internalGrid.splice(rowIndex, 1);
       this.internalGrid.unshift(new Array(constants.gridX).fill(0));
-
-      //dit is het nog niet maar wel bijna.
-      const blocksThatShouldFall = uniq(this.internalGrid
-        // .filter((row, i) => i < rowIndex)
-        .filter((row, i) => i > rowIndex)
-        .filter((blockId) => !uniqueBlockIdsInRow.includes(blockId)).flat());
-
-      // console.log("blocksThatShouldFall: ", blocksThatShouldFall);
-
-      // blocksThatShouldFall.forEach((blockId:number) =>
-      //   this.settledBlocks[blockId].moveDown()
-      // );
-
-
-      // doe dit door alle blocken nog een tick te doen.
-      // this.settledBlocks.forEach(block => {
-      //   if (this.blockWillCollideYOnNextTick(block)) {
-      //     this.finishBlock(block);
-      //   } else {
-      //     block.moveDown();
-      //   }
-      // })
-
-      //todo: alle blokken die volledig boven de 'rowindex' vallen moeten ook Y++
-      // optical only, het interne grid werkt al wel goed.
     });
     console.table(this.internalGrid);
   }
@@ -139,7 +136,7 @@ export default class Stage {
 
   blockWillCollideYOnNextTick(block: Block): boolean {
     return block.shape
-      .map((row, rowIndex, shape) => {
+      .map((row, rowIndex) => {
         return row.map((atom, columnIndex) => {
           if (!atom) return false; //Empty atom in this slot
 
@@ -148,6 +145,7 @@ export default class Stage {
           }
 
           return (
+            //returns the value of the target spot in the internal grid for the atom
             this.internalGrid[block.y + rowIndex + 1] &&
             this.internalGrid[block.y + rowIndex + 1][block.x + columnIndex]
           );
@@ -176,6 +174,7 @@ export default class Stage {
     blockSize: number = this.blockSize
   ) {
     const grid = selectAll(".stage svg")
+      .attr("style", `width: ${x * blockSize}px; height: ${y * blockSize}px`)
       .append("g")
       .attr("class", "gridlines")
       .attr("width", x * blockSize)

@@ -1,7 +1,7 @@
 import { selectAll } from "d3-selection";
 import constants from "./constants";
 import { possibleForms } from "./possibleForms";
-import { cloneDeep } from './utils';
+import { cloneDeep } from "./utils";
 
 export type Shape = number[][];
 export default class Block {
@@ -13,8 +13,8 @@ export default class Block {
   d3Self: any;
 
   constructor(id: number = 0) {
-    const randomBlock = 
-        possibleForms[Math.floor(Math.random() * possibleForms.length)]
+    const randomBlock =
+      possibleForms[Math.floor(Math.random() * possibleForms.length)];
     this.shape = cloneDeep(randomBlock.shape);
     this.color = randomBlock.color;
     this.x = Math.floor((constants.gridX - this.shape[0].length) / 2);
@@ -51,16 +51,29 @@ export default class Block {
 
   redraw() {
     this.d3Self.selectAll("rect").remove();
+    this.d3Self.selectAll("g").remove();
     this.shape.map((y, yI) => {
       y.map((x, xI) => {
         if (x && y) {
           this.d3Self
+            .append("g")
             .append("rect")
             .attr("width", constants.blockSize)
             .attr("height", constants.blockSize)
             .attr("x", xI * constants.blockSize)
             .attr("y", yI * constants.blockSize)
             .attr("class", "atom");
+
+            if(constants.debug) {
+              this.d3Self
+              .selectAll("g")
+              .append("text")
+              .attr("style", "fill: white;")
+              .attr("x", xI * constants.blockSize)
+              .attr("y", yI * constants.blockSize + 10)
+              .text(() => this.id);
+            }
+          
         }
       });
     });
@@ -69,15 +82,9 @@ export default class Block {
   }
 
   clearRow(rowIndex: number) {
-    const targetShapeRowIndex = rowIndex - this.y
-    // const targetShapeRow = this.shape[targetShapeRowIndex];
-    // targetShapeRow.fill(0);
-    this.shape.unshift(new Array(this.shape[0].length).fill(0))
-    this.shape.splice(targetShapeRowIndex+1, 1)
-
-    // if(targetShapeRowIndex === this.shape.length) {
-    //   this.y++;
-    // }
+    const targetShapeRowIndex = rowIndex - this.y;
+    this.shape.unshift(new Array(this.shape[0].length).fill(0));
+    this.shape.splice(targetShapeRowIndex + 1, 1);
     this.redraw();
   }
 

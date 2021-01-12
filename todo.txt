@@ -10,7 +10,7 @@ Bugs:
 Features:
 - UI
 - Stats
-- Start screen
+- Start screen animation
 
 done:
 - Full row logic

@@ -48,12 +48,12 @@ export default class Stage {
     document.addEventListener("keydown", (e: any) => {
       switch (e.code) {
         case "ArrowRight":
-          if (!this.activeBlockWillCollideXOnNextTick(1)) {
+          if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
             return this.activeBlock.moveX(1);
           }
           break;
         case "ArrowLeft":
-          if (!this.activeBlockWillCollideXOnNextTick(-1)) {
+          if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
             return this.activeBlock.moveX(-1);
           }
           break;
@@ -93,27 +93,13 @@ export default class Stage {
           .filter((cell) => cell > 0)
           .filter((gridCel) => !uniqueBlockIdsInRow.includes(gridCel))
       );
-
-      // if (blocksIdsThatShouldFall) {
-      //   debugger;
-      // }
-
-
-
-      //Dit blok werkt, zeker weten
+      
       this.settledBlocks
-        .filter((settledBlock) => uniqueBlockIdsInRow.includes(settledBlock.id))
-        .forEach((blockWithClearedRow) =>
-          blockWithClearedRow.clearRow(rowIndex)
-        );
-      // t/m hier
-
-        
-
-
-
-      console.log("blocksIdsThatShouldFall: ", blocksIdsThatShouldFall);
-
+      .filter((settledBlock) => uniqueBlockIdsInRow.includes(settledBlock.id))
+      .forEach((blockWithClearedRow) =>
+      blockWithClearedRow.clearRow(rowIndex)
+      );
+      
       blocksIdsThatShouldFall.forEach((blockId: number) =>
         this.settledBlocks[blockId -1].moveDown()
       );
@@ -121,7 +107,6 @@ export default class Stage {
       this.internalGrid.splice(rowIndex, 1);
       this.internalGrid.unshift(new Array(constants.gridX).fill(0));
     });
-    console.table(this.internalGrid);
   }
 
   placeBlockInGrid(block: Block) {
@@ -155,8 +140,17 @@ export default class Stage {
       .some((d) => d);
   }
 
-  activeBlockWillCollideXOnNextTick(dir: number): boolean {
-    return false;
+  blockWillCollideXOnNextTick(block: Block, dir: number): boolean {
+    return block.shape.map((row, rowIndex) => {
+      return row.map((atom, columnIndex) => {
+        if(!atom) return false;
+        return (
+          //returns the value of the target spot in the internal grid for the atom
+          this.internalGrid[block.y + rowIndex] &&
+          this.internalGrid[block.y + rowIndex][block.x + columnIndex + dir]
+        );
+      });
+    }).flat().some((d) => d)
   }
 
   get completedRows(): number[] {

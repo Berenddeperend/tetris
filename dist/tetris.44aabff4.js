@@ -131,7 +131,7 @@ exports.default = {
   gridLineWidth: 1,
   blockSize: 24,
   gridOverBlocks: true,
-  debug: true
+  debug: false
 };
 },{}],"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
 "use strict";
@@ -2055,14 +2055,14 @@ function () {
     document.addEventListener("keydown", function (e) {
       switch (e.code) {
         case "ArrowRight":
-          if (!_this.activeBlockWillCollideXOnNextTick(1)) {
+          if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, 1)) {
             return _this.activeBlock.moveX(1);
           }
 
           break;
 
         case "ArrowLeft":
-          if (!_this.activeBlockWillCollideXOnNextTick(-1)) {
+          if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, -1)) {
             return _this.activeBlock.moveX(-1);
           }
 
@@ -2107,19 +2107,14 @@ function () {
         return cell > 0;
       }).filter(function (gridCel) {
         return !uniqueBlockIdsInRow.includes(gridCel);
-      })); // if (blocksIdsThatShouldFall) {
-      //   debugger;
-      // }
-      //Dit blok werkt, zeker weten
+      }));
 
       _this.settledBlocks.filter(function (settledBlock) {
         return uniqueBlockIdsInRow.includes(settledBlock.id);
       }).forEach(function (blockWithClearedRow) {
         return blockWithClearedRow.clearRow(rowIndex);
-      }); // t/m hier
+      });
 
-
-      console.log("blocksIdsThatShouldFall: ", blocksIdsThatShouldFall);
       blocksIdsThatShouldFall.forEach(function (blockId) {
         return _this.settledBlocks[blockId - 1].moveDown();
       });
@@ -2128,7 +2123,6 @@ function () {
 
       _this.internalGrid.unshift(new Array(constants_1.default.gridX).fill(0));
     });
-    console.table(this.internalGrid);
   };
 
   Stage.prototype.placeBlockInGrid = function (block) {
@@ -2163,8 +2157,19 @@ function () {
     });
   };
 
-  Stage.prototype.activeBlockWillCollideXOnNextTick = function (dir) {
-    return false;
+  Stage.prototype.blockWillCollideXOnNextTick = function (block, dir) {
+    var _this = this;
+
+    return block.shape.map(function (row, rowIndex) {
+      return row.map(function (atom, columnIndex) {
+        if (!atom) return false;
+        return (//returns the value of the target spot in the internal grid for the atom
+          _this.internalGrid[block.y + rowIndex] && _this.internalGrid[block.y + rowIndex][block.x + columnIndex + dir]
+        );
+      });
+    }).flat().some(function (d) {
+      return d;
+    });
   };
 
   Object.defineProperty(Stage.prototype, "completedRows", {
@@ -2268,7 +2273,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49575" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50179" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

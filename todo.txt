@@ -1,6 +1,4 @@
 Bugs:
-- Stack fall after row clear
-- Horizontal collision detection
 - Game over logic
 - Rotate out of bounds
 - Reset tick after instafall

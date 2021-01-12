@@ -7,5 +7,5 @@ export default {
   gridLineWidth: 1,
   blockSize: 24,
   gridOverBlocks: true,
-  debug: true
+  debug: false
 }

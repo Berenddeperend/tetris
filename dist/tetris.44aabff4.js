@@ -2020,10 +2020,14 @@ var constants_1 = __importDefault(require("./constants"));
 
 var utils_1 = require("./utils");
 
+var tetris_1 = require("./tetris");
+
 var Stage =
 /** @class */
 function () {
   function Stage(_a) {
+    var _this = this;
+
     var _b = _a === void 0 ? {} : _a,
         _c = _b.width,
         width = _c === void 0 ? 10 : _c,
@@ -2038,15 +2042,51 @@ function () {
     this.queue = [];
     this.blockIndex = 1;
     this.isGameOver = false;
-    d3_selection_1.selectAll('body').append('div').attr('class', 'stage').append("svg");
+    this.clearedLines = 0;
+
+    this.onKeyDown = function (e) {
+      switch (e.code) {
+        case "ArrowRight":
+          if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
+            return this.activeBlock.moveX(1);
+          }
+
+          break;
+
+        case "ArrowLeft":
+          if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
+            return this.activeBlock.moveX(-1);
+          }
+
+          break;
+
+        case "ArrowDown":
+          return this.tick();
+
+        case "ArrowUp":
+          while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
+            this.activeBlock.moveDown();
+          }
+
+          return this.finishBlock(this.activeBlock);
+
+        case "Space":
+          return this.activeBlock.rotate();
+      }
+    }.bind(this);
+
+    d3_selection_1.selectAll("body").append("div").attr("class", "stage").append("svg");
     this.width = width;
     this.height = height;
     this.blockSize = blockSize;
     this.gridGutterSize = gridGutterSize;
-    this.drawGridLines();
+    this.initUI();
     this.initializeInternalGrid();
-    this.setEventListeners();
     this.activeBlock = new block_1.default(this.blockIndex);
+    document.addEventListener("keydown", this.onKeyDown);
+    this.tickInterval = window.setInterval(function () {
+      _this.tick();
+    }, 1000);
   }
 
   Stage.prototype.initializeInternalGrid = function () {
@@ -2061,44 +2101,10 @@ function () {
     }
   };
 
-  Stage.prototype.setEventListeners = function () {
-    var _this = this;
-
-    document.addEventListener("keydown", function (e) {
-      switch (e.code) {
-        case "ArrowRight":
-          if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, 1)) {
-            return _this.activeBlock.moveX(1);
-          }
-
-          break;
-
-        case "ArrowLeft":
-          if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, -1)) {
-            return _this.activeBlock.moveX(-1);
-          }
-
-          break;
-
-        case "ArrowDown":
-          return _this.tick();
-
-        case "ArrowUp":
-          while (!_this.blockWillCollideYOnNextTick(_this.activeBlock)) {
-            _this.activeBlock.moveDown();
-          }
-
-          return _this.finishBlock(_this.activeBlock);
-
-        case "Space":
-          return _this.activeBlock.rotate();
-      }
-    });
-  };
-
   Stage.prototype.tick = function () {
     if (this.isGameOver) {
-      console.log('game over!');
+      this.beforeDestroy();
+      tetris_1.setGameState("gameOver");
       return;
     }
 
@@ -2121,6 +2127,10 @@ function () {
     }
 
     this.completedRows.map(function (rowIndex) {
+      _this.clearedLines++;
+
+      _this.updateScore();
+
       var uniqueBlockIdsInRow = utils_1.uniq(_this.internalGrid[rowIndex]);
       var blocksIdsThatShouldFall = utils_1.uniq(_this.internalGrid.filter(function (row, i) {
         return i < rowIndex;
@@ -2145,6 +2155,10 @@ function () {
 
       _this.internalGrid.unshift(new Array(constants_1.default.gridX).fill(0));
     });
+  };
+
+  Stage.prototype.updateScore = function () {
+    d3_selection_1.select(".score").text(this.clearedLines);
   };
 
   Stage.prototype.placeBlockInGrid = function (block) {
@@ -2196,6 +2210,7 @@ function () {
 
   Object.defineProperty(Stage.prototype, "completedRows", {
     get: function get() {
+      console.log("called getter");
       return this.internalGrid.reduce(function (acc, row, rowIndex) {
         if (row.every(function (d) {
           return d;
@@ -2209,6 +2224,18 @@ function () {
     enumerable: false,
     configurable: true
   });
+  Object.defineProperty(Stage.prototype, "score", {
+    get: function get() {
+      return this.clearedLines;
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  Stage.prototype.initUI = function () {
+    this.drawGridLines();
+    d3_selection_1.select("body").append("div").attr("class", "score").text(this.score);
+  };
 
   Stage.prototype.drawGridLines = function (x, y, blockSize) {
     if (x === void 0) {
@@ -2236,11 +2263,85 @@ function () {
     }
   };
 
+  Stage.prototype.beforeDestroy = function () {
+    clearInterval(this.tickInterval);
+    document.removeEventListener("keydown", this.onKeyDown);
+  };
+
   return Stage;
 }();
 
 exports.default = Stage;
-},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./constants":"src/constants.ts","./utils":"src/utils.ts"}],"src/tetris.ts":[function(require,module,exports) {
+},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./constants":"src/constants.ts","./utils":"src/utils.ts","./tetris":"src/tetris.ts"}],"src/splash.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var d3_selection_1 = require("d3-selection");
+
+var tetris_1 = require("./tetris");
+
+var Splash =
+/** @class */
+function () {
+  function Splash() {
+    d3_selection_1.select('body').append('div').attr('class', 'splash').text('press space to begin');
+
+    var onKeyDown = function onKeyDown(e) {
+      if (e.code === 'Space') {
+        window.removeEventListener('keydown', onKeyDown);
+        d3_selection_1.select('.splash').remove();
+        tetris_1.setGameState('playing');
+      }
+
+      ;
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+  }
+
+  return Splash;
+}();
+
+exports.default = Splash;
+},{"d3-selection":"node_modules/d3-selection/src/index.js","./tetris":"src/tetris.ts"}],"src/gameOver.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var d3_selection_1 = require("d3-selection");
+
+var tetris_1 = require("./tetris");
+
+var GameOver =
+/** @class */
+function () {
+  function GameOver() {
+    d3_selection_1.select('body').append('div').attr('class', 'gameOver').text('u dea, press space to try again');
+
+    var onKeyDown = function onKeyDown(e) {
+      if (e.code === 'Space') {
+        window.removeEventListener('keydown', onKeyDown);
+        d3_selection_1.select('.stage').remove();
+        d3_selection_1.select('.gameOver').remove();
+        tetris_1.setGameState('playing');
+      }
+
+      ;
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+  }
+
+  return GameOver;
+}();
+
+exports.default = GameOver;
+},{"d3-selection":"node_modules/d3-selection/src/index.js","./tetris":"src/tetris.ts"}],"src/tetris.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -2258,24 +2359,34 @@ var constants_1 = __importDefault(require("./constants"));
 
 var stage_1 = __importDefault(require("./stage"));
 
-var gameState = "splash";
+var splash_1 = __importDefault(require("./splash"));
+
+var gameOver_1 = __importDefault(require("./gameOver"));
 
 function setGameState(gameState) {
-  this.gameState = gameState;
+  gameState = gameState;
+
+  switch (gameState) {
+    case "splash":
+      return new splash_1.default();
+
+    case "playing":
+      var stage = new stage_1.default({
+        width: constants_1.default.gridX,
+        height: constants_1.default.gridY,
+        blockSize: constants_1.default.blockSize,
+        gridGutterSize: constants_1.default.gridLineWidth
+      });
+      break;
+
+    case "gameOver":
+      return new gameOver_1.default();
+  }
 }
 
 exports.setGameState = setGameState;
-var stage = new stage_1.default({
-  // element: '.stage',
-  width: constants_1.default.gridX,
-  height: constants_1.default.gridY,
-  blockSize: constants_1.default.blockSize,
-  gridGutterSize: constants_1.default.gridLineWidth
-});
-window.setInterval(function () {
-  stage.tick();
-}, 1000);
-},{"./constants":"src/constants.ts","./stage":"src/stage.ts"}],"../../../.nvm/versions/node/v12.16.3/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+setGameState('splash');
+},{"./constants":"src/constants.ts","./stage":"src/stage.ts","./splash":"src/splash.ts","./gameOver":"src/gameOver.ts"}],"../../../.nvm/versions/node/v12.16.3/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2303,7 +2414,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50093" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61779" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

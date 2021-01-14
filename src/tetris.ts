@@ -1,21 +1,28 @@
 import constants from "./constants";
 import Stage from './stage';
+import Splash from './splash';
+import GameOver from './gameOver';
 
 export type GameState = "splash" | "playing" | "gameOver";
-let gameState: GameState = "splash";
 
 export function setGameState(gameState: GameState) {
-  this.gameState = gameState; 
+  gameState = gameState; 
+  switch (gameState) {
+    case "splash": 
+      return new Splash;
+    case "playing":
+      const stage = new Stage({
+        width: constants.gridX,
+        height: constants.gridY,
+        blockSize: constants.blockSize,
+        gridGutterSize: constants.gridLineWidth,
+      })
+      break;
+    case "gameOver": 
+      return new GameOver;
+  }
 }
 
-const stage = new Stage({
-  // element: '.stage',
-  width: constants.gridX,
-  height: constants.gridY,
-  blockSize: constants.blockSize,
-  gridGutterSize: constants.gridLineWidth,
-});
-  
-window.setInterval(() => {
-  stage.tick();
-}, 1000)
+setGameState('splash')
+
+

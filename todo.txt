@@ -1,7 +1,7 @@
 Bugs:
-- Game over logic
 - Conditionally disallow rotate
 - Reset tick after instafall
+- Instafall delays death
 - Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
 - Reset tick after last-minute rotate
 - Game drawing clock (event loop? uitzoeken)
@@ -10,11 +10,12 @@ Features:
 - gh pages deploy script (npm gh-pages)
 - UI
 - Stats
+- Score
 - Start screen animation
 - Localstorage highscores
 
 Maintenance:
-- remove Constants, give 'stage' to block
+- remove Constants, give 'stage' to block as arg
 
 Future:
 - 2 player mode (one client)
@@ -22,4 +23,5 @@ Future:
 
 Maybe:
 - Snake/Pacman style level overflow
+- "Tetris UI", select mode by dropping block in a row
 - Swap out Parceljs (https://2020.stateofjs.com/en-US/technologies/build-tools/)

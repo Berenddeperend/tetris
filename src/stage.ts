@@ -1,7 +1,8 @@
 import Block, { Shape } from "./block";
-import { selectAll } from "d3-selection";
+import { select, selectAll } from "d3-selection";
 import constants from "./constants";
 import { uniq } from "./utils";
+import { setGameState } from "./tetris";
 
 export default class Stage {
   width: number;
@@ -15,6 +16,8 @@ export default class Stage {
   queue: Block[] = [];
   blockIndex: number = 1;
   isGameOver: boolean = false;
+  tickInterval: number;
+  clearedLines: number = 0;
 
   constructor({
     width = 10,
@@ -23,19 +26,19 @@ export default class Stage {
     gridGutterSize = 1,
     // element = ".stage",
   } = {}) {
-    selectAll('body')
-    .append('div')
-    .attr('class', 'stage')
-    .append("svg");
+    selectAll("body").append("div").attr("class", "stage").append("svg");
     this.width = width;
     this.height = height;
     this.blockSize = blockSize;
     this.gridGutterSize = gridGutterSize;
-    this.drawGridLines();
+    this.initUI();
     this.initializeInternalGrid();
-    this.setEventListeners();
 
     this.activeBlock = new Block(this.blockIndex);
+    document.addEventListener("keydown", this.onKeyDown);
+    this.tickInterval = window.setInterval(() => {
+      this.tick();
+    }, 1000);
   }
 
   initializeInternalGrid() {
@@ -48,35 +51,34 @@ export default class Stage {
     }
   }
 
-  setEventListeners() {
-    document.addEventListener("keydown", (e: any) => {
-      switch (e.code) {
-        case "ArrowRight":
-          if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
-            return this.activeBlock.moveX(1);
-          }
-          break;
-        case "ArrowLeft":
-          if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
-            return this.activeBlock.moveX(-1);
-          }
-          break;
-        case "ArrowDown":
-          return this.tick();
-        case "ArrowUp":
-          while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
-            this.activeBlock.moveDown();
-          }
-          return this.finishBlock(this.activeBlock);
-        case "Space":
-          return this.activeBlock.rotate();
-      }
-    });
-  }
+  onKeyDown = function (e: any) {
+    switch (e.code) {
+      case "ArrowRight":
+        if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
+          return this.activeBlock.moveX(1);
+        }
+        break;
+      case "ArrowLeft":
+        if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
+          return this.activeBlock.moveX(-1);
+        }
+        break;
+      case "ArrowDown":
+        return this.tick();
+      case "ArrowUp":
+        while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
+          this.activeBlock.moveDown();
+        }
+        return this.finishBlock(this.activeBlock);
+      case "Space":
+        return this.activeBlock.rotate();
+    }
+  }.bind(this);
 
   tick() {
-    if(this.isGameOver) {
-      console.log('game over!')
+    if (this.isGameOver) {
+      this.beforeDestroy();
+      setGameState("gameOver");
       return;
     }
 
@@ -91,11 +93,14 @@ export default class Stage {
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
     this.activeBlock = new Block(++this.blockIndex);
-    if(this.blockWillCollideYOnNextTick(this.activeBlock)) {
-      return this.isGameOver = true;
+    if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
+      return (this.isGameOver = true);
     }
 
     this.completedRows.map((rowIndex) => {
+      this.clearedLines++;
+      this.updateScore();
+
       const uniqueBlockIdsInRow = uniq(this.internalGrid[rowIndex]);
 
       const blocksIdsThatShouldFall = uniq(
@@ -105,20 +110,24 @@ export default class Stage {
           .filter((cell) => cell > 0)
           .filter((gridCel) => !uniqueBlockIdsInRow.includes(gridCel))
       );
-      
+
       this.settledBlocks
-      .filter((settledBlock) => uniqueBlockIdsInRow.includes(settledBlock.id))
-      .forEach((blockWithClearedRow) =>
-      blockWithClearedRow.clearRow(rowIndex)
-      );
-      
+        .filter((settledBlock) => uniqueBlockIdsInRow.includes(settledBlock.id))
+        .forEach((blockWithClearedRow) =>
+          blockWithClearedRow.clearRow(rowIndex)
+        );
+
       blocksIdsThatShouldFall.forEach((blockId: number) =>
-        this.settledBlocks[blockId -1].moveDown()
+        this.settledBlocks[blockId - 1].moveDown()
       );
 
       this.internalGrid.splice(rowIndex, 1);
       this.internalGrid.unshift(new Array(constants.gridX).fill(0));
     });
+  }
+
+  updateScore() {
+    select(".score").text(this.clearedLines);
   }
 
   placeBlockInGrid(block: Block) {
@@ -153,25 +162,38 @@ export default class Stage {
   }
 
   blockWillCollideXOnNextTick(block: Block, dir: number): boolean {
-    return block.shape.map((row, rowIndex) => {
-      return row.map((atom, columnIndex) => {
-        if(!atom) return false;
-        return (
-          //returns the value of the target spot in the internal grid for the atom
-          this.internalGrid[block.y + rowIndex] &&
-          this.internalGrid[block.y + rowIndex][block.x + columnIndex + dir]
-        );
-      });
-    }).flat().some((d) => d)
+    return block.shape
+      .map((row, rowIndex) => {
+        return row.map((atom, columnIndex) => {
+          if (!atom) return false;
+          return (
+            //returns the value of the target spot in the internal grid for the atom
+            this.internalGrid[block.y + rowIndex] &&
+            this.internalGrid[block.y + rowIndex][block.x + columnIndex + dir]
+          );
+        });
+      })
+      .flat()
+      .some((d) => d);
   }
 
   get completedRows(): number[] {
+    console.log("called getter");
     return this.internalGrid.reduce((acc, row, rowIndex) => {
       if (row.every((d) => d)) {
         acc.push(rowIndex);
       }
       return acc;
     }, []);
+  }
+
+  get score(): number {
+    return this.clearedLines;
+  }
+
+  initUI() {
+    this.drawGridLines();
+    select("body").append("div").attr("class", "score").text(this.score);
   }
 
   drawGridLines(
@@ -208,5 +230,10 @@ export default class Stage {
         .attr("x1", i * blockSize)
         .attr("x2", i * blockSize);
     }
+  }
+
+  beforeDestroy() {
+    clearInterval(this.tickInterval);
+    document.removeEventListener("keydown", this.onKeyDown);
   }
 }

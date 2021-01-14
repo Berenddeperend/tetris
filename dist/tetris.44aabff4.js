@@ -2032,14 +2032,13 @@ function () {
         _e = _b.blockSize,
         blockSize = _e === void 0 ? 10 : _e,
         _f = _b.gridGutterSize,
-        gridGutterSize = _f === void 0 ? 1 : _f,
-        _g = _b.element,
-        element = _g === void 0 ? ".stage" : _g;
+        gridGutterSize = _f === void 0 ? 1 : _f;
 
     this.settledBlocks = [];
     this.queue = [];
     this.blockIndex = 1;
-    d3_selection_1.selectAll(element).append("svg");
+    this.isGameOver = false;
+    d3_selection_1.selectAll('body').append('div').attr('class', 'stage').append("svg");
     this.width = width;
     this.height = height;
     this.blockSize = blockSize;
@@ -2116,6 +2115,11 @@ function () {
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
     this.activeBlock = new block_1.default(++this.blockIndex);
+
+    if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
+      return this.isGameOver = true;
+    }
+
     this.completedRows.map(function (rowIndex) {
       var uniqueBlockIdsInRow = utils_1.uniq(_this.internalGrid[rowIndex]);
       var blocksIdsThatShouldFall = utils_1.uniq(_this.internalGrid.filter(function (row, i) {
@@ -2205,13 +2209,6 @@ function () {
     enumerable: false,
     configurable: true
   });
-  Object.defineProperty(Stage.prototype, "isGameOver", {
-    get: function get() {
-      return false;
-    },
-    enumerable: false,
-    configurable: true
-  });
 
   Stage.prototype.drawGridLines = function (x, y, blockSize) {
     if (x === void 0) {
@@ -2255,20 +2252,28 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.setGameState = void 0;
 
 var constants_1 = __importDefault(require("./constants"));
 
 var stage_1 = __importDefault(require("./stage"));
 
-var myStage = new stage_1.default({
-  element: '.stage',
+var gameState = "splash";
+
+function setGameState(gameState) {
+  this.gameState = gameState;
+}
+
+exports.setGameState = setGameState;
+var stage = new stage_1.default({
+  // element: '.stage',
   width: constants_1.default.gridX,
   height: constants_1.default.gridY,
   blockSize: constants_1.default.blockSize,
   gridGutterSize: constants_1.default.gridLineWidth
 });
 window.setInterval(function () {
-  myStage.tick();
+  stage.tick();
 }, 1000);
 },{"./constants":"src/constants.ts","./stage":"src/stage.ts"}],"../../../.nvm/versions/node/v12.16.3/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -2298,7 +2303,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50179" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50093" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -14,15 +14,19 @@ export default class Stage {
   settledBlocks: Block[] = [];
   queue: Block[] = [];
   blockIndex: number = 1;
+  isGameOver: boolean = false;
 
   constructor({
     width = 10,
     height = 10,
     blockSize = 10,
     gridGutterSize = 1,
-    element = ".stage",
+    // element = ".stage",
   } = {}) {
-    selectAll(element).append("svg");
+    selectAll('body')
+    .append('div')
+    .attr('class', 'stage')
+    .append("svg");
     this.width = width;
     this.height = height;
     this.blockSize = blockSize;
@@ -87,6 +91,9 @@ export default class Stage {
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
     this.activeBlock = new Block(++this.blockIndex);
+    if(this.blockWillCollideYOnNextTick(this.activeBlock)) {
+      return this.isGameOver = true;
+    }
 
     this.completedRows.map((rowIndex) => {
       const uniqueBlockIdsInRow = uniq(this.internalGrid[rowIndex]);
@@ -165,10 +172,6 @@ export default class Stage {
       }
       return acc;
     }, []);
-  }
-
-  get isGameOver() {
-    return false
   }
 
   drawGridLines(

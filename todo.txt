@@ -1,14 +1,25 @@
 Bugs:
 - Game over logic
+- Conditionally disallow rotate
 - Reset tick after instafall
-- Rotation origin
+- Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
 - Reset tick after last-minute rotate
+- Game drawing clock (event loop? uitzoeken)
 
 Features:
+- gh pages deploy script (npm gh-pages)
 - UI
 - Stats
 - Start screen animation
+- Localstorage highscores
 
-done:
-- Full row logic
-- Random rotation bug
+Maintenance:
+- remove Constants, give 'stage' to block
+
+Future:
+- 2 player mode (one client)
+- Backend for highscores (rpi or firebase)
+
+Maybe:
+- Snake/Pacman style level overflow
+- Swap out Parceljs (https://2020.stateofjs.com/en-US/technologies/build-tools/)

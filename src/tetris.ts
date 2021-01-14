@@ -1,8 +1,15 @@
 import constants from "./constants";
 import Stage from './stage';
 
-const myStage = new Stage({
-  element: '.stage',
+export type GameState = "splash" | "playing" | "gameOver";
+let gameState: GameState = "splash";
+
+export function setGameState(gameState: GameState) {
+  this.gameState = gameState; 
+}
+
+const stage = new Stage({
+  // element: '.stage',
   width: constants.gridX,
   height: constants.gridY,
   blockSize: constants.blockSize,
@@ -10,5 +17,5 @@ const myStage = new Stage({
 });
   
 window.setInterval(() => {
-  myStage.tick();
+  stage.tick();
 }, 1000)

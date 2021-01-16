@@ -4,15 +4,12 @@ Bugs:
 - Instafall delays death
 - Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
 - Reset tick after last-minute rotate
-- Game drawing clock (event loop? uitzoeken)
+- Game drawing clock (event loop? investigate)
 - Gridlines as gutter in grid
 
 Features:
-- gh pages deploy script (npm gh-pages)
 - UI
 - Stats
-- Score
-- Start screen animation
 - Localstorage highscores
 
 Maintenance:

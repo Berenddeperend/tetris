@@ -6,7 +6,8 @@ export default class Splash {
     const splash = select("body").append("div").attr("class", "splash");
 
     splash.append('div').attr('class', 'title').text("Tetris")
-    splash.append('div').attr('class', 'subtitle').text("by Berend")
+    // splash.append('div').attr('class', 'subtitle').text("by Berend")
+    splash.append('div').attr('class', 'subtitle').text("Makkelijke elvera editie")
 
     splash
       .append('div')

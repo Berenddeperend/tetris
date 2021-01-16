@@ -121,4 +121,4 @@ parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcel
 },{"d3-selection":"lm1C","./tetris":"rDTz"}],"rDTz":[function(require,module,exports) {
 "use strict";var e=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.setGameState=void 0;var t=e(require("./constants")),r=e(require("./stage")),a=e(require("./splash")),i=e(require("./gameOver"));function s(e){switch(e=e){case"splash":return new a.default;case"playing":new r.default({width:t.default.gridX,height:t.default.gridY,blockSize:t.default.blockSize,gridGutterSize:t.default.gridLineWidth});break;case"gameOver":return new i.default}}exports.setGameState=s,s("splash");
 },{"./constants":"RhqW","./stage":"Vp1G","./splash":"Wfv0","./gameOver":"tKgm"}]},{},["rDTz"], null)
-//# sourceMappingURL=tetris/tetris.d676a7c8.js.map
+//# sourceMappingURL=/tetris.d676a7c8.js.map

@@ -1,6 +1,37 @@
+@keyframes wiggle {
+  0% {
+    transform: translateY(3px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(3px);
+  }
+}
+@font-face {
+  font-family: "pixel";
+  src: url("/04B_30__.b064df48.TTF") format("truetype");
+}
+@font-face {
+  font-family: "gameboy";
+  src: url("/gameboy.3c58ac41.ttf") format("truetype");
+}
 html {
   background: #2b0f54;
-  font-family: monospace;
+  font-family: gameboy;
+  font-size: 62.5%;
+  color: white;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 * {
@@ -35,6 +66,28 @@ html {
   fill: #ff4f69;
 }
 
+.splash {
+  text-align: center;
+}
+.splash .title {
+  font-size: 2rem;
+}
+.splash .subtitle {
+  margin-bottom: 40px;
+}
+.splash .begin .letter {
+  text-shadow: 0.1em 0.1em #ab1f65, -0.05em -0.05em #ff4f69;
+  transition: transform 0.1s, text-shadow 0.2s;
+  display: inline-block;
+  cursor: default;
+  min-width: 1.4rem;
+  font-size: 1.4rem;
+  animation: wiggle 0.33s infinite;
+}
+.splash .begin .letter:hover {
+  text-shadow: -4px -4px #ab1f65, 2px 2px #ff4f69;
+}
+
 svg {
   overflow: visible;
 }
@@ -42,7 +95,8 @@ svg {
 .gridlines {
   z-index: 2;
 }
-.gridlines .rows, .gridlines .columns {
+.gridlines .rows,
+.gridlines .columns {
   stroke: #ff8142;
   stroke-linecap: square;
 }

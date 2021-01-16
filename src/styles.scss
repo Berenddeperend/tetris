@@ -1,4 +1,3 @@
-
 //cool pllette, but too small
 // $black: #264653;
 // $green: #2a9d8f;
@@ -27,9 +26,48 @@ $green: #88da88;
 $purple: #ab1f65;
 $red: #ff4f69;
 
+@keyframes wiggle {
+  $intensity: 3px;
+  // $intensity: 10px;
+  0% {
+    transform: translateY($intensity);
+  }
+  50% {
+    transform: translateY($intensity * -1);
+  }
+  100% {
+    transform: translateY($intensity);
+  }
+}
+
+@font-face {
+  font-family: "pixel";
+  src: url("04B_30__.TTF") format("truetype");
+}
+
+@font-face {
+  font-family: "gameboy";
+  src: url("gameboy.ttf") format("truetype");
+}
+
 html {
   background: $black;
-  font-family: monospace;
+  font-family: gameboy;
+  font-size: 62.5%;
+  color: white;
+  // color: $orange;
+  // text-shadow: 2px 2px $purple, -1px -1px $red;
+}
+
+body {
+  // display: flex;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 * {
@@ -37,15 +75,63 @@ html {
 }
 
 .block {
-  &.black{ fill: $black }
-  &.light-blue{ fill: $light-blue }
-  &.light-blue{ fill: $light-blue }
-  &.dark-blue{ fill: $dark-blue }
-  &.orange{ fill: $orange }
-  &.yellow{ fill: $yellow }
-  &.green{ fill: $green }
-  &.purple{ fill: $purple }
-  &.red{ fill: $red }
+  &.black {
+    fill: $black;
+  }
+  &.light-blue {
+    fill: $light-blue;
+  }
+  &.light-blue {
+    fill: $light-blue;
+  }
+  &.dark-blue {
+    fill: $dark-blue;
+  }
+  &.orange {
+    fill: $orange;
+  }
+  &.yellow {
+    fill: $yellow;
+  }
+  &.green {
+    fill: $green;
+  }
+  &.purple {
+    fill: $purple;
+  }
+  &.red {
+    fill: $red;
+  }
+}
+
+.splash {
+  text-align: center;
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    margin-bottom: 40px;
+  }
+
+  .begin {
+    .letter {
+      $shadow-distance: 0.1em;
+      text-shadow: $shadow-distance $shadow-distance $purple,
+        ($shadow-distance * -0.5) ($shadow-distance * -0.5) $red;
+      transition: transform 0.1s, text-shadow 0.2s;
+      display: inline-block;
+      cursor: default;
+      min-width: 1.4rem;
+      font-size: 1.4rem;
+      animation: wiggle 0.33s infinite;
+
+      &:hover {
+        text-shadow: -4px -4px $purple, 2px 2px $red;
+      }
+    }
+  }
 }
 
 svg {
@@ -55,9 +141,10 @@ svg {
 .gridlines {
   z-index: 2;
 
-  .rows, .columns {
+  .rows,
+  .columns {
     stroke: $orange;
-    // stroke-width: 1px; 
+    // stroke-width: 1px;
     stroke-linecap: square;
     // opacity: 0.5;
   }

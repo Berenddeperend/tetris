@@ -2287,19 +2287,24 @@ var Splash =
 /** @class */
 function () {
   function Splash() {
-    d3_selection_1.select('body').append('div').attr('class', 'splash').text('press space to begin');
+    var splash = d3_selection_1.select("body").append("div").attr("class", "splash");
+    splash.append('div').attr('class', 'title').text("Tetris");
+    splash.append('div').attr('class', 'subtitle').text("by Berend");
+    splash.append('div').attr('class', 'begin').selectAll("span").data("press spacebar to begin".split("")).enter().append("span").attr('class', 'letter').attr('style', function (d, i) {
+      return "animation-delay: -" + i * 2 + "s";
+    }).text(function (d) {
+      return d;
+    });
 
     var onKeyDown = function onKeyDown(e) {
-      if (e.code === 'Space') {
-        window.removeEventListener('keydown', onKeyDown);
-        d3_selection_1.select('.splash').remove();
-        tetris_1.setGameState('playing');
+      if (e.code === "Space") {
+        window.removeEventListener("keydown", onKeyDown);
+        d3_selection_1.select(".splash").remove();
+        tetris_1.setGameState("playing");
       }
-
-      ;
     };
 
-    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener("keydown", onKeyDown);
   }
 
   return Splash;
@@ -2321,20 +2326,21 @@ var GameOver =
 /** @class */
 function () {
   function GameOver() {
-    d3_selection_1.select('body').append('div').attr('class', 'gameOver').text('u dea, press space to try again');
+    d3_selection_1.select("body").append("div").attr("class", "gameOver").attr('style', function (d, i) {
+      return "animation-delay: " + i;
+    }).text("u dea, press space to try again");
 
     var onKeyDown = function onKeyDown(e) {
-      if (e.code === 'Space') {
-        window.removeEventListener('keydown', onKeyDown);
-        d3_selection_1.select('.stage').remove();
-        d3_selection_1.select('.gameOver').remove();
-        tetris_1.setGameState('playing');
+      if (e.code === "Space") {
+        window.removeEventListener("keydown", onKeyDown);
+        d3_selection_1.select(".stage").remove();
+        d3_selection_1.select(".gameOver").remove();
+        d3_selection_1.select(".score").remove();
+        tetris_1.setGameState("playing");
       }
-
-      ;
     };
 
-    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener("keydown", onKeyDown);
   }
 
   return GameOver;
@@ -2414,7 +2420,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61779" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50285" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

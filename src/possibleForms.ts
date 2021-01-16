@@ -1,4 +1,4 @@
-import {Shape} from './block'
+import { Shape } from "./block";
 export const possibleForms: { shape: Shape; color: string }[] = [
   {
     color: "purple",

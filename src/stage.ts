@@ -1,4 +1,4 @@
-import Block, { Shape } from "./block";
+import Block from "./block";
 import { select, selectAll } from "d3-selection";
 import constants from "./constants";
 import { uniq } from "./utils";

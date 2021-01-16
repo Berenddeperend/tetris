@@ -1,0 +1,41 @@
+// funkyfuture 8
+$black: #2b0f54;
+$light-blue: #49e7ec;
+$light-blue: #49e7ec;
+$dark-blue: #3368dc;
+$orange: #ff8142;
+$yellow: #ffda45;
+// $green: #fff7f8;
+$green: #88da88;
+$purple: #ab1f65;
+$red: #ff4f69;
+
+
+@keyframes wiggle {
+  $intensity: 3px;
+  0% {
+    transform: translateY($intensity);
+  }
+  50% {
+    transform: translateY($intensity * -1);
+  }
+  100% {
+    transform: translateY($intensity);
+  }
+}
+
+
+@mixin text-shadow($distance, $hover: false) {
+  text-shadow: $distance $distance $purple,
+      ($distance * -0.5) ($distance * -0.5) $red;
+
+
+      @if $hover {
+        &:hover {
+          text-shadow: $distance * 2 $distance * 2 $purple,
+          ($distance * -1.5) ($distance * -1.5) $red;
+        }
+      }
+        
+
+}

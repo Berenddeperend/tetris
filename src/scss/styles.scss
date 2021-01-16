@@ -1,53 +1,13 @@
-//cool pllette, but too small
-// $black: #264653;
-// $green: #2a9d8f;
-// $yellow: #e9c46a;
-// $orange: #f4a261;
-// $red: #e76f51;
-
-//pico-8
-// $light-blue: #29ADFF;
-// $dark-blue: #1D2B53;
-// $orange: #FFA300;
-// $yellow: #FFEC27;
-// $green: #00E436;
-// $purple: #83769C;
-// $red: #FF004D;
-
-// funkyfuture 8
-$black: #2b0f54;
-$light-blue: #49e7ec;
-$light-blue: #49e7ec;
-$dark-blue: #3368dc;
-$orange: #ff8142;
-$yellow: #ffda45;
-// $green: #fff7f8;
-$green: #88da88;
-$purple: #ab1f65;
-$red: #ff4f69;
-
-@keyframes wiggle {
-  $intensity: 3px;
-  // $intensity: 10px;
-  0% {
-    transform: translateY($intensity);
-  }
-  50% {
-    transform: translateY($intensity * -1);
-  }
-  100% {
-    transform: translateY($intensity);
-  }
-}
+@import "./variables.scss";
 
 @font-face {
   font-family: "pixel";
-  src: url("04B_30__.TTF") format("truetype");
+  src: url("./../fonts/04B_30__.TTF") format("truetype");
 }
 
 @font-face {
   font-family: "gameboy";
-  src: url("gameboy.ttf") format("truetype");
+  src: url("./../fonts/gameboy.ttf") format("truetype");
 }
 
 html {
@@ -109,25 +69,19 @@ body {
   cursor: default;
 
   .title {
+    display: inline-block;
     font-size: 2.6rem;
     margin-bottom: 10px;
     $shadow-distance: 0.1em;
     transition: text-shadow 0.5s;
-    text-shadow: $shadow-distance $shadow-distance $purple,
-      ($shadow-distance * -0.5) ($shadow-distance * -0.5) $red;
-
-        &:hover {
-          text-shadow: $shadow-distance * 2 $shadow-distance * 2 $purple,
-          ($shadow-distance * -1.5) ($shadow-distance * -1.5) $red;
-        }
+    @include text-shadow(2px, true)
   }
 
   .begin {
     margin-top: 40px;
     .letter {
-      $shadow-distance: 0.1em;
-      text-shadow: $shadow-distance $shadow-distance $purple,
-        ($shadow-distance * -0.5) ($shadow-distance * -0.5) $red;
+      @include text-shadow(0.1em, false);
+
       transition: transform 0.1s, text-shadow 0.2s;
       display: inline-block;
       cursor: default;

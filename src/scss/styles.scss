@@ -87,7 +87,9 @@ body {
       cursor: default;
       min-width: 1.4rem;
       font-size: 1.4rem;
-      animation: wiggle 0.33s infinite;
+      // animation: wiggle 0.33s infinite;
+      animation: wiggle 1.05s infinite;
+      animation-timing-function: ease-in-out;
     }
   }
 }

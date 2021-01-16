@@ -21,5 +21,5 @@ Future:
 
 Maybe:
 - Snake/Pacman style level overflow
-- "Tetris UI", select mode by dropping block in a row
+- "Tetris UI", select mode by dropping block in a column
 - Swap out Parceljs (https://2020.stateofjs.com/en-US/technologies/build-tools/)

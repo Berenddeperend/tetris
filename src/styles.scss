@@ -106,16 +106,24 @@ body {
 
 .splash {
   text-align: center;
+  cursor: default;
 
   .title {
-    font-size: 2rem;
-  }
+    font-size: 2.6rem;
+    margin-bottom: 10px;
+    $shadow-distance: 0.1em;
+    transition: text-shadow 0.5s;
+    text-shadow: $shadow-distance $shadow-distance $purple,
+      ($shadow-distance * -0.5) ($shadow-distance * -0.5) $red;
 
-  .subtitle {
-    margin-bottom: 40px;
+        &:hover {
+          text-shadow: $shadow-distance * 2 $shadow-distance * 2 $purple,
+          ($shadow-distance * -1.5) ($shadow-distance * -1.5) $red;
+        }
   }
 
   .begin {
+    margin-top: 40px;
     .letter {
       $shadow-distance: 0.1em;
       text-shadow: $shadow-distance $shadow-distance $purple,
@@ -126,10 +134,6 @@ body {
       min-width: 1.4rem;
       font-size: 1.4rem;
       animation: wiggle 0.33s infinite;
-
-      &:hover {
-        text-shadow: -4px -4px $purple, 2px 2px $red;
-      }
     }
   }
 }

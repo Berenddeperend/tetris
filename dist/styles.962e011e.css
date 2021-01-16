@@ -68,12 +68,19 @@ body {
 
 .splash {
   text-align: center;
+  cursor: default;
 }
 .splash .title {
-  font-size: 2rem;
+  font-size: 2.6rem;
+  margin-bottom: 10px;
+  transition: text-shadow 0.5s;
+  text-shadow: 0.1em 0.1em #ab1f65, -0.05em -0.05em #ff4f69;
 }
-.splash .subtitle {
-  margin-bottom: 40px;
+.splash .title:hover {
+  text-shadow: 0.2em 0.2em #ab1f65, -0.15em -0.15em #ff4f69;
+}
+.splash .begin {
+  margin-top: 40px;
 }
 .splash .begin .letter {
   text-shadow: 0.1em 0.1em #ab1f65, -0.05em -0.05em #ff4f69;
@@ -83,9 +90,6 @@ body {
   min-width: 1.4rem;
   font-size: 1.4rem;
   animation: wiggle 0.33s infinite;
-}
-.splash .begin .letter:hover {
-  text-shadow: -4px -4px #ab1f65, 2px 2px #ff4f69;
 }
 
 svg {

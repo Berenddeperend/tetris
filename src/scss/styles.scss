@@ -89,14 +89,15 @@ body {
 
 svg {
   overflow: visible;
+  filter: drop-shadow( 0 0 2px $orange);
 }
 
 .gridlines {
   z-index: 2;
-  filter: blur(2px);
-
+  
   .rows,
   .columns {
+    
     stroke: $orange;
     // stroke-width: 1px;
     stroke-linecap: square;

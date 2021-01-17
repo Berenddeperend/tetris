@@ -8,7 +8,7 @@ $yellow: #ffda45;
 // $green: #fff7f8;
 $green: #88da88;
 $purple: #ab1f65;
-$red: #ff4f69; 
+$red: #ff4f69;
 
 @keyframes wiggle {
   $intensity: 3px;
@@ -23,18 +23,24 @@ $red: #ff4f69;
   }
 }
 
+@font-face {
+  font-family: "pixel";
+  src: url("./../fonts/04B_30__.TTF") format("truetype");
+}
+
+@font-face {
+  font-family: "gameboy";
+  src: url("./../fonts/gameboy.ttf") format("truetype");
+}
 
 @mixin text-shadow($distance, $hover: false) {
   text-shadow: $distance $distance $purple,
-      ($distance * -0.5) ($distance * -0.5) $red;
+    ($distance * -0.5) ($distance * -0.5) $red;
 
-
-      @if $hover {
-        &:hover {
-          text-shadow: $distance * 2 $distance * 2 $purple,
-          ($distance * -1.5) ($distance * -1.5) $red;
-        }
-      }
-        
-
+  @if $hover {
+    &:hover {
+      text-shadow: $distance * 2 $distance * 2 $purple,
+        ($distance * -1.5) ($distance * -1.5) $red;
+    }
+  }
 }

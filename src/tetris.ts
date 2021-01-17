@@ -1,4 +1,3 @@
-import constants from "./constants";
 import Stage from './stage';
 import Splash from './splash';
 import GameOver from './gameOver';
@@ -11,12 +10,7 @@ export function setGameState(gameState: GameState) {
     case "splash": 
       return new Splash;
     case "playing":
-      const stage = new Stage({
-        width: constants.gridX,
-        height: constants.gridY,
-        blockSize: constants.blockSize,
-        gridGutterSize: constants.gridLineWidth,
-      })
+      const stage = new Stage()
       break;
     case "gameOver": 
       return new GameOver;

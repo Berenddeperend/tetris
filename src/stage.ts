@@ -1,14 +1,14 @@
 import Block from "./block";
 import { select, selectAll } from "d3-selection";
-import constants from "./constants";
 import { uniq } from "./utils";
 import { setGameState } from "./tetris";
 
 export default class Stage {
-  width: number;
-  height: number;
+  gridWidth: number;
+  gridHeight: number;
   blockSize: number;
   gridGutterSize: number;
+  gridOverBlocks: boolean;
 
   internalGrid: number[][];
   activeBlock: Block;
@@ -21,21 +21,23 @@ export default class Stage {
 
   constructor({
     width = 10,
-    height = 10,
-    blockSize = 10,
+    height = 20,
+    blockSize = 24,
     gridGutterSize = 1,
-    // element = ".stage",
+    gridOverBlocks = false,
   } = {}) {
     selectAll("body").append("div").attr("class", "stage").append("svg");
-    this.width = width;
-    this.height = height;
+    this.gridWidth = width;
+    this.gridHeight = height;
     this.blockSize = blockSize;
     this.gridGutterSize = gridGutterSize;
+    this.gridOverBlocks = gridOverBlocks;
     this.initUI();
     this.initializeInternalGrid();
 
-    this.activeBlock = new Block(this.blockIndex);
+    this.activeBlock = new Block(this.blockIndex, this);
     document.addEventListener("keydown", this.onKeyDown);
+    
     this.tickInterval = window.setInterval(() => {
       this.tick();
     }, 1000);
@@ -43,9 +45,9 @@ export default class Stage {
 
   initializeInternalGrid() {
     this.internalGrid = [];
-    for (let y = 0; y < this.height; y++) {
+    for (let y = 0; y < this.gridHeight; y++) {
       this.internalGrid.push([]);
-      for (let x = 0; x < this.width; x++) {
+      for (let x = 0; x < this.gridWidth; x++) {
         this.internalGrid[y][x] = 0;
       }
     }
@@ -69,6 +71,12 @@ export default class Stage {
         while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
           this.activeBlock.moveDown();
         }
+        
+        clearInterval(this.tickInterval);
+        this.tickInterval = window.setInterval(() => {
+          this.tick();
+        }, 1000);
+
         return this.finishBlock(this.activeBlock);
       case "Space":
         return this.activeBlock.rotate();
@@ -92,7 +100,7 @@ export default class Stage {
   finishBlock(block: Block) {
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
-    this.activeBlock = new Block(++this.blockIndex);
+    this.activeBlock = new Block(++this.blockIndex, this);
     if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
       return (this.isGameOver = true);
     }
@@ -122,7 +130,7 @@ export default class Stage {
       );
 
       this.internalGrid.splice(rowIndex, 1);
-      this.internalGrid.unshift(new Array(constants.gridX).fill(0));
+      this.internalGrid.unshift(new Array(this.gridWidth).fill(0));
     });
   }
 
@@ -146,7 +154,7 @@ export default class Stage {
         return row.map((atom, columnIndex) => {
           if (!atom) return false; //Empty atom in this slot
 
-          if (block.y + rowIndex + 1 >= constants.gridY) {
+          if (block.y + rowIndex + 1 >= this.gridHeight) {
             return true; //Block reached bottom of stage
           }
 
@@ -197,8 +205,8 @@ export default class Stage {
   }
 
   drawGridLines(
-    x: number = this.width,
-    y: number = this.height,
+    x: number = this.gridWidth,
+    y: number = this.gridHeight,
     blockSize: number = this.blockSize
   ) {
     const grid = selectAll(".stage svg")

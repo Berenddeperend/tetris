@@ -1,26 +1,13 @@
 @import "./variables.scss";
 
-@font-face {
-  font-family: "pixel";
-  src: url("./../fonts/04B_30__.TTF") format("truetype");
-}
-
-@font-face {
-  font-family: "gameboy";
-  src: url("./../fonts/gameboy.ttf") format("truetype");
-}
-
 html {
   background: $black;
   font-family: gameboy;
   font-size: 62.5%;
   color: white;
-  // color: $orange;
-  // text-shadow: 2px 2px $purple, -1px -1px $red;
 }
 
 body {
-  // display: flex;
   width: 100vw;
   height: 100vh;
   margin: 0;
@@ -28,40 +15,38 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  &:after {
+    //scanlines
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    z-index: 100;
+    background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.25) 0);
+    background-size: 100% 4px;
+    opacity: 0.3;
+  }
 }
 
 * {
   box-sizing: border-box;
 }
 
+// prettier-ignore
 .block {
-  &.black {
-    fill: $black;
-  }
-  &.light-blue {
-    fill: $light-blue;
-  }
-  &.light-blue {
-    fill: $light-blue;
-  }
-  &.dark-blue {
-    fill: $dark-blue;
-  }
-  &.orange {
-    fill: $orange;
-  }
-  &.yellow {
-    fill: $yellow;
-  }
-  &.green {
-    fill: $green;
-  }
-  &.purple {
-    fill: $purple;
-  }
-  &.red {
-    fill: $red;
-  }
+  &.black { fill: $black; }
+  &.light-blue { fill: $light-blue; }
+  &.light-blue { fill: $light-blue; }
+  &.dark-blue { fill: $dark-blue; }
+  &.orange { fill: $orange; }
+  &.yellow { fill: $yellow; }
+  &.green { fill: $green; }
+  &.purple { fill: $purple; }
+  &.red { fill: $red; }
 }
 
 .splash {
@@ -74,7 +59,7 @@ body {
     margin-bottom: 10px;
     $shadow-distance: 0.1em;
     transition: text-shadow 0.5s;
-    @include text-shadow(2px, true)
+    @include text-shadow(3px, true);
   }
 
   .begin {
@@ -87,7 +72,6 @@ body {
       cursor: default;
       min-width: 1.4rem;
       font-size: 1.4rem;
-      // animation: wiggle 0.33s infinite;
       animation: wiggle 1.05s infinite;
       animation-timing-function: ease-in-out;
     }
@@ -100,6 +84,7 @@ svg {
 
 .gridlines {
   z-index: 2;
+  filter: blur(2px);
 
   .rows,
   .columns {

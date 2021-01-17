@@ -5,19 +5,21 @@ export default class Splash {
   constructor() {
     const splash = select("body").append("div").attr("class", "splash");
 
-    splash.append('div').attr('class', 'title').text("Tetris")
-    // splash.append('div').attr('class', 'subtitle').text("by Berend")
-    splash.append('div').attr('class', 'subtitle').text("Makkelijke elvera editie")
+    splash.append("div").attr("class", "title").text("Tetris");
+    splash
+      .append("div")
+      .attr("class", "subtitle")
+      .text("by Berend");
 
     splash
-      .append('div')
-      .attr('class', 'begin')
+      .append("div")
+      .attr("class", "begin")
       .selectAll("span")
       .data("press spacebar to begin".split(""))
       .enter()
       .append("span")
-      .attr('class', 'letter')
-      .attr('style', (d, i) => `animation-delay: -${i*2}s`)
+      .attr("class", "letter")
+      .attr("style", (d, i) => `animation-delay: -${i * 2}s`)
       .text((d) => d);
 
     const onKeyDown = (e: any) => {

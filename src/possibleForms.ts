@@ -44,13 +44,6 @@ export const possibleForms: { shape: Shape; color: string }[] = [
     ],
   },
   { color: "light-blue", shape: [[1, 1, 1, 1]] },
-  { color: "light-blue", shape: [[1, 1, 1, 1]] },
-  { color: "light-blue", shape: [[1, 1, 1, 1]] },
-  { color: "light-blue", shape: [[1, 1, 1, 1]] },
-  { color: "light-blue", shape: [[1, 1, 1, 1]] },
-  { color: "light-blue", shape: [[1, 1, 1, 1]] },
-  { color: "light-blue", shape: [[1, 1, 1, 1]] },
-  { color: "light-blue", shape: [[1, 1, 1, 1]] },
   // {
   //   color: "red",
   //   shape: [

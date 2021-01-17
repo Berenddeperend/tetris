@@ -1,6 +1,4 @@
 Bugs:
-- Conditionally disallow rotate
-- Reset tick after instafall
 - Instafall delays death
 - Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
 - Reset tick after last-minute rotate
@@ -11,6 +9,7 @@ Features:
 - UI
 - Stats
 - Localstorage highscores
+- Cool effect on line clear, extra effect on Tetris
 
 Maintenance:
 - Move collision logic to block class
@@ -18,7 +17,6 @@ Maintenance:
 Future:
 - 2 player mode (one client)
 - Backend for highscores (rpi or firebase)
-- Cool effect on line clear
 
 Maybe:
 - Snake/Pacman style level overflow

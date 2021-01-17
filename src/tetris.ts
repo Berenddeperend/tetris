@@ -10,8 +10,7 @@ export function setGameState(gameState: GameState) {
     case "splash": 
       return new Splash;
     case "playing":
-      const stage = new Stage()
-      break;
+      return new Stage({width: 5});
     case "gameOver": 
       return new GameOver;
   }

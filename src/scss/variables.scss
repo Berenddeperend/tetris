@@ -16,7 +16,8 @@ $red: #ff4f69;
     transform: translateY($intensity);
   }
   50% {
-    transform: translateY($intensity * -1);
+    // transform: translateY($intensity * -1);
+    transform: translateY($intensity * -1) translateX($intensity * -0.5);
   }
   100% {
     transform: translateY($intensity);

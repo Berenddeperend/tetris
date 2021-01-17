@@ -9,7 +9,7 @@ export default class Splash {
     splash
       .append("div")
       .attr("class", "subtitle")
-      .text("by Berend");
+      .text("By Berend");
 
     splash
       .append("div")
@@ -21,6 +21,12 @@ export default class Splash {
       .attr("class", "letter")
       .attr("style", (d, i) => `animation-delay: -${i * 2}s`)
       .text((d) => d);
+
+    splash.append("a")
+      .attr('class', 'social')
+      .attr('href', "https://github.com/Berenddeperend/tetris")
+      .attr('target', '_blank')
+      .text('Github')
 
     const onKeyDown = (e: any) => {
       if (e.code === "Space") {

@@ -186,7 +186,6 @@ export default class Stage {
   }
 
   get completedRows(): number[] {
-    console.log("called getter");
     return this.internalGrid.reduce((acc, row, rowIndex) => {
       if (row.every((d) => d)) {
         acc.push(rowIndex);

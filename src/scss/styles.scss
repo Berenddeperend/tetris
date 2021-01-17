@@ -18,6 +18,14 @@ body {
 
   &:after {
     //scanlines
+    @keyframes scanlines {
+      from {
+        transform: translateY(0);
+      }
+      to {
+        transform: translateY(-4px);
+      }
+    }
     content: "";
     position: fixed;
     top: 0;
@@ -29,6 +37,7 @@ body {
     background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.25) 0);
     background-size: 100% 4px;
     opacity: 0.3;
+    animation: scanlines 1s infinite linear;
   }
 }
 

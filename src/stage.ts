@@ -24,7 +24,7 @@ export default class Stage {
     height = 20,
     blockSize = 24,
     gridGutterSize = 1,
-    gridOverBlocks = false,
+    gridOverBlocks = true,
   } = {}) {
     selectAll("body").append("div").attr("class", "stage").append("svg");
     this.gridWidth = width;

@@ -2017,7 +2017,7 @@ function () {
         _f = _b.gridGutterSize,
         gridGutterSize = _f === void 0 ? 1 : _f,
         _g = _b.gridOverBlocks,
-        gridOverBlocks = _g === void 0 ? false : _g;
+        gridOverBlocks = _g === void 0 ? true : _g;
 
     this.settledBlocks = [];
     this.queue = [];

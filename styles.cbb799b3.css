@@ -1,0 +1,133 @@
+@keyframes wiggle {
+  0% {
+    transform: translateY(3px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(3px);
+  }
+}
+@font-face {
+  font-family: "pixel";
+  src: url("/04B_30__.bf732946.TTF") format("truetype");
+}
+@font-face {
+  font-family: "gameboy";
+  src: url("/gameboy.1128e73c.ttf") format("truetype");
+}
+html {
+  background: #2b0f54;
+  font-family: gameboy;
+  font-size: 62.5%;
+  color: white;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+body:after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  z-index: 100;
+  background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.25) 0);
+  background-size: 100% 4px;
+  opacity: 0.3;
+  animation: scanlines 1s infinite linear;
+}
+@keyframes scanlines {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.block.black {
+  fill: #2b0f54;
+}
+.block.light-blue {
+  fill: #49e7ec;
+}
+.block.light-blue {
+  fill: #49e7ec;
+}
+.block.dark-blue {
+  fill: #3368dc;
+}
+.block.orange {
+  fill: #ff8142;
+}
+.block.yellow {
+  fill: #ffda45;
+}
+.block.green {
+  fill: #88da88;
+}
+.block.purple {
+  fill: #ab1f65;
+}
+.block.red {
+  fill: #ff4f69;
+}
+
+.splash {
+  text-align: center;
+  cursor: default;
+}
+.splash .title {
+  display: inline-block;
+  font-size: 2.6rem;
+  margin-bottom: 10px;
+  transition: text-shadow 0.5s;
+  text-shadow: 3px 3px #ab1f65, -1.5px -1.5px #ff4f69;
+}
+.splash .title:hover {
+  text-shadow: 6px 6px #ab1f65, -4.5px -4.5px #ff4f69;
+}
+.splash .begin {
+  margin-top: 40px;
+}
+.splash .begin .letter {
+  text-shadow: 0.1em 0.1em #ab1f65, -0.05em -0.05em #ff4f69;
+  transition: transform 0.1s, text-shadow 0.2s;
+  display: inline-block;
+  cursor: default;
+  min-width: 1.4rem;
+  font-size: 1.4rem;
+  animation: wiggle 1.05s infinite;
+  animation-timing-function: ease-in-out;
+}
+
+svg {
+  overflow: visible;
+}
+
+.gridlines {
+  z-index: 2;
+  filter: blur(2px);
+}
+.gridlines .rows,
+.gridlines .columns {
+  stroke: #ff8142;
+  stroke-linecap: square;
+}
+
+/*# sourceMappingURL=/styles.cbb799b3.css.map */

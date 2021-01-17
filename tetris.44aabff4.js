@@ -117,23 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/constants.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = {
-  // gridX: 10,
-  // gridY: 20,
-  gridX: 5,
-  gridY: 20,
-  gridLineWidth: 1,
-  blockSize: 24,
-  gridOverBlocks: true,
-  debug: false
-};
-},{}],"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
+})({"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1815,27 +1799,6 @@ exports.possibleForms = [{
 }, {
   color: "light-blue",
   shape: [[1, 1, 1, 1]]
-}, {
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
 }];
 },{}],"src/utils.ts":[function(require,module,exports) {
 "use strict";
@@ -1894,19 +1857,11 @@ exports.cloneDeep = cloneDeep;
 },{}],"src/block.ts":[function(require,module,exports) {
 "use strict";
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var d3_selection_1 = require("d3-selection");
-
-var constants_1 = __importDefault(require("./constants"));
 
 var possibleForms_1 = require("./possibleForms");
 
@@ -1915,17 +1870,18 @@ var utils_1 = require("./utils");
 var Block =
 /** @class */
 function () {
-  function Block(id) {
+  function Block(id, stage) {
     if (id === void 0) {
       id = 0;
     }
 
     this.x = 0;
     this.y = 0;
+    this.stage = stage;
     var randomBlock = possibleForms_1.possibleForms[Math.floor(Math.random() * possibleForms_1.possibleForms.length)];
     this.shape = utils_1.cloneDeep(randomBlock.shape);
     this.color = randomBlock.color;
-    this.x = Math.floor((constants_1.default.gridX - this.shape[0].length) / 2);
+    this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2);
     this.id = id;
     this.init();
   }
@@ -1949,10 +1905,11 @@ function () {
 
     this.shape = newVal.map(function (row) {
       return row.reverse();
-    }); //sorta inefficient but ok
+    }); //push block away from wall if gonna overlap
+    //sorta inefficient but ok
 
     this.shape[0].map(function (x, xIndex) {
-      if (xIndex + _this.x >= constants_1.default.gridX) {
+      if (xIndex + _this.x >= _this.stage.gridWidth) {
         _this.moveX(-1, true);
       }
     });
@@ -1960,7 +1917,7 @@ function () {
   };
 
   Block.prototype.init = function () {
-    this.d3Self = d3_selection_1.selectAll(".stage svg").insert("g", constants_1.default.gridOverBlocks ? ":first-child" : null).attr("class", "block " + this.color);
+    this.d3Self = d3_selection_1.selectAll(".stage svg").insert("g", this.stage.gridOverBlocks ? ":first-child" : null).attr("class", "block " + this.color);
     this.redraw();
   };
 
@@ -1972,13 +1929,16 @@ function () {
     this.shape.map(function (y, yI) {
       y.map(function (x, xI) {
         if (x && y) {
-          _this.d3Self.append("g").append("rect").attr("width", constants_1.default.blockSize).attr("height", constants_1.default.blockSize).attr("x", xI * constants_1.default.blockSize).attr("y", yI * constants_1.default.blockSize).attr("class", "atom");
+          _this.d3Self.append("g").append("rect").attr("width", _this.stage.blockSize).attr("height", _this.stage.blockSize).attr("x", xI * _this.stage.blockSize).attr("y", yI * _this.stage.blockSize).attr("class", "atom"); // if(constants.debug) {
+          //   this.d3Self
+          //   .selectAll("g")
+          //   .append("text")
+          //   .attr("style", "fill: white;")
+          //   .attr("x", xI * this.stage.blockSize)
+          //   .attr("y", yI * this.stage.blockSize + 10)
+          //   .text(() => this.id);
+          // }
 
-          if (constants_1.default.debug) {
-            _this.d3Self.selectAll("g").append("text").attr("style", "fill: white;").attr("x", xI * constants_1.default.blockSize).attr("y", yI * constants_1.default.blockSize + 10).text(function () {
-              return _this.id;
-            });
-          }
         }
       });
     });
@@ -2003,7 +1963,7 @@ function () {
     }
 
     if (!bypassCollision) {
-      if (this.x + x + this.shape[0].length > constants_1.default.gridX || this.x + x < 0) {
+      if (this.x + x + this.shape[0].length > this.stage.gridWidth || this.x + x < 0) {
         return; //block moves out of bounds
       }
     }
@@ -2013,14 +1973,14 @@ function () {
   };
 
   Block.prototype.updatePosition = function () {
-    this.d3Self.attr("transform", "translate(" + this.x * constants_1.default.blockSize + ", " + this.y * constants_1.default.blockSize + ")");
+    this.d3Self.attr("transform", "translate(" + this.x * this.stage.blockSize + ", " + this.y * this.stage.blockSize + ")");
   };
 
   return Block;
 }();
 
 exports.default = Block;
-},{"d3-selection":"node_modules/d3-selection/src/index.js","./constants":"src/constants.ts","./possibleForms":"src/possibleForms.ts","./utils":"src/utils.ts"}],"src/stage.ts":[function(require,module,exports) {
+},{"d3-selection":"node_modules/d3-selection/src/index.js","./possibleForms":"src/possibleForms.ts","./utils":"src/utils.ts"}],"src/stage.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -2037,8 +1997,6 @@ var block_1 = __importDefault(require("./block"));
 
 var d3_selection_1 = require("d3-selection");
 
-var constants_1 = __importDefault(require("./constants"));
-
 var utils_1 = require("./utils");
 
 var tetris_1 = require("./tetris");
@@ -2053,11 +2011,13 @@ function () {
         _c = _b.width,
         width = _c === void 0 ? 10 : _c,
         _d = _b.height,
-        height = _d === void 0 ? 10 : _d,
+        height = _d === void 0 ? 20 : _d,
         _e = _b.blockSize,
-        blockSize = _e === void 0 ? 10 : _e,
+        blockSize = _e === void 0 ? 24 : _e,
         _f = _b.gridGutterSize,
-        gridGutterSize = _f === void 0 ? 1 : _f;
+        gridGutterSize = _f === void 0 ? 1 : _f,
+        _g = _b.gridOverBlocks,
+        gridOverBlocks = _g === void 0 ? true : _g;
 
     this.settledBlocks = [];
     this.queue = [];
@@ -2066,6 +2026,8 @@ function () {
     this.clearedLines = 0;
 
     this.onKeyDown = function (e) {
+      var _this = this;
+
       switch (e.code) {
         case "ArrowRight":
           if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
@@ -2089,6 +2051,10 @@ function () {
             this.activeBlock.moveDown();
           }
 
+          clearInterval(this.tickInterval);
+          this.tickInterval = window.setInterval(function () {
+            _this.tick();
+          }, 1000);
           return this.finishBlock(this.activeBlock);
 
         case "Space":
@@ -2097,13 +2063,14 @@ function () {
     }.bind(this);
 
     d3_selection_1.selectAll("body").append("div").attr("class", "stage").append("svg");
-    this.width = width;
-    this.height = height;
+    this.gridWidth = width;
+    this.gridHeight = height;
     this.blockSize = blockSize;
     this.gridGutterSize = gridGutterSize;
+    this.gridOverBlocks = gridOverBlocks;
     this.initUI();
     this.initializeInternalGrid();
-    this.activeBlock = new block_1.default(this.blockIndex);
+    this.activeBlock = new block_1.default(this.blockIndex, this);
     document.addEventListener("keydown", this.onKeyDown);
     this.tickInterval = window.setInterval(function () {
       _this.tick();
@@ -2113,10 +2080,10 @@ function () {
   Stage.prototype.initializeInternalGrid = function () {
     this.internalGrid = [];
 
-    for (var y = 0; y < this.height; y++) {
+    for (var y = 0; y < this.gridHeight; y++) {
       this.internalGrid.push([]);
 
-      for (var x = 0; x < this.width; x++) {
+      for (var x = 0; x < this.gridWidth; x++) {
         this.internalGrid[y][x] = 0;
       }
     }
@@ -2141,7 +2108,7 @@ function () {
 
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
-    this.activeBlock = new block_1.default(++this.blockIndex);
+    this.activeBlock = new block_1.default(++this.blockIndex, this);
 
     if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
       return this.isGameOver = true;
@@ -2174,7 +2141,7 @@ function () {
 
       _this.internalGrid.splice(rowIndex, 1);
 
-      _this.internalGrid.unshift(new Array(constants_1.default.gridX).fill(0));
+      _this.internalGrid.unshift(new Array(_this.gridWidth).fill(0));
     });
   };
 
@@ -2201,7 +2168,7 @@ function () {
       return row.map(function (atom, columnIndex) {
         if (!atom) return false; //Empty atom in this slot
 
-        if (block.y + rowIndex + 1 >= constants_1.default.gridY) {
+        if (block.y + rowIndex + 1 >= _this.gridHeight) {
           return true; //Block reached bottom of stage
         }
 
@@ -2260,11 +2227,11 @@ function () {
 
   Stage.prototype.drawGridLines = function (x, y, blockSize) {
     if (x === void 0) {
-      x = this.width;
+      x = this.gridWidth;
     }
 
     if (y === void 0) {
-      y = this.height;
+      y = this.gridHeight;
     }
 
     if (blockSize === void 0) {
@@ -2293,7 +2260,7 @@ function () {
 }();
 
 exports.default = Stage;
-},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./constants":"src/constants.ts","./utils":"src/utils.ts","./tetris":"src/tetris.ts"}],"src/splash.ts":[function(require,module,exports) {
+},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.ts","./tetris":"src/tetris.ts"}],"src/splash.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2308,11 +2275,9 @@ var Splash =
 /** @class */
 function () {
   function Splash() {
-    this.subtitles = ["by berend"];
     var splash = d3_selection_1.select("body").append("div").attr("class", "splash");
     splash.append("div").attr("class", "title").text("Tetris");
-    splash.append("div").attr("class", "subtitle").text(this.subtitles[Math.floor(Math.random() * this.subtitles.length)]); // splash.append('div').attr('class', 'subtitle').text("Makkelijke elvera editie")
-
+    splash.append("div").attr("class", "subtitle").text("by Berend");
     splash.append("div").attr("class", "begin").selectAll("span").data("press spacebar to begin".split("")).enter().append("span").attr("class", "letter").attr("style", function (d, i) {
       return "animation-delay: -" + i * 2 + "s";
     }).text(function (d) {
@@ -2384,8 +2349,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.setGameState = void 0;
 
-var constants_1 = __importDefault(require("./constants"));
-
 var stage_1 = __importDefault(require("./stage"));
 
 var splash_1 = __importDefault(require("./splash"));
@@ -2400,12 +2363,7 @@ function setGameState(gameState) {
       return new splash_1.default();
 
     case "playing":
-      var stage = new stage_1.default({
-        width: constants_1.default.gridX,
-        height: constants_1.default.gridY,
-        blockSize: constants_1.default.blockSize,
-        gridGutterSize: constants_1.default.gridLineWidth
-      });
+      var stage = new stage_1.default();
       break;
 
     case "gameOver":
@@ -2415,7 +2373,7 @@ function setGameState(gameState) {
 
 exports.setGameState = setGameState;
 setGameState('splash');
-},{"./constants":"src/constants.ts","./stage":"src/stage.ts","./splash":"src/splash.ts","./gameOver":"src/gameOver.ts"}],"../../../.nvm/versions/node/v12.16.3/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./stage":"src/stage.ts","./splash":"src/splash.ts","./gameOver":"src/gameOver.ts"}],"../../../.nvm/versions/node/v12.16.3/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2443,7 +2401,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54137" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56030" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

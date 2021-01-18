@@ -19,6 +19,9 @@ export default class Stage {
   tickInterval: number;
   clearedLines: number = 0;
 
+  d3Stage:any;
+  d3UI:any;
+
   constructor({
     width = 10,
     height = 20,
@@ -26,7 +29,6 @@ export default class Stage {
     gridGutterSize = 1,
     gridOverBlocks = true,
   } = {}) {
-    selectAll("body").append("div").attr("class", "stage").append("svg");
     this.gridWidth = width;
     this.gridHeight = height;
     this.blockSize = blockSize;
@@ -135,7 +137,16 @@ export default class Stage {
   }
 
   updateScore() {
-    select(".score").text(this.clearedLines);
+    // select(".score").text(this.clearedLines);
+    select('.score').remove();
+
+    // const ui = select("body").append("div").attr("class", "score")
+    // ui.append('div').attr('class', 'label').text('Score')
+    // ui.append('div').text(this.score);
+
+    const ui = this.d3UI.append("div").attr("class", "score")
+    ui.append('div').attr('class', 'label').text('Score')
+    ui.append('div').attr('class', 'value').text(this.score);
   }
 
   placeBlockInGrid(block: Block) {
@@ -199,8 +210,11 @@ export default class Stage {
   }
 
   initUI() {
+    this.d3Stage = selectAll("body").append("div").attr("class", "stage");
+    this.d3Stage.append("svg");
+    this.d3UI = select("body").append("div").attr("class", "ui");
     this.drawGridLines();
-    select("body").append("div").attr("class", "score").text(this.score);
+    this.updateScore();
   }
 
   drawGridLines(
@@ -208,6 +222,8 @@ export default class Stage {
     y: number = this.gridHeight,
     blockSize: number = this.blockSize
   ) {
+    document.documentElement.style.setProperty('--stage-height', `${y * blockSize}px`)
+    document.documentElement.style.setProperty('--stage-width', `${x * blockSize}px`)
     const grid = selectAll(".stage svg")
       .attr("style", `width: ${x * blockSize}px; height: ${y * blockSize}px`)
       .append("g")

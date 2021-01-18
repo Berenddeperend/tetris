@@ -3,17 +3,17 @@ import { setGameState } from "./tetris";
 
 export default class GameOver {
   constructor() {
-    select("body")
+    select(".stage")
+      .attr('class', 'stage is-game-over')
       .append("div")
-      .attr("class", "gameOver")
-      .attr('style', (d, i) => `animation-delay: ${i}`)
-      .text("u dea, press space to try again");
+      .attr("class", "game-over")
+      .text("Game over");
 
     const onKeyDown = (e: any) => {
       if (e.code === "Space") {
         window.removeEventListener("keydown", onKeyDown);
         select(".stage").remove();
-        select(".gameOver").remove();
+        select(".game-over").remove();
         select(".score").remove();
         setGameState("playing");
       }

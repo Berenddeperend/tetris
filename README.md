@@ -18,6 +18,7 @@ Maintenance:
 Future:
 - 2 player mode (one client)
 - Backend for highscores (rpi or firebase)
+- Touchscreen support through hammer.js
 
 Maybe:
 - Snake/Pacman style level overflow

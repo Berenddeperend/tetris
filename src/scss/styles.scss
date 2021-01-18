@@ -1,5 +1,10 @@
 @import "./variables.scss";
 
+:root {
+  --stage-height: 0px;
+  --stage-width: 0px;
+}
+
 html {
   background: $black;
   font-family: gameboy;
@@ -17,7 +22,7 @@ body {
   height: 100vh;
   margin: 0;
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   align-items: center;
   justify-content: center;
 
@@ -64,7 +69,50 @@ body {
   &.red { fill: $red; }
 }
 
+.stage {
+  position: relative;
+  transition: opacity 2s;
 
+  // width: var(--stage-width);
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: var(--stage-height); //why cant i do 100%?
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: $black;
+    transition: opacity 2s;
+  }
+
+  &.is-game-over {
+    &::after {
+        opacity: 0.7;
+      
+    }
+  }
+
+}
+
+.game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  
+  // animation: wiggle 1.05s infinite;
+  // animation-timing-function: ease-in-out;
+  
+  font-size: 2.2rem;
+  @include text-shadow(3px, true);
+}
 
 .splash {
   text-align: center;
@@ -124,5 +172,31 @@ svg {
     // stroke-width: 1px;
     stroke-linecap: square;
     // opacity: 0.5;
+  }
+}
+
+
+.score { 
+  margin-left: 20px;
+  border: 1px solid $orange;
+  padding: 10px 20px;
+  position: relative;
+  width: 75px;
+  box-shadow: 0 0 2px $orange;
+  
+  .value {
+    @include text-shadow(2px, false);
+    font-size: 2.2rem;
+  }
+
+
+  .label {
+    font-size: 1rem;
+    position: absolute;
+    top: -7px;
+    left: 5px;
+    background: $black;
+    // color: gray
+    padding: 0 4px 0 8px;
   }
 }

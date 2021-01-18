@@ -72,7 +72,6 @@ export default class Block {
 
     const newShape = buildRotatedShape(this.shape)
     
-
     if(shapeMayRotate(newShape)) {
      this.shape = newShape;
      return this.redraw(); 
@@ -80,17 +79,13 @@ export default class Block {
 
     const offset = amountOfAtomsThatWillRotateOutOfBounds(newShape);
 
-    for(let i = 0; i < offset; i++) {
-      this.moveX(-1, true);
-    }
+    this.moveX(-offset, true);
 
     if( shapeMayRotate(newShape) ) {
       this.shape = newShape
       return this.redraw();
     } else {
-      for(let i = 0; i < offset; i++) {
-        this.moveX(1, true); //it still doesn't fit, move the block back from where it came.
-      }
+        this.moveX(offset, true) //it still doesn't fit, move the block back from where it came.
     }
   }
 
@@ -132,8 +127,8 @@ export default class Block {
 
   clearRow(rowIndex: number) {
     const targetShapeRowIndex = rowIndex - this.y;
+    this.shape.splice(targetShapeRowIndex, 1);
     this.shape.unshift(new Array(this.shape[0].length).fill(0));
-    this.shape.splice(targetShapeRowIndex + 1, 1);
     this.redraw();
   }
 

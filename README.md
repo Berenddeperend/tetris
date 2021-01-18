@@ -6,6 +6,7 @@ Bugs:
 - Gridlines as gutter in grid
 
 Features:
+- Better 'Game Over' screen.
 - UI
 - Stats
 - Localstorage highscores

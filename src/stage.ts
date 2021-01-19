@@ -2,6 +2,8 @@ import Block from "./block";
 import { select, selectAll } from "d3-selection";
 import { uniq } from "./utils";
 import { setGameState } from "./tetris";
+import Gestures from "./gestureControls";
+import KeyboardControls from "./keyboardControls";
 
 export default class Stage {
   gridWidth: number;
@@ -18,6 +20,8 @@ export default class Stage {
   isGameOver: boolean = false;
   tickInterval: number;
   clearedLines: number = 0;
+
+  keyboardControls: KeyboardControls;
 
   d3Stage:any;
   d3UI:any;
@@ -36,9 +40,10 @@ export default class Stage {
     this.gridOverBlocks = gridOverBlocks;
     this.initUI();
     this.initializeInternalGrid();
+    this.initGestures();
+    this.initKeyboardControls();
 
     this.activeBlock = new Block(this.blockIndex, this);
-    document.addEventListener("keydown", this.onKeyDown);
     
     this.tickInterval = window.setInterval(() => {
       this.tick();
@@ -55,35 +60,45 @@ export default class Stage {
     }
   }
 
-  onKeyDown = function (e: any) {
-    switch (e.code) {
-      case "ArrowRight":
-        if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
-          return this.activeBlock.moveX(1);
-        }
-        break;
-      case "ArrowLeft":
+  get controls() {
+    return {
+      left: ()=> {
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
-          return this.activeBlock.moveX(-1);
+          this.activeBlock.moveX(-1);
         }
-        break;
-      case "ArrowDown":
-        return this.tick();
-      case "ArrowUp":
+      },
+      right: () => {
+        if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
+          this.activeBlock.moveX(1);
+        }
+      },
+      down: () => {
+        this.tick();
+      },
+      instaFall: () => {
         while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
           this.activeBlock.moveDown();
         }
-        
         clearInterval(this.tickInterval);
         this.tickInterval = window.setInterval(() => {
           this.tick();
         }, 1000);
-
-        return this.finishBlock(this.activeBlock);
-      case "Space":
-        return this.activeBlock.rotate();
+        this.finishBlock(this.activeBlock);
+      },
+      rotate: () => {
+        this.activeBlock.rotate();
+      }
     }
-  }.bind(this);
+  }
+
+  initKeyboardControls() {
+    this.keyboardControls = new KeyboardControls(this);
+  }
+
+  initGestures() {
+    // this.gestures = new Gestures;
+    // this.gestures.left = this.controls.left
+  }
 
   tick() {
     if (this.isGameOver) {
@@ -257,6 +272,6 @@ export default class Stage {
 
   beforeDestroy() {
     clearInterval(this.tickInterval);
-    document.removeEventListener("keydown", this.onKeyDown);
+    this.keyboardControls.destroy();
   }
 }

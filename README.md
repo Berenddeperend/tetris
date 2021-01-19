@@ -1,5 +1,4 @@
 Bugs:
-- First line clear is broken
 - Instafall delays death
 - Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
 - Reset tick after last-minute rotate

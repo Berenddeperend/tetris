@@ -6,7 +6,7 @@ console.log("gestures called");
 export default class Gestures {
   stage: Stage;
 
-  sensitivity: number = 10; //higher is less sensitive;
+  sensitivity: number = 0; //higher is less sensitive;
   swipeCounter: number = 0;
   dir: string = "";
 
@@ -14,16 +14,18 @@ export default class Gestures {
     const body = document.querySelector("body");
     const gestures = new Hammer(body, {});
 
-    gestures.on("panleft panright panup tap ", (e) => {
+    gestures.on("swipeleft swiperight swipeup swipedown tap ", (e) => {
       switch (e.type) {
-        case "panleft":
-          return this.throttledFn("panleft", () => stage.controls.left());
-        case "panright":
-          return this.throttledFn("panright", () => stage.controls.right());
-        case "panup":
-          return this.throttledFn("panup", () => stage.controls.instaFall());
-        case "pandown":
-          return this.throttledFn("pandown", () => stage.controls.down());
+        case "swipeleft":
+          return stage.controls.left();
+          // return this.throttledFn("swipeleft", () => stage.controls.left());
+        case "swiperight":
+          return stage.controls.right();
+          // return this.throttledFn("swiperight", () => stage.controls.right());
+        case "swipeup":
+          return this.throttledFn("swipeup", () => stage.controls.instaFall());
+        case "swipedown":
+          return this.throttledFn("swipedown", () => stage.controls.down());
         case "tap":
           return stage.controls.rotate();
       }

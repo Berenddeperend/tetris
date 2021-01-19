@@ -15,7 +15,7 @@ export default class Splash {
       .append("div")
       .attr("class", "begin")
       .selectAll("span")
-      .data("press spacebar to begin".split(""))
+      .data("press space to start".split(""))
       .enter()
       .append("span")
       .attr("class", "letter")

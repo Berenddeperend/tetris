@@ -16,4 +16,4 @@ export function setGameState(gameState: GameState) {
   }
 }
 
-setGameState('splash')
+setGameState('playing')

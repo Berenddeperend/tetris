@@ -22,6 +22,7 @@ export default class Stage {
   clearedLines: number = 0;
 
   keyboardControls: KeyboardControls;
+  gestureControls: Gestures;
 
   d3Stage:any;
   d3UI:any;
@@ -96,8 +97,7 @@ export default class Stage {
   }
 
   initGestures() {
-    // this.gestures = new Gestures;
-    // this.gestures.left = this.controls.left
+    this.gestureControls = new Gestures(this);
   }
 
   tick() {
@@ -273,5 +273,6 @@ export default class Stage {
   beforeDestroy() {
     clearInterval(this.tickInterval);
     this.keyboardControls.destroy();
+    this.gestureControls.destroy();
   }
 }

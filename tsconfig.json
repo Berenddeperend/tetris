@@ -5,6 +5,7 @@
       "es2019",
       "dom"
     ],
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "esModuleInterop": true
   }
 }

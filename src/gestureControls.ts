@@ -6,40 +6,46 @@ console.log("gestures called");
 export default class Gestures {
   stage: Stage;
 
-  sensitivity: number = 0; //higher is less sensitive;
-  swipeCounter: number = 0;
+  hasInstaFallen: boolean = false;
+  sensitivity: number = 3; //higher is less sensitive;
+  panCounter: number = 0;
   dir: string = "";
 
   constructor(stage: Stage) {
     const body = document.querySelector("body");
     const gestures = new Hammer(body, {});
+    // gestures.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
 
-    gestures.on("swipeleft swiperight swipeup swipedown tap ", (e) => {
+    gestures.on("panleft panright swipeup swipedown tap", (e) => {
+      // gestures.on("pan", (e) => {
+      console.log(e);
       switch (e.type) {
-        case "swipeleft":
+        case "panleft":
           return stage.controls.left();
-          // return this.throttledFn("swipeleft", () => stage.controls.left());
-        case "swiperight":
+          // return this.throttledFn("panleft", () => stage.controls.left());
+        case "panright":
           return stage.controls.right();
-          // return this.throttledFn("swiperight", () => stage.controls.right());
-        case "swipeup":
-          return this.throttledFn("swipeup", () => stage.controls.instaFall());
+          // return this.throttledFn("panright", () => stage.controls.right());
         case "swipedown":
-          return this.throttledFn("swipedown", () => stage.controls.down());
+          return stage.controls.down();
+        case "swipeup":
+          return stage.controls.instaFall();
         case "tap":
           return stage.controls.rotate();
+        case "panend":
+          return (this.hasInstaFallen = false);
       }
     });
   }
 
   throttledFn(hammerEventType: string, fn: () => any) {
     if (this.dir === hammerEventType) {
-      this.swipeCounter++;
+      this.panCounter++;
     } else {
       this.dir = hammerEventType;
-      this.swipeCounter = 0;
+      this.panCounter = 0;
     }
-    if (this.swipeCounter % this.sensitivity === 0) {
+    if (this.panCounter % this.sensitivity === 0) {
       return fn();
     }
   }

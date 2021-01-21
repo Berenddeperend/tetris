@@ -185,6 +185,7 @@ svg {
   position: relative;
   width: 75px;
   box-shadow: 0 0 2px $orange;
+  user-select: none;
   
   .value {
     @include text-shadow(2px, false);

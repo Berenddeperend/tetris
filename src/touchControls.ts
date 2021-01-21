@@ -9,17 +9,10 @@ export default class TouchControls {
     this.deviceWidth = document.querySelector('body').clientWidth;
     this.stage = stage;
 
-    this.onTap = (e: any) => {
+    this.onTap = (e:TouchEvent) => {
+      console.log('e.touches[0].clientX: ', e.touches[0].clientX);
 
-      // switch (e.width) {
-      //   case 2 > 2: 
-
-
-
-      // }
-
-
-      e.x > this.deviceWidth / 2
+      e.touches[0].clientX > this.deviceWidth / 2
         ? stage.controls.right()
         : stage.controls.left()
     };

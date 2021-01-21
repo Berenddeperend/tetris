@@ -8,25 +8,28 @@ export default class TouchControls {
   // action : () => void;
   interval: number;
 
-
   constructor(stage: Stage) {
-    this.deviceWidth = document.querySelector('body').clientWidth;
+    this.deviceWidth = document.querySelector("body").clientWidth;
     this.stage = stage;
 
-    this.onTap = (e:TouchEvent) => {
-      const action = ()=> {
-        e.touches[0].clientX > this.deviceWidth / 2
-        ? stage.controls.right()
-        : stage.controls.left()
+    this.onTap = (e: TouchEvent) => {
+      if(this.interval) {
+        clearInterval(this.interval);
       }
+
+      const action = () => {
+        e.touches[e.touches.length - 1].clientX > this.deviceWidth / 2
+          ? stage.controls.right()
+          : stage.controls.left();
+      };
 
       action();
       this.interval = window.setInterval(action, 100);
     };
- 
-    this.onTapRelease = (e:TouchEvent) => {
+
+    this.onTapRelease = (e: TouchEvent) => {
       clearInterval(this.interval);
-    }
+    };
 
     this.init();
   }

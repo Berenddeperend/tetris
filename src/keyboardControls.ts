@@ -2,11 +2,11 @@ import Stage from './stage';
 
 export default class KeyboardControls {
   stage: Stage;
-  onKeyDown:any;
+  onKeyDown: (e:any) => any;
   constructor(stage: Stage) {
     this.stage = stage;
 
-    this.onKeyDown = function (e: any) {
+    this.onKeyDown = (e: any) => {
       switch (e.code) {
         case "ArrowRight":
           return stage.controls.right();
@@ -19,7 +19,7 @@ export default class KeyboardControls {
         case "Space":
           return stage.controls.rotate();
       }
-    }.bind(this.stage);
+    };
 
     this.init();
   }

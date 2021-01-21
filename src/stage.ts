@@ -4,6 +4,7 @@ import { uniq } from "./utils";
 import { setGameState } from "./tetris";
 import Gestures from "./gestureControls";
 import KeyboardControls from "./keyboardControls";
+import TouchControls from "./touchControls";
 
 export default class Stage {
   gridWidth: number;
@@ -23,6 +24,7 @@ export default class Stage {
 
   keyboardControls: KeyboardControls;
   gestureControls: Gestures;
+  touchControls: TouchControls;
 
   d3Stage:any;
   d3UI:any;
@@ -43,6 +45,7 @@ export default class Stage {
     this.initializeInternalGrid();
     // this.initGestures();
     this.initKeyboardControls();
+    this.initTouchControls();
 
     this.activeBlock = new Block(this.blockIndex, this);
     
@@ -94,6 +97,10 @@ export default class Stage {
 
   initKeyboardControls() {
     this.keyboardControls = new KeyboardControls(this);
+  }
+    
+  initTouchControls() {
+    this.touchControls = new TouchControls(this);
   }
 
   initGestures() {
@@ -281,6 +288,7 @@ export default class Stage {
   beforeDestroy() {
     clearInterval(this.tickInterval);
     this.keyboardControls?.destroy();
+    this.touchControls?.destroy();
     this.gestureControls?.destroy();
   }
 }

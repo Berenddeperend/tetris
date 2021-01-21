@@ -1,5 +1,4 @@
 Bugs:
-- Instafall delays death
 - Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
 - Reset tick after last-minute rotate
 - Gridlines as gutter in grid
@@ -16,6 +15,7 @@ Features:
 - Cool effect on line clear, extra effect on Tetris
 - Show block shadow
 - Drought, blocks since tallblock
+- Improve death thing
 
 Maintenance:
 - Move collision logic to block class
@@ -33,3 +33,4 @@ Maybe:
 - "Tetris UI", select mode by dropping block in a column
 - Swap out Parceljs (https://2020.stateofjs.com/en-US/technologies/build-tools/)
 - Implement 8bit style wordart
+- Change d3 for either native JS or Preact

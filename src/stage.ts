@@ -41,7 +41,7 @@ export default class Stage {
     this.gridOverBlocks = gridOverBlocks;
     this.initUI();
     this.initializeInternalGrid();
-    this.initGestures();
+    // this.initGestures();
     this.initKeyboardControls();
 
     this.activeBlock = new Block(this.blockIndex, this);
@@ -115,13 +115,21 @@ export default class Stage {
   }
 
   finishBlock(block: Block) {
+    if(this.isGameOver) {
+      this.beforeDestroy();
+      return setGameState('gameOver')
+    }
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
     this.activeBlock = new Block(++this.blockIndex, this);
-    if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
-      return (this.isGameOver = true);
-    }
 
+    //if the block spawned invalidly, instant game over
+    if(!this.activeBlock.blockPositionIsValid) {
+      this.isGameOver = true;
+      this.beforeDestroy();
+      return setGameState("gameOver");  
+    }
+    
     this.completedRows.map((rowIndex) => {
       this.clearedLines++;
       this.updateScore();
@@ -272,7 +280,7 @@ export default class Stage {
 
   beforeDestroy() {
     clearInterval(this.tickInterval);
-    this.keyboardControls.destroy();
-    this.gestureControls.destroy();
+    this.keyboardControls?.destroy();
+    this.gestureControls?.destroy();
   }
 }

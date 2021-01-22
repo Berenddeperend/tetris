@@ -15,6 +15,7 @@ Features:
 - Cool effect on line clear, extra effect on Tetris
 - Show block shadow
 - Drought, blocks since tallblock
+- 'Record pace' notifications
 - Improve death thing
 
 Maintenance:

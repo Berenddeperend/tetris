@@ -26,6 +26,16 @@ export default class Block {
   }
 
   rotate() {
+    //1: save original values
+    const originalShape = cloneDeep(this.shape);
+    const originalY = this.y;
+
+    //2: try whatever
+
+
+    //3: if it fails, reset it back to originalshape and originalY
+
+
     const buildRotatedShape = (shape: Shape): Shape => {
       const columnCount = shape[0].length;
       const rowCount = shape.length;

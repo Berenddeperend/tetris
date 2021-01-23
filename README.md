@@ -1,5 +1,5 @@
 Bugs:
-- Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
+- Move controls of all states to *Controls.ts file
 - Reset tick after last-minute rotate
 - Gridlines as gutter in grid
 
@@ -12,6 +12,7 @@ Features:
 - Highscores
 - Cool effect on line clear, extra effect on Tetris
 - Show block shadow
+- Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
 - Drought, blocks since tallblock
 - 'Record pace' notifications
 - Improve death thing -> z-index
@@ -34,7 +35,6 @@ Maybe:
 - Swap out Parceljs (https://2020.stateofjs.com/en-US/technologies/build-tools/)
 - Implement 8bit style wordart
 - Change d3 for either native JS or Preact
-- Change next UI thing as Stage instance? Nee dat is overkill
 
 On release:
 - Post to reddit.com/r/tetris

@@ -71,15 +71,18 @@ export default class Stage {
       left: () => {
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
           this.activeBlock.moveX(-1);
+          return "left";
         }
       },
       right: () => {
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
           this.activeBlock.moveX(1);
+          return "right";
         }
       },
       down: () => {
         this.tick();
+        return "down";
       },
       instaFall: () => {
         while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
@@ -90,9 +93,11 @@ export default class Stage {
           this.tick();
         }, 1000);
         this.finishBlock(this.activeBlock);
+        return "instaFall";
       },
       rotate: () => {
         this.activeBlock.rotate();
+        return "rotate";
       },
     };
   }
@@ -110,7 +115,6 @@ export default class Stage {
   }
 
   tick() {
-    console.log(this.queue);
     if (this.isGameOver) {
       this.beforeDestroy();
       setGameState("gameOver");

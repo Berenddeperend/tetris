@@ -5,10 +5,12 @@ export default class TouchControls {
   onTap: (e: any) => any;
   onTapRelease: (e: any) => any;
   deviceWidth: number;
+  deviceHeight: number;
   interval: number;
 
   constructor(stage: Stage) {
     this.deviceWidth = document.querySelector("body").clientWidth;
+    this.deviceHeight = document.querySelector("body").clientHeight;
     this.stage = stage;
 
     this.onTap = (e: TouchEvent) => {
@@ -20,29 +22,31 @@ export default class TouchControls {
         const x = e.touches[e.touches.length - 1].clientX;
         const y = e.touches[e.touches.length - 1].clientY;
 
-        if(x > this.deviceWidth / 2) { stage.controls.right() } 
-        if(x < this.deviceWidth / 2) { stage.controls.left() } 
+        const xPercentage = Math.round(x) / this.deviceWidth * 100;
+        const yPercentage = Math.round(y) / this.deviceHeight * 100;
 
-        // switch (e.touches[e.touches.length - 1]) {
-        //   case "ArrowRight":
-        //     return stage.controls.right();
-        //   case "ArrowLeft":
-        //     return stage.controls.left();
-        //   case "ArrowDown":
-        //     return stage.controls.down();
-        //   case "ArrowUp":
-        //     return stage.controls.instaFall();
-        //   case "Space":
-        //     return stage.controls.rotate();
-        // }
 
-        // e.touches[e.touches.length - 1].clientX > this.deviceWidth / 2
-        //   ? stage.controls.right()
-        //   : stage.controls.left();
+        if(yPercentage > 80 ) {
+          return this.stage.controls.instaFall();
+        }
+
+        if (xPercentage < 25) {
+          return stage.controls.left();
+        }
+
+        if (xPercentage > 75) {
+          return stage.controls.right();
+        }
+
+        return stage.controls.rotate();
       };
 
-      action();
-      this.interval = window.setInterval(action, 80);
+      const executedAction = action();
+
+      if(executedAction !== 'instafall') {
+        this.interval = window.setInterval(action, 80);
+      }
+
     };
 
     this.onTapRelease = (e: TouchEvent) => {

@@ -4846,6 +4846,7 @@ function () {
     var _this = this;
 
     this.deviceWidth = document.querySelector("body").clientWidth;
+    this.deviceHeight = document.querySelector("body").clientHeight;
     this.stage = stage;
 
     this.onTap = function (e) {
@@ -4856,33 +4857,29 @@ function () {
       var action = function action() {
         var x = e.touches[e.touches.length - 1].clientX;
         var y = e.touches[e.touches.length - 1].clientY;
+        var xPercentage = Math.round(x) / _this.deviceWidth * 100;
+        var yPercentage = Math.round(y) / _this.deviceHeight * 100;
 
-        if (x > _this.deviceWidth / 2) {
-          stage.controls.right();
+        if (yPercentage > 80) {
+          return _this.stage.controls.instaFall();
         }
 
-        if (x < _this.deviceWidth / 2) {
-          stage.controls.left();
-        } // switch (e.touches[e.touches.length - 1]) {
-        //   case "ArrowRight":
-        //     return stage.controls.right();
-        //   case "ArrowLeft":
-        //     return stage.controls.left();
-        //   case "ArrowDown":
-        //     return stage.controls.down();
-        //   case "ArrowUp":
-        //     return stage.controls.instaFall();
-        //   case "Space":
-        //     return stage.controls.rotate();
-        // }
-        // e.touches[e.touches.length - 1].clientX > this.deviceWidth / 2
-        //   ? stage.controls.right()
-        //   : stage.controls.left();
+        if (xPercentage < 25) {
+          return stage.controls.left();
+        }
 
+        if (xPercentage > 75) {
+          return stage.controls.right();
+        }
+
+        return stage.controls.rotate();
       };
 
-      action();
-      _this.interval = window.setInterval(action, 80);
+      var executedAction = action();
+
+      if (executedAction !== 'instafall') {
+        _this.interval = window.setInterval(action, 80);
+      }
     };
 
     this.onTapRelease = function (e) {
@@ -4992,15 +4989,21 @@ function () {
         left: function left() {
           if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, -1)) {
             _this.activeBlock.moveX(-1);
+
+            return "left";
           }
         },
         right: function right() {
           if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, 1)) {
             _this.activeBlock.moveX(1);
+
+            return "right";
           }
         },
         down: function down() {
           _this.tick();
+
+          return "down";
         },
         instaFall: function instaFall() {
           while (!_this.blockWillCollideYOnNextTick(_this.activeBlock)) {
@@ -5013,9 +5016,13 @@ function () {
           }, 1000);
 
           _this.finishBlock(_this.activeBlock);
+
+          return "instaFall";
         },
         rotate: function rotate() {
           _this.activeBlock.rotate();
+
+          return "rotate";
         }
       };
     },
@@ -5036,8 +5043,6 @@ function () {
   };
 
   Stage.prototype.tick = function () {
-    console.log(this.queue);
-
     if (this.isGameOver) {
       this.beforeDestroy();
       tetris_1.setGameState("gameOver");

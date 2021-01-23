@@ -42,7 +42,8 @@ export default class Block {
 
     this.d3Self = d3RenderTarget
       .select("svg")
-      .insert("g", this.stage.gridOverBlocks ? ":first-child" : null)
+      // .insert("g", this.stage.gridOverBlocks ? ":first-child" : null)
+      .insert("g", this.stage.gridOverBlocks ? '.gridlines' : null)
       .attr("class", `block ${this.color}`);
     this.draw();
   }

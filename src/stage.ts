@@ -176,13 +176,6 @@ export default class Stage {
     });
   }
 
-  updateQueueUI() {
-    // select('.queue').remove();
-    // const ui = this.d3UI.append("div").attr("class", "queue ui-block")
-    // ui.append('div').attr('class', 'label').text('Next')
-    // ui.append('div').attr('class', 'value')//.text(this.queue[0]);
-  }
-
   updateScoreUI() {
     this.d3UI.select(".score .value").text(this.score);
   }
@@ -268,7 +261,6 @@ export default class Stage {
     score.append("div").attr("class", "value").text(this.score);
 
     this.drawGridLines();
-    this.updateQueueUI(); //doesnt do anything
     this.updateScoreUI();
   }
 

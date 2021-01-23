@@ -53,7 +53,6 @@ export default class TouchControls {
   }
 
   init() {
-    console.log("initialized touchcontrols");
     document.addEventListener("touchstart", this.onTap);
     document.addEventListener("touchend", this.onTapRelease);
   }

@@ -4,12 +4,9 @@ Bugs:
 - Gridlines as gutter in grid
 
 Features:
-- Queue
 - Better 'Game Over' screen. (in progress)
 - UI 
   - Check gameboy version for inspiration, or this one: https://m.media-amazon.com/images/S/aplus-media/vc/d2044fc9-3049-41ff-8262-6b52fad2794c.__CR0,69,2099,2099_PT0_SX300_V1___.jpg
-  - Next
-  - Score [Done]
   - Lines
   - Level
 - Highscores
@@ -37,6 +34,7 @@ Maybe:
 - Swap out Parceljs (https://2020.stateofjs.com/en-US/technologies/build-tools/)
 - Implement 8bit style wordart
 - Change d3 for either native JS or Preact
+- Change next UI thing as Stage instance? Nee dat is overkill
 
 On release:
 - Post to reddit.com/r/tetris

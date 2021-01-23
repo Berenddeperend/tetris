@@ -4,6 +4,7 @@ import { cloneDeep } from "./utils";
 import Stage from "./stage";
 
 export type Shape = number[][];
+export type renderBlockTo = "queue" | "stage";
 export default class Block {
   shape: Shape;
   color: string;
@@ -13,25 +14,32 @@ export default class Block {
   d3Self: any;
   stage: Stage;
 
-  constructor(id: number = 0, stage: Stage, renderTo?: any) {
+  constructor(id: number = 0, stage: Stage, renderTo: renderBlockTo) {
     this.stage = stage;
     const randomBlock =
       possibleForms[Math.floor(Math.random() * possibleForms.length)];
     this.shape = cloneDeep(randomBlock.shape);
     this.color = randomBlock.color;
-    this.x = renderTo ? Math.floor((this.stage.gridWidth - this.shape[0].length) / 2) : 0;
     this.id = id;
 
     this.init(renderTo);
   }
 
-  //todo: logic to render in queue or stage. Or move from one to another.
+  init(renderTo: renderBlockTo) {
+    let d3RenderTarget;
+    if(renderTo === 'stage') {
+      this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2)
+      d3RenderTarget = this.stage.d3Stage;
+    } else if (renderTo = 'queue') {
+      this.x = 0;
+      d3RenderTarget = this.stage.d3Queue;
+    }
 
-  init(renderTo: any = this.stage.d3UI.select(".queue")) {
     if (this.d3Self) {
       this.d3Self.remove();
     }
-    this.d3Self = renderTo
+
+    this.d3Self = d3RenderTarget
       .select("svg")
       .insert("g", this.stage.gridOverBlocks ? ":first-child" : null)
       .attr("class", `block ${this.color}`);

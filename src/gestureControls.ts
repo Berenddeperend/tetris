@@ -1,8 +1,5 @@
 import Hammer from "hammerjs";
 import Stage from "./stage";
-
-console.log("gestures called");
-
 export default class Gestures {
   stage: Stage;
 

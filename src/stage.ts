@@ -28,6 +28,7 @@ export default class Stage {
 
   d3Stage: any; //todo: better typing
   d3UI: any; //todo: better typing
+  d3Queue: any; //todo: better typing
 
   constructor({
     width = 10,
@@ -47,11 +48,11 @@ export default class Stage {
     this.initKeyboardControls();
     this.initTouchControls();
 
-    this.activeBlock = new Block(this.blockIndex, this, this.d3Stage);
-    this.queue.push(new Block(++this.blockIndex, this));
+    this.activeBlock = new Block(this.blockIndex, this, 'stage');
+    this.queue.push(new Block(++this.blockIndex, this, 'queue'));
 
     this.tickInterval = window.setInterval(() => {
-      // this.tick();
+      this.tick();
     }, 1000);
   }
 
@@ -109,6 +110,7 @@ export default class Stage {
   }
 
   tick() {
+    console.log(this.queue)
     if (this.isGameOver) {
       this.beforeDestroy();
       setGameState("gameOver");
@@ -131,8 +133,8 @@ export default class Stage {
     this.placeBlockInGrid(block);
 
     this.activeBlock = this.queue.pop();
-    this.activeBlock.init(this.d3Stage);
-    this.queue.push(new Block(++this.blockIndex, this));
+    this.activeBlock.init('stage');
+    this.queue.push(new Block(++this.blockIndex, this, 'queue'));
 
     //if the block spawned invalidly, instant game over
     if (!this.activeBlock.blockPositionIsValid) {
@@ -254,6 +256,9 @@ export default class Stage {
       .append("svg")
       .attr("width", this.blockSize * 4)
       .attr("height", this.blockSize * 2);
+
+      this.d3Queue = queue;
+
 
     const score = this.d3UI.append("div").attr("class", "score ui-block");
     score.append("div").attr("class", "label").text("Score");

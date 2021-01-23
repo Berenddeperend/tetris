@@ -48,8 +48,8 @@ export default class Stage {
     this.initKeyboardControls();
     this.initTouchControls();
 
-    this.activeBlock = new Block(this.blockIndex, this, 'stage');
-    this.queue.push(new Block(++this.blockIndex, this, 'queue'));
+    this.activeBlock = new Block(this.blockIndex, this, "stage");
+    this.queue.push(new Block(++this.blockIndex, this, "queue"));
 
     this.tickInterval = window.setInterval(() => {
       this.tick();
@@ -110,7 +110,7 @@ export default class Stage {
   }
 
   tick() {
-    console.log(this.queue)
+    console.log(this.queue);
     if (this.isGameOver) {
       this.beforeDestroy();
       setGameState("gameOver");
@@ -133,8 +133,8 @@ export default class Stage {
     this.placeBlockInGrid(block);
 
     this.activeBlock = this.queue.pop();
-    this.activeBlock.init('stage');
-    this.queue.push(new Block(++this.blockIndex, this, 'queue'));
+    this.activeBlock.init("stage");
+    this.queue.push(new Block(++this.blockIndex, this, "queue"));
 
     //if the block spawned invalidly, instant game over
     if (!this.activeBlock.blockPositionIsValid) {
@@ -257,8 +257,7 @@ export default class Stage {
       .attr("width", this.blockSize * 4)
       .attr("height", this.blockSize * 2);
 
-      this.d3Queue = queue;
-
+    this.d3Queue = queue;
 
     const score = this.d3UI.append("div").attr("class", "score ui-block");
     score.append("div").attr("class", "label").text("Score");

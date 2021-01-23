@@ -31,7 +31,8 @@ export default class Block {
       this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2)
       d3RenderTarget = this.stage.d3Stage;
     } else if (renderTo = 'queue') {
-      this.x = 0;
+      this.x = (4 - this.shape[0].length) / 2; //align center
+      // this.x = 4 - this.shape[0].length; //align right
       d3RenderTarget = this.stage.d3Queue;
     }
 
@@ -62,7 +63,7 @@ export default class Block {
       });
     });
 
-    this.updateVerticalGroupPosition();
+    this.updateGroupPosition();
   }
 
   rotate() {
@@ -142,7 +143,7 @@ export default class Block {
 
   moveDown() {
     this.y++;
-    this.updateVerticalGroupPosition();
+    this.updateGroupPosition();
   }
 
   moveX(x: number, bypassCollision: boolean = false) {
@@ -155,10 +156,10 @@ export default class Block {
       }
     }
     this.x = this.x + x;
-    this.updateVerticalGroupPosition();
+    this.updateGroupPosition();
   }
 
-  updateVerticalGroupPosition() {
+  updateGroupPosition() {
     this.d3Self.attr(
       "transform",
       `translate(${this.x * this.stage.blockSize}, ${

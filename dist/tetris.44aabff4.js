@@ -243,7 +243,9 @@ function () {
       this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2);
       d3RenderTarget = this.stage.d3Stage;
     } else if (renderTo = 'queue') {
-      this.x = 0;
+      this.x = (4 - this.shape[0].length) / 2; //align center
+      // this.x = 4 - this.shape[0].length; //align right
+
       d3RenderTarget = this.stage.d3Queue;
     }
 
@@ -266,7 +268,7 @@ function () {
         }
       });
     });
-    this.updateVerticalGroupPosition();
+    this.updateGroupPosition();
   };
 
   Block.prototype.rotate = function () {
@@ -350,7 +352,7 @@ function () {
 
   Block.prototype.moveDown = function () {
     this.y++;
-    this.updateVerticalGroupPosition();
+    this.updateGroupPosition();
   };
 
   Block.prototype.moveX = function (x, bypassCollision) {
@@ -365,10 +367,10 @@ function () {
     }
 
     this.x = this.x + x;
-    this.updateVerticalGroupPosition();
+    this.updateGroupPosition();
   };
 
-  Block.prototype.updateVerticalGroupPosition = function () {
+  Block.prototype.updateGroupPosition = function () {
     this.d3Self.attr("transform", "translate(" + this.x * this.stage.blockSize + ", " + this.y * this.stage.blockSize + ")");
   };
 
@@ -4963,8 +4965,8 @@ function () {
 
     this.initKeyboardControls();
     this.initTouchControls();
-    this.activeBlock = new block_1.default(this.blockIndex, this, 'stage');
-    this.queue.push(new block_1.default(++this.blockIndex, this, 'queue'));
+    this.activeBlock = new block_1.default(this.blockIndex, this, "stage");
+    this.queue.push(new block_1.default(++this.blockIndex, this, "queue"));
     this.tickInterval = window.setInterval(function () {
       _this.tick();
     }, 1000);
@@ -5060,8 +5062,8 @@ function () {
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
     this.activeBlock = this.queue.pop();
-    this.activeBlock.init('stage');
-    this.queue.push(new block_1.default(++this.blockIndex, this, 'queue')); //if the block spawned invalidly, instant game over
+    this.activeBlock.init("stage");
+    this.queue.push(new block_1.default(++this.blockIndex, this, "queue")); //if the block spawned invalidly, instant game over
 
     if (!this.activeBlock.blockPositionIsValid) {
       this.isGameOver = true;

@@ -167,10 +167,10 @@ svg {
 
   .rows,
   .columns {
+    // stroke: darken($orange, 50%);
     stroke: $orange;
-    // stroke-width: 1px;
     stroke-linecap: square;
-    // opacity: 0;
+    // opacity: 0.4;
   }
 }
 

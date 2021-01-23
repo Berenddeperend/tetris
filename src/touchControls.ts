@@ -14,11 +14,13 @@ export default class TouchControls {
     this.stage = stage;
 
     this.onTap = (e: TouchEvent) => {
+      console.log('new event')
       if(this.interval) {
         clearInterval(this.interval);
       }
 
       const action = () => {
+
         const x = e.touches[e.touches.length - 1].clientX;
         const y = e.touches[e.touches.length - 1].clientY;
 
@@ -43,7 +45,7 @@ export default class TouchControls {
 
       const executedAction = action();
 
-      if(executedAction !== 'instafall') {
+      if(executedAction === "left" || executedAction === "right") {
         this.interval = window.setInterval(action, 80);
       }
 

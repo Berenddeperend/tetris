@@ -1985,18 +1985,6 @@ function () {
     configurable: true
   });
 
-  Block.shapeCollidesWithGrid = function ( //should this be here?
-  shape, stage, x, y) {
-    return shape.map(function (row, rowIndex) {
-      return row.map(function (atom, columnIndex) {
-        if (!atom) return true;
-        return stage.internalGrid[y + rowIndex][x + columnIndex] === 0;
-      });
-    }).flat().every(function (d) {
-      return d;
-    });
-  };
-
   Block.prototype.clearRow = function (rowIndex) {
     var targetShapeRowIndex = rowIndex - this.y;
     var rowLength = this.shape[0].length;

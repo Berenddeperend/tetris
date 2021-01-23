@@ -129,23 +129,6 @@ export default class Block {
         .every((d) => d);
   }
 
-  static shapeCollidesWithGrid( //should this be here?
-    shape: Shape,
-    stage: Stage,
-    x: number,
-    y: number
-  ): boolean {
-    return shape
-      .map((row, rowIndex) => {
-        return row.map((atom, columnIndex) => {
-          if (!atom) return true;
-          return stage.internalGrid[y + rowIndex][x + columnIndex] === 0;
-        });
-      })
-      .flat()
-      .every((d) => d);
-  }
-
   clearRow(rowIndex: number) {
     const targetShapeRowIndex = rowIndex - this.y;
     const rowLength = this.shape[0].length;

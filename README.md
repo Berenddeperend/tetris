@@ -16,7 +16,7 @@ Features:
 - Show block shadow
 - Drought, blocks since tallblock
 - 'Record pace' notifications
-- Improve death thing
+- Improve death thing -> z-index
 
 Maintenance:
 - Move collision logic to block class
@@ -24,6 +24,7 @@ Maintenance:
 Future:
 - 2 player mode (one client)
 - Backend for highscores (rpi or firebase)
+- Validate highscore by saving game history
 - Touchscreen support through hammer.js
 - Stats
 - Sound

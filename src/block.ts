@@ -13,56 +13,51 @@ export default class Block {
   d3Self: any;
   stage: Stage;
 
-  constructor(id: number = 0, stage: Stage) {
+  constructor(id: number = 0, stage: Stage, renderTo?: any) {
     this.stage = stage;
     const randomBlock =
       possibleForms[Math.floor(Math.random() * possibleForms.length)];
     this.shape = cloneDeep(randomBlock.shape);
     this.color = randomBlock.color;
-    this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2);
+    this.x = renderTo ? Math.floor((this.stage.gridWidth - this.shape[0].length) / 2) : 0;
     this.id = id;
 
-    this.init();
+    this.init(renderTo);
   }
 
-  init() {
-    this.d3Self = selectAll(".stage svg")
+  //todo: logic to render in queue or stage. Or move from one to another.
+
+  init(renderTo: any = this.stage.d3UI.select(".queue")) {
+    if (this.d3Self) {
+      this.d3Self.remove();
+    }
+    this.d3Self = renderTo
+      .select("svg")
       .insert("g", this.stage.gridOverBlocks ? ":first-child" : null)
       .attr("class", `block ${this.color}`);
-    this.redraw();
+    this.draw();
   }
 
-  redraw() {
+  draw() {
     this.d3Self.selectAll("rect").remove();
-    this.d3Self.selectAll("g").remove();
     this.shape.map((y, yI) => {
       y.map((x, xI) => {
         if (x && y) {
           this.d3Self
-            .append("g")
             .append("rect")
             .attr("width", this.stage.blockSize)
             .attr("height", this.stage.blockSize)
             .attr("x", xI * this.stage.blockSize)
             .attr("y", yI * this.stage.blockSize)
             .attr("class", "atom");
-
-          // this.d3Self
-          // .selectAll("g")
-          // .append("text")
-          // .attr("style", "fill: white;")
-          // .attr("x", xI * this.stage.blockSize)
-          // .attr("y", yI * this.stage.blockSize + 10)
-          // .text(() => this.id);
         }
       });
     });
 
-    this.updatePosition();
+    this.updateVerticalGroupPosition();
   }
 
   rotate() {
-    //1: save original values
     const originalShape = cloneDeep(this.shape);
     const originalX = this.x;
 
@@ -70,7 +65,7 @@ export default class Block {
       const columnCount = shape[0].length;
       const rowCount = shape.length;
       let newShape: Shape = [];
-      
+
       for (let x = 0; x < columnCount; x++) {
         newShape.push([]);
       }
@@ -98,35 +93,35 @@ export default class Block {
     this.shape = buildRotatedShape(this.shape);
 
     if (this.blockPositionIsValid) {
-      return this.redraw();
+      return this.draw();
     }
 
     const offset = amountOfAtomsThatWillRotateOutOfBounds(this.shape);
     this.moveX(-offset, true);
 
     if (this.blockPositionIsValid) {
-      return this.redraw();
-    } else { //it doesn't fit even after offsetting, return to what it was.
+      return this.draw();
+    } else {
+      //it doesn't fit even after offsetting, return to what it was.
       this.shape = originalShape;
       this.x = originalX;
-      this.redraw();
+      this.draw();
     }
   }
 
-  get blockPositionIsValid() { 
+  get blockPositionIsValid() {
     return this.shape
-        .map((row, rowIndex) => {
-          return row.map((atom, columnIndex) => {
-            if (!atom) return true;
-            return (
-              this.stage.internalGrid[this.y + rowIndex][
-                this.x + columnIndex
-              ] === 0
-            );
-          });
-        })
-        .flat()
-        .every((d) => d);
+      .map((row, rowIndex) => {
+        return row.map((atom, columnIndex) => {
+          if (!atom) return true;
+          return (
+            this.stage.internalGrid[this.y + rowIndex][this.x + columnIndex] ===
+            0
+          );
+        });
+      })
+      .flat()
+      .every((d) => d);
   }
 
   clearRow(rowIndex: number) {
@@ -134,12 +129,12 @@ export default class Block {
     const rowLength = this.shape[0].length;
     this.shape.splice(targetShapeRowIndex, 1);
     this.shape.unshift(new Array(rowLength).fill(0));
-    this.redraw();
+    this.draw();
   }
 
   moveDown() {
     this.y++;
-    this.updatePosition();
+    this.updateVerticalGroupPosition();
   }
 
   moveX(x: number, bypassCollision: boolean = false) {
@@ -152,10 +147,10 @@ export default class Block {
       }
     }
     this.x = this.x + x;
-    this.updatePosition();
+    this.updateVerticalGroupPosition();
   }
 
-  updatePosition() {
+  updateVerticalGroupPosition() {
     this.d3Self.attr(
       "transform",
       `translate(${this.x * this.stage.blockSize}, ${

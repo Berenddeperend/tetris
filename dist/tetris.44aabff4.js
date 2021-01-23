@@ -117,7 +117,262 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
+})({"src/possibleForms.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.possibleForms = void 0;
+exports.possibleForms = [{
+  id: 0,
+  color: "light-blue",
+  shape: [[1, 1, 1, 1]]
+}, {
+  id: 1,
+  color: "purple",
+  shape: [[0, 1, 0], [1, 1, 1]]
+}, {
+  id: 2,
+  color: "green",
+  shape: [[0, 1, 1], [1, 1, 0]]
+}, {
+  id: 3,
+  color: "red",
+  shape: [[1, 1, 0], [0, 1, 1]]
+}, {
+  id: 4,
+  color: "yellow",
+  shape: [[1, 1], [1, 1]]
+}, {
+  id: 5,
+  color: "dark-blue",
+  shape: [[1, 0, 0], [1, 1, 1]]
+}, {
+  id: 6,
+  color: "orange",
+  shape: [[0, 0, 1], [1, 1, 1]]
+}];
+},{}],"src/utils.ts":[function(require,module,exports) {
+"use strict";
+
+var __read = this && this.__read || function (o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o),
+      r,
+      ar = [],
+      e;
+
+  try {
+    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
+      ar.push(r.value);
+    }
+  } catch (error) {
+    e = {
+      error: error
+    };
+  } finally {
+    try {
+      if (r && !r.done && (m = i["return"])) m.call(i);
+    } finally {
+      if (e) throw e.error;
+    }
+  }
+
+  return ar;
+};
+
+var __spread = this && this.__spread || function () {
+  for (var ar = [], i = 0; i < arguments.length; i++) {
+    ar = ar.concat(__read(arguments[i]));
+  }
+
+  return ar;
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cloneDeep = exports.uniq = void 0;
+
+function uniq(arr) {
+  return __spread(new Set(arr));
+}
+
+exports.uniq = uniq;
+
+function cloneDeep(o) {
+  return JSON.parse(JSON.stringify(o));
+}
+
+exports.cloneDeep = cloneDeep;
+},{}],"src/block.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var possibleForms_1 = require("./possibleForms");
+
+var utils_1 = require("./utils");
+
+var Block =
+/** @class */
+function () {
+  function Block(id, stage, renderTo) {
+    if (id === void 0) {
+      id = 0;
+    }
+
+    this.x = 0;
+    this.y = 0;
+    this.stage = stage;
+    var randomBlock = possibleForms_1.possibleForms[Math.floor(Math.random() * possibleForms_1.possibleForms.length)];
+    this.shape = utils_1.cloneDeep(randomBlock.shape);
+    this.color = randomBlock.color;
+    this.x = renderTo ? Math.floor((this.stage.gridWidth - this.shape[0].length) / 2) : 0;
+    this.id = id;
+    this.init(renderTo);
+  } //todo: logic to render in queue or stage. Or move from one to another.
+
+
+  Block.prototype.init = function (renderTo) {
+    if (renderTo === void 0) {
+      renderTo = this.stage.d3UI.select(".queue");
+    }
+
+    if (this.d3Self) {
+      this.d3Self.remove();
+    }
+
+    this.d3Self = renderTo.select("svg").insert("g", this.stage.gridOverBlocks ? ":first-child" : null).attr("class", "block " + this.color);
+    this.draw();
+  };
+
+  Block.prototype.draw = function () {
+    var _this = this;
+
+    this.d3Self.selectAll("rect").remove();
+    this.shape.map(function (y, yI) {
+      y.map(function (x, xI) {
+        if (x && y) {
+          _this.d3Self.append("rect").attr("width", _this.stage.blockSize).attr("height", _this.stage.blockSize).attr("x", xI * _this.stage.blockSize).attr("y", yI * _this.stage.blockSize).attr("class", "atom");
+        }
+      });
+    });
+    this.updateVerticalGroupPosition();
+  };
+
+  Block.prototype.rotate = function () {
+    var _this = this;
+
+    var originalShape = utils_1.cloneDeep(this.shape);
+    var originalX = this.x;
+
+    var buildRotatedShape = function buildRotatedShape(shape) {
+      var columnCount = shape[0].length;
+      var rowCount = shape.length;
+      var newShape = [];
+
+      for (var x = 0; x < columnCount; x++) {
+        newShape.push([]);
+      }
+
+      for (var row = 0; row < rowCount; row++) {
+        for (var column = 0; column < columnCount; column++) {
+          newShape[column][row] = shape[row][column];
+        }
+      }
+
+      newShape.forEach(function (row) {
+        return row.reverse();
+      });
+      return newShape;
+    };
+
+    var amountOfAtomsThatWillRotateOutOfBounds = function amountOfAtomsThatWillRotateOutOfBounds(shape) {
+      return shape[0].map(function (x, xIndex) {
+        return xIndex + _this.x >= _this.stage.gridWidth;
+      }).reduce(function (acc, curr) {
+        return curr ? ++acc : acc;
+      }, 0);
+    };
+
+    this.shape = buildRotatedShape(this.shape);
+
+    if (this.blockPositionIsValid) {
+      return this.draw();
+    }
+
+    var offset = amountOfAtomsThatWillRotateOutOfBounds(this.shape);
+    this.moveX(-offset, true);
+
+    if (this.blockPositionIsValid) {
+      return this.draw();
+    } else {
+      //it doesn't fit even after offsetting, return to what it was.
+      this.shape = originalShape;
+      this.x = originalX;
+      this.draw();
+    }
+  };
+
+  Object.defineProperty(Block.prototype, "blockPositionIsValid", {
+    get: function get() {
+      var _this = this;
+
+      return this.shape.map(function (row, rowIndex) {
+        return row.map(function (atom, columnIndex) {
+          if (!atom) return true;
+          return _this.stage.internalGrid[_this.y + rowIndex][_this.x + columnIndex] === 0;
+        });
+      }).flat().every(function (d) {
+        return d;
+      });
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  Block.prototype.clearRow = function (rowIndex) {
+    var targetShapeRowIndex = rowIndex - this.y;
+    var rowLength = this.shape[0].length;
+    this.shape.splice(targetShapeRowIndex, 1);
+    this.shape.unshift(new Array(rowLength).fill(0));
+    this.draw();
+  };
+
+  Block.prototype.moveDown = function () {
+    this.y++;
+    this.updateVerticalGroupPosition();
+  };
+
+  Block.prototype.moveX = function (x, bypassCollision) {
+    if (bypassCollision === void 0) {
+      bypassCollision = false;
+    }
+
+    if (!bypassCollision) {
+      if (this.x + x + this.shape[0].length > this.stage.gridWidth || this.x + x < 0) {
+        return; //block moves out of bounds
+      }
+    }
+
+    this.x = this.x + x;
+    this.updateVerticalGroupPosition();
+  };
+
+  Block.prototype.updateVerticalGroupPosition = function () {
+    this.d3Self.attr("transform", "translate(" + this.x * this.stage.blockSize + ", " + this.y * this.stage.blockSize + ")");
+  };
+
+  return Block;
+}();
+
+exports.default = Block;
+},{"./possibleForms":"src/possibleForms.ts","./utils":"src/utils.ts"}],"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1771,264 +2026,7 @@ var _style = require("./selection/style.js");
 var _window = _interopRequireDefault(require("./window.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./create.js":"node_modules/d3-selection/src/create.js","./creator.js":"node_modules/d3-selection/src/creator.js","./local.js":"node_modules/d3-selection/src/local.js","./matcher.js":"node_modules/d3-selection/src/matcher.js","./namespace.js":"node_modules/d3-selection/src/namespace.js","./namespaces.js":"node_modules/d3-selection/src/namespaces.js","./pointer.js":"node_modules/d3-selection/src/pointer.js","./pointers.js":"node_modules/d3-selection/src/pointers.js","./select.js":"node_modules/d3-selection/src/select.js","./selectAll.js":"node_modules/d3-selection/src/selectAll.js","./selection/index.js":"node_modules/d3-selection/src/selection/index.js","./selector.js":"node_modules/d3-selection/src/selector.js","./selectorAll.js":"node_modules/d3-selection/src/selectorAll.js","./selection/style.js":"node_modules/d3-selection/src/selection/style.js","./window.js":"node_modules/d3-selection/src/window.js"}],"src/possibleForms.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.possibleForms = void 0;
-exports.possibleForms = [{
-  id: 0,
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  id: 1,
-  color: "purple",
-  shape: [[0, 1, 0], [1, 1, 1]]
-}, {
-  id: 2,
-  color: "green",
-  shape: [[0, 1, 1], [1, 1, 0]]
-}, {
-  id: 3,
-  color: "red",
-  shape: [[1, 1, 0], [0, 1, 1]]
-}, {
-  id: 4,
-  color: "yellow",
-  shape: [[1, 1], [1, 1]]
-}, {
-  id: 5,
-  color: "dark-blue",
-  shape: [[1, 0, 0], [1, 1, 1]]
-}, {
-  id: 6,
-  color: "orange",
-  shape: [[0, 0, 1], [1, 1, 1]]
-}];
-},{}],"src/utils.ts":[function(require,module,exports) {
-"use strict";
-
-var __read = this && this.__read || function (o, n) {
-  var m = typeof Symbol === "function" && o[Symbol.iterator];
-  if (!m) return o;
-  var i = m.call(o),
-      r,
-      ar = [],
-      e;
-
-  try {
-    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
-      ar.push(r.value);
-    }
-  } catch (error) {
-    e = {
-      error: error
-    };
-  } finally {
-    try {
-      if (r && !r.done && (m = i["return"])) m.call(i);
-    } finally {
-      if (e) throw e.error;
-    }
-  }
-
-  return ar;
-};
-
-var __spread = this && this.__spread || function () {
-  for (var ar = [], i = 0; i < arguments.length; i++) {
-    ar = ar.concat(__read(arguments[i]));
-  }
-
-  return ar;
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.cloneDeep = exports.uniq = void 0;
-
-function uniq(arr) {
-  return __spread(new Set(arr));
-}
-
-exports.uniq = uniq;
-
-function cloneDeep(o) {
-  return JSON.parse(JSON.stringify(o));
-}
-
-exports.cloneDeep = cloneDeep;
-},{}],"src/block.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var d3_selection_1 = require("d3-selection");
-
-var possibleForms_1 = require("./possibleForms");
-
-var utils_1 = require("./utils");
-
-var Block =
-/** @class */
-function () {
-  function Block(id, stage) {
-    if (id === void 0) {
-      id = 0;
-    }
-
-    this.x = 0;
-    this.y = 0;
-    this.stage = stage;
-    var randomBlock = possibleForms_1.possibleForms[Math.floor(Math.random() * possibleForms_1.possibleForms.length)];
-    this.shape = utils_1.cloneDeep(randomBlock.shape);
-    this.color = randomBlock.color;
-    this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2);
-    this.id = id;
-    this.init();
-  }
-
-  Block.prototype.init = function () {
-    this.d3Self = d3_selection_1.selectAll(".stage svg").insert("g", this.stage.gridOverBlocks ? ":first-child" : null).attr("class", "block " + this.color);
-    this.redraw();
-  };
-
-  Block.prototype.redraw = function () {
-    var _this = this;
-
-    this.d3Self.selectAll("rect").remove();
-    this.d3Self.selectAll("g").remove();
-    this.shape.map(function (y, yI) {
-      y.map(function (x, xI) {
-        if (x && y) {
-          _this.d3Self.append("g").append("rect").attr("width", _this.stage.blockSize).attr("height", _this.stage.blockSize).attr("x", xI * _this.stage.blockSize).attr("y", yI * _this.stage.blockSize).attr("class", "atom"); // this.d3Self
-          // .selectAll("g")
-          // .append("text")
-          // .attr("style", "fill: white;")
-          // .attr("x", xI * this.stage.blockSize)
-          // .attr("y", yI * this.stage.blockSize + 10)
-          // .text(() => this.id);
-
-        }
-      });
-    });
-    this.updatePosition();
-  };
-
-  Block.prototype.rotate = function () {
-    var _this = this; //1: save original values
-
-
-    var originalShape = utils_1.cloneDeep(this.shape);
-    var originalX = this.x;
-
-    var buildRotatedShape = function buildRotatedShape(shape) {
-      var columnCount = shape[0].length;
-      var rowCount = shape.length;
-      var newShape = [];
-
-      for (var x = 0; x < columnCount; x++) {
-        newShape.push([]);
-      }
-
-      for (var row = 0; row < rowCount; row++) {
-        for (var column = 0; column < columnCount; column++) {
-          newShape[column][row] = shape[row][column];
-        }
-      }
-
-      newShape.forEach(function (row) {
-        return row.reverse();
-      });
-      return newShape;
-    };
-
-    var amountOfAtomsThatWillRotateOutOfBounds = function amountOfAtomsThatWillRotateOutOfBounds(shape) {
-      return shape[0].map(function (x, xIndex) {
-        return xIndex + _this.x >= _this.stage.gridWidth;
-      }).reduce(function (acc, curr) {
-        return curr ? ++acc : acc;
-      }, 0);
-    };
-
-    this.shape = buildRotatedShape(this.shape);
-
-    if (this.blockPositionIsValid) {
-      return this.redraw();
-    }
-
-    var offset = amountOfAtomsThatWillRotateOutOfBounds(this.shape);
-    this.moveX(-offset, true);
-
-    if (this.blockPositionIsValid) {
-      return this.redraw();
-    } else {
-      //it doesn't fit even after offsetting, return to what it was.
-      this.shape = originalShape;
-      this.x = originalX;
-      this.redraw();
-    }
-  };
-
-  Object.defineProperty(Block.prototype, "blockPositionIsValid", {
-    get: function get() {
-      var _this = this;
-
-      return this.shape.map(function (row, rowIndex) {
-        return row.map(function (atom, columnIndex) {
-          if (!atom) return true;
-          return _this.stage.internalGrid[_this.y + rowIndex][_this.x + columnIndex] === 0;
-        });
-      }).flat().every(function (d) {
-        return d;
-      });
-    },
-    enumerable: false,
-    configurable: true
-  });
-
-  Block.prototype.clearRow = function (rowIndex) {
-    var targetShapeRowIndex = rowIndex - this.y;
-    var rowLength = this.shape[0].length;
-    this.shape.splice(targetShapeRowIndex, 1);
-    this.shape.unshift(new Array(rowLength).fill(0));
-    this.redraw();
-  };
-
-  Block.prototype.moveDown = function () {
-    this.y++;
-    this.updatePosition();
-  };
-
-  Block.prototype.moveX = function (x, bypassCollision) {
-    if (bypassCollision === void 0) {
-      bypassCollision = false;
-    }
-
-    if (!bypassCollision) {
-      if (this.x + x + this.shape[0].length > this.stage.gridWidth || this.x + x < 0) {
-        return; //block moves out of bounds
-      }
-    }
-
-    this.x = this.x + x;
-    this.updatePosition();
-  };
-
-  Block.prototype.updatePosition = function () {
-    this.d3Self.attr("transform", "translate(" + this.x * this.stage.blockSize + ", " + this.y * this.stage.blockSize + ")");
-  };
-
-  return Block;
-}();
-
-exports.default = Block;
-},{"d3-selection":"node_modules/d3-selection/src/index.js","./possibleForms":"src/possibleForms.ts","./utils":"src/utils.ts"}],"node_modules/hammerjs/hammer.js":[function(require,module,exports) {
+},{"./create.js":"node_modules/d3-selection/src/create.js","./creator.js":"node_modules/d3-selection/src/creator.js","./local.js":"node_modules/d3-selection/src/local.js","./matcher.js":"node_modules/d3-selection/src/matcher.js","./namespace.js":"node_modules/d3-selection/src/namespace.js","./namespaces.js":"node_modules/d3-selection/src/namespaces.js","./pointer.js":"node_modules/d3-selection/src/pointer.js","./pointers.js":"node_modules/d3-selection/src/pointers.js","./select.js":"node_modules/d3-selection/src/select.js","./selectAll.js":"node_modules/d3-selection/src/selectAll.js","./selection/index.js":"node_modules/d3-selection/src/selection/index.js","./selector.js":"node_modules/d3-selection/src/selector.js","./selectorAll.js":"node_modules/d3-selection/src/selectorAll.js","./selection/style.js":"node_modules/d3-selection/src/selection/style.js","./window.js":"node_modules/d3-selection/src/window.js"}],"node_modules/hammerjs/hammer.js":[function(require,module,exports) {
 var define;
 /*! Hammer.JS - v2.0.7 - 2016-04-22
  * http://hammerjs.github.io/
@@ -4935,8 +4933,6 @@ var Stage =
 /** @class */
 function () {
   function Stage(_a) {
-    var _this = this;
-
     var _b = _a === void 0 ? {} : _a,
         _c = _b.width,
         width = _c === void 0 ? 10 : _c,
@@ -4964,10 +4960,9 @@ function () {
 
     this.initKeyboardControls();
     this.initTouchControls();
-    this.activeBlock = new block_1.default(this.blockIndex, this);
+    this.activeBlock = new block_1.default(this.blockIndex, this, this.d3Stage);
     this.queue.push(new block_1.default(++this.blockIndex, this));
-    this.tickInterval = window.setInterval(function () {
-      _this.tick();
+    this.tickInterval = window.setInterval(function () {// this.tick();
     }, 1000);
   }
 
@@ -5059,6 +5054,7 @@ function () {
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
     this.activeBlock = this.queue.pop();
+    this.activeBlock.init(this.d3Stage);
     this.queue.push(new block_1.default(++this.blockIndex, this)); //if the block spawned invalidly, instant game over
 
     if (!this.activeBlock.blockPositionIsValid) {
@@ -5098,22 +5094,14 @@ function () {
     });
   };
 
-  Stage.prototype.updateQueueUI = function () {
-    d3_selection_1.select('.queue').remove();
-    var ui = this.d3UI.append("div").attr("class", "queue ui-block");
-    ui.append('div').attr('class', 'label').text('Next');
-    ui.append('div').attr('class', 'value').text(this.queue[0]);
+  Stage.prototype.updateQueueUI = function () {// select('.queue').remove();
+    // const ui = this.d3UI.append("div").attr("class", "queue ui-block")
+    // ui.append('div').attr('class', 'label').text('Next')
+    // ui.append('div').attr('class', 'value')//.text(this.queue[0]);
   };
 
   Stage.prototype.updateScoreUI = function () {
-    // select(".score").text(this.clearedLines);
-    d3_selection_1.select('.score').remove(); // const ui = select("body").append("div").attr("class", "score")
-    // ui.append('div').attr('class', 'label').text('Score')
-    // ui.append('div').text(this.score);
-
-    var ui = this.d3UI.append("div").attr("class", "score ui-block");
-    ui.append('div').attr('class', 'label').text('Score');
-    ui.append('div').attr('class', 'value').text(this.score);
+    this.d3UI.select('.score .value').text(this.score);
   };
 
   Stage.prototype.placeBlockInGrid = function (block) {
@@ -5190,9 +5178,16 @@ function () {
     this.d3Stage = d3_selection_1.selectAll("body").append("div").attr("class", "stage");
     this.d3Stage.append("svg");
     this.d3UI = d3_selection_1.select("body").append("div").attr("class", "ui");
+    var queue = this.d3UI.append('div').attr('class', 'queue ui-block');
+    queue.append('div').attr('class', 'label').text('Next');
+    queue.append('div').attr('class', 'value').append('svg').attr('width', this.blockSize * 4);
+    var score = this.d3UI.append("div").attr("class", "score ui-block");
+    score.append('div').attr('class', 'label').text('Score');
+    score.append('div').attr('class', 'value').text(this.score);
     this.drawGridLines();
+    this.updateQueueUI(); //doesnt do anything
+
     this.updateScoreUI();
-    this.updateQueueUI();
   };
 
   Stage.prototype.drawGridLines = function (x, y, blockSize) {

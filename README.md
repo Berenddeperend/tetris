@@ -37,3 +37,8 @@ Maybe:
 - Swap out Parceljs (https://2020.stateofjs.com/en-US/technologies/build-tools/)
 - Implement 8bit style wordart
 - Change d3 for either native JS or Preact
+
+On release:
+- Post to reddit.com/r/tetris
+- Write blog post
+- Ask Daniel to hack the highscore

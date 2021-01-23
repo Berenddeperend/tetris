@@ -26,8 +26,8 @@ export default class Stage {
   gestureControls: Gestures;
   touchControls: TouchControls;
 
-  d3Stage:any;
-  d3UI:any;
+  d3Stage: any; //todo: better typing
+  d3UI: any; //todo: better typing
 
   constructor({
     width = 10,
@@ -47,11 +47,11 @@ export default class Stage {
     this.initKeyboardControls();
     this.initTouchControls();
 
-    this.activeBlock = new Block(this.blockIndex, this);
+    this.activeBlock = new Block(this.blockIndex, this, this.d3Stage);
     this.queue.push(new Block(++this.blockIndex, this));
     
     this.tickInterval = window.setInterval(() => {
-      this.tick();
+      // this.tick();
     }, 1000);
   }
 
@@ -131,6 +131,7 @@ export default class Stage {
     this.placeBlockInGrid(block);
 
     this.activeBlock = this.queue.pop();
+    this.activeBlock.init(this.d3Stage)
     this.queue.push(new Block(++this.blockIndex, this));
 
     //if the block spawned invalidly, instant game over
@@ -170,23 +171,14 @@ export default class Stage {
   }
 
   updateQueueUI() {
-    select ('.queue').remove();
-    const ui = this.d3UI.append("div").attr("class", "queue ui-block")
-    ui.append('div').attr('class', 'label').text('Next')
-    ui.append('div').attr('class', 'value').text(this.queue[0]);
+    // select('.queue').remove();
+    // const ui = this.d3UI.append("div").attr("class", "queue ui-block")
+    // ui.append('div').attr('class', 'label').text('Next')
+    // ui.append('div').attr('class', 'value')//.text(this.queue[0]);
   }
 
   updateScoreUI() {
-    // select(".score").text(this.clearedLines);
-    select('.score').remove();
-
-    // const ui = select("body").append("div").attr("class", "score")
-    // ui.append('div').attr('class', 'label').text('Score')
-    // ui.append('div').text(this.score);
-
-    const ui = this.d3UI.append("div").attr("class", "score ui-block")
-    ui.append('div').attr('class', 'label').text('Score')
-    ui.append('div').attr('class', 'value').text(this.score);
+    this.d3UI.select('.score .value').text(this.score);
   }
 
   placeBlockInGrid(block: Block) {
@@ -253,9 +245,18 @@ export default class Stage {
     this.d3Stage = selectAll("body").append("div").attr("class", "stage");
     this.d3Stage.append("svg");
     this.d3UI = select("body").append("div").attr("class", "ui");
+
+    const queue = this.d3UI.append('div').attr('class', 'queue ui-block');
+    queue.append('div').attr('class', 'label').text('Next');
+    queue.append('div').attr('class', 'value').append('svg').attr('width', this.blockSize * 4);
+
+    const score = this.d3UI.append("div").attr("class", "score ui-block");
+    score.append('div').attr('class', 'label').text('Score')
+    score.append('div').attr('class', 'value').text(this.score)
+
     this.drawGridLines();
+    this.updateQueueUI(); //doesnt do anything
     this.updateScoreUI();
-    this.updateQueueUI();
   }
 
   drawGridLines(

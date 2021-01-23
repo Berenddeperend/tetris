@@ -191,8 +191,8 @@ svg {
   text-align: right;
 }
 
-.score {
-  margin-left: 20px;
+.ui-block {
+  margin: 0 0 20px 20px;
   border: 1px solid #ff8142;
   padding: 10px;
   position: relative;
@@ -200,11 +200,11 @@ svg {
   box-shadow: 0 0 2px #ff8142;
   user-select: none;
 }
-.score .value {
+.ui-block .value {
   text-shadow: 2px 2px #ab1f65, -1px -1px #ff4f69;
   font-size: 2.2rem;
 }
-.score .label {
+.ui-block .label {
   font-size: 1rem;
   position: absolute;
   top: -7px;

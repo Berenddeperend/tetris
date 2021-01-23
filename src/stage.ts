@@ -48,6 +48,7 @@ export default class Stage {
     this.initTouchControls();
 
     this.activeBlock = new Block(this.blockIndex, this);
+    this.queue.push(new Block(++this.blockIndex, this));
     
     this.tickInterval = window.setInterval(() => {
       this.tick();
@@ -128,7 +129,9 @@ export default class Stage {
     }
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
-    this.activeBlock = new Block(++this.blockIndex, this);
+
+    this.activeBlock = this.queue.pop();
+    this.queue.push(new Block(++this.blockIndex, this));
 
     //if the block spawned invalidly, instant game over
     if(!this.activeBlock.blockPositionIsValid) {
@@ -139,7 +142,7 @@ export default class Stage {
     
     this.completedRows.map((rowIndex) => {
       this.clearedLines++;
-      this.updateScore();
+      this.updateScoreUI();
 
       const uniqueBlockIdsInRow = uniq(this.internalGrid[rowIndex]);
 
@@ -166,7 +169,14 @@ export default class Stage {
     });
   }
 
-  updateScore() {
+  updateQueueUI() {
+    select ('.queue').remove();
+    const ui = this.d3UI.append("div").attr("class", "queue ui-block")
+    ui.append('div').attr('class', 'label').text('Next')
+    ui.append('div').attr('class', 'value').text(this.queue[0]);
+  }
+
+  updateScoreUI() {
     // select(".score").text(this.clearedLines);
     select('.score').remove();
 
@@ -174,7 +184,7 @@ export default class Stage {
     // ui.append('div').attr('class', 'label').text('Score')
     // ui.append('div').text(this.score);
 
-    const ui = this.d3UI.append("div").attr("class", "score")
+    const ui = this.d3UI.append("div").attr("class", "score ui-block")
     ui.append('div').attr('class', 'label').text('Score')
     ui.append('div').attr('class', 'value').text(this.score);
   }
@@ -244,7 +254,8 @@ export default class Stage {
     this.d3Stage.append("svg");
     this.d3UI = select("body").append("div").attr("class", "ui");
     this.drawGridLines();
-    this.updateScore();
+    this.updateScoreUI();
+    this.updateQueueUI();
   }
 
   drawGridLines(

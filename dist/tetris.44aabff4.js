@@ -1779,26 +1779,33 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.possibleForms = void 0;
 exports.possibleForms = [{
+  id: 0,
+  color: "light-blue",
+  shape: [[1, 1, 1, 1]]
+}, {
+  id: 1,
   color: "purple",
   shape: [[0, 1, 0], [1, 1, 1]]
 }, {
+  id: 2,
   color: "green",
   shape: [[0, 1, 1], [1, 1, 0]]
 }, {
+  id: 3,
   color: "red",
   shape: [[1, 1, 0], [0, 1, 1]]
 }, {
+  id: 4,
   color: "yellow",
   shape: [[1, 1], [1, 1]]
 }, {
+  id: 5,
   color: "dark-blue",
   shape: [[1, 0, 0], [1, 1, 1]]
 }, {
+  id: 6,
   color: "orange",
   shape: [[0, 0, 1], [1, 1, 1]]
-}, {
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
 }];
 },{}],"src/utils.ts":[function(require,module,exports) {
 "use strict";
@@ -4958,6 +4965,7 @@ function () {
     this.initKeyboardControls();
     this.initTouchControls();
     this.activeBlock = new block_1.default(this.blockIndex, this);
+    this.queue.push(new block_1.default(++this.blockIndex, this));
     this.tickInterval = window.setInterval(function () {
       _this.tick();
     }, 1000);
@@ -5050,7 +5058,8 @@ function () {
 
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
-    this.activeBlock = new block_1.default(++this.blockIndex, this); //if the block spawned invalidly, instant game over
+    this.activeBlock = this.queue.pop();
+    this.queue.push(new block_1.default(++this.blockIndex, this)); //if the block spawned invalidly, instant game over
 
     if (!this.activeBlock.blockPositionIsValid) {
       this.isGameOver = true;
@@ -5061,7 +5070,7 @@ function () {
     this.completedRows.map(function (rowIndex) {
       _this.clearedLines++;
 
-      _this.updateScore();
+      _this.updateScoreUI();
 
       var uniqueBlockIdsInRow = utils_1.uniq(_this.internalGrid[rowIndex]);
       var blocksIdsThatShouldFall = utils_1.uniq(_this.internalGrid.filter(function (row, i) {
@@ -5089,13 +5098,20 @@ function () {
     });
   };
 
-  Stage.prototype.updateScore = function () {
+  Stage.prototype.updateQueueUI = function () {
+    d3_selection_1.select('.queue').remove();
+    var ui = this.d3UI.append("div").attr("class", "queue ui-block");
+    ui.append('div').attr('class', 'label').text('Next');
+    ui.append('div').attr('class', 'value').text(this.queue[0]);
+  };
+
+  Stage.prototype.updateScoreUI = function () {
     // select(".score").text(this.clearedLines);
     d3_selection_1.select('.score').remove(); // const ui = select("body").append("div").attr("class", "score")
     // ui.append('div').attr('class', 'label').text('Score')
     // ui.append('div').text(this.score);
 
-    var ui = this.d3UI.append("div").attr("class", "score");
+    var ui = this.d3UI.append("div").attr("class", "score ui-block");
     ui.append('div').attr('class', 'label').text('Score');
     ui.append('div').attr('class', 'value').text(this.score);
   };
@@ -5175,7 +5191,8 @@ function () {
     this.d3Stage.append("svg");
     this.d3UI = d3_selection_1.select("body").append("div").attr("class", "ui");
     this.drawGridLines();
-    this.updateScore();
+    this.updateScoreUI();
+    this.updateQueueUI();
   };
 
   Stage.prototype.drawGridLines = function (x, y, blockSize) {
@@ -5360,7 +5377,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50543" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53249" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

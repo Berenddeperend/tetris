@@ -178,8 +178,8 @@ svg {
   text-align: right;
 }
 
-.score {
-  margin-left: 20px;
+.ui-block {
+  margin: 0 0 20px 20px;
   border: 1px solid $orange;
   padding: 10px;
   position: relative;
@@ -202,3 +202,5 @@ svg {
     padding: 0 4px 0 8px;
   }
 }
+
+

@@ -49,7 +49,7 @@ export default class Stage {
 
     this.activeBlock = new Block(this.blockIndex, this, this.d3Stage);
     this.queue.push(new Block(++this.blockIndex, this));
-    
+
     this.tickInterval = window.setInterval(() => {
       // this.tick();
     }, 1000);
@@ -67,7 +67,7 @@ export default class Stage {
 
   get controls() {
     return {
-      left: ()=> {
+      left: () => {
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
           this.activeBlock.moveX(-1);
         }
@@ -92,14 +92,14 @@ export default class Stage {
       },
       rotate: () => {
         this.activeBlock.rotate();
-      }
-    }
+      },
+    };
   }
 
   initKeyboardControls() {
     this.keyboardControls = new KeyboardControls(this);
   }
-    
+
   initTouchControls() {
     this.touchControls = new TouchControls(this);
   }
@@ -123,24 +123,24 @@ export default class Stage {
   }
 
   finishBlock(block: Block) {
-    if(this.isGameOver) {
+    if (this.isGameOver) {
       this.beforeDestroy();
-      return setGameState('gameOver')
+      return setGameState("gameOver");
     }
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
 
     this.activeBlock = this.queue.pop();
-    this.activeBlock.init(this.d3Stage)
+    this.activeBlock.init(this.d3Stage);
     this.queue.push(new Block(++this.blockIndex, this));
 
     //if the block spawned invalidly, instant game over
-    if(!this.activeBlock.blockPositionIsValid) {
+    if (!this.activeBlock.blockPositionIsValid) {
       this.isGameOver = true;
       this.beforeDestroy();
-      return setGameState("gameOver");  
+      return setGameState("gameOver");
     }
-    
+
     this.completedRows.map((rowIndex) => {
       this.clearedLines++;
       this.updateScoreUI();
@@ -178,7 +178,7 @@ export default class Stage {
   }
 
   updateScoreUI() {
-    this.d3UI.select('.score .value').text(this.score);
+    this.d3UI.select(".score .value").text(this.score);
   }
 
   placeBlockInGrid(block: Block) {
@@ -246,13 +246,18 @@ export default class Stage {
     this.d3Stage.append("svg");
     this.d3UI = select("body").append("div").attr("class", "ui");
 
-    const queue = this.d3UI.append('div').attr('class', 'queue ui-block');
-    queue.append('div').attr('class', 'label').text('Next');
-    queue.append('div').attr('class', 'value').append('svg').attr('width', this.blockSize * 4);
+    const queue = this.d3UI.append("div").attr("class", "queue ui-block");
+    queue.append("div").attr("class", "label").text("Next");
+    queue
+      .append("div")
+      .attr("class", "value")
+      .append("svg")
+      .attr("width", this.blockSize * 4)
+      .attr("height", this.blockSize * 2);
 
     const score = this.d3UI.append("div").attr("class", "score ui-block");
-    score.append('div').attr('class', 'label').text('Score')
-    score.append('div').attr('class', 'value').text(this.score)
+    score.append("div").attr("class", "label").text("Score");
+    score.append("div").attr("class", "value").text(this.score);
 
     this.drawGridLines();
     this.updateQueueUI(); //doesnt do anything
@@ -264,8 +269,14 @@ export default class Stage {
     y: number = this.gridHeight,
     blockSize: number = this.blockSize
   ) {
-    document.documentElement.style.setProperty('--stage-height', `${y * blockSize}px`)
-    document.documentElement.style.setProperty('--stage-width', `${x * blockSize}px`)
+    document.documentElement.style.setProperty(
+      "--stage-height",
+      `${y * blockSize}px`
+    );
+    document.documentElement.style.setProperty(
+      "--stage-width",
+      `${x * blockSize}px`
+    );
     const grid = selectAll(".stage svg")
       .attr("style", `width: ${x * blockSize}px; height: ${y * blockSize}px`)
       .append("g")

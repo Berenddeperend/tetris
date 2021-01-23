@@ -5048,7 +5048,7 @@ function () {
 
     if (this.isGameOver) {
       this.beforeDestroy();
-      return tetris_1.setGameState('gameOver');
+      return tetris_1.setGameState("gameOver");
     }
 
     this.settledBlocks.push(block);
@@ -5101,7 +5101,7 @@ function () {
   };
 
   Stage.prototype.updateScoreUI = function () {
-    this.d3UI.select('.score .value').text(this.score);
+    this.d3UI.select(".score .value").text(this.score);
   };
 
   Stage.prototype.placeBlockInGrid = function (block) {
@@ -5178,12 +5178,12 @@ function () {
     this.d3Stage = d3_selection_1.selectAll("body").append("div").attr("class", "stage");
     this.d3Stage.append("svg");
     this.d3UI = d3_selection_1.select("body").append("div").attr("class", "ui");
-    var queue = this.d3UI.append('div').attr('class', 'queue ui-block');
-    queue.append('div').attr('class', 'label').text('Next');
-    queue.append('div').attr('class', 'value').append('svg').attr('width', this.blockSize * 4);
+    var queue = this.d3UI.append("div").attr("class", "queue ui-block");
+    queue.append("div").attr("class", "label").text("Next");
+    queue.append("div").attr("class", "value").append("svg").attr("width", this.blockSize * 4).attr("height", this.blockSize * 2);
     var score = this.d3UI.append("div").attr("class", "score ui-block");
-    score.append('div').attr('class', 'label').text('Score');
-    score.append('div').attr('class', 'value').text(this.score);
+    score.append("div").attr("class", "label").text("Score");
+    score.append("div").attr("class", "value").text(this.score);
     this.drawGridLines();
     this.updateQueueUI(); //doesnt do anything
 
@@ -5203,8 +5203,8 @@ function () {
       blockSize = this.blockSize;
     }
 
-    document.documentElement.style.setProperty('--stage-height', y * blockSize + "px");
-    document.documentElement.style.setProperty('--stage-width', x * blockSize + "px");
+    document.documentElement.style.setProperty("--stage-height", y * blockSize + "px");
+    document.documentElement.style.setProperty("--stage-width", x * blockSize + "px");
     var grid = d3_selection_1.selectAll(".stage svg").attr("style", "width: " + x * blockSize + "px; height: " + y * blockSize + "px").append("g").attr("class", "gridlines").attr("width", x * blockSize).attr("height", y * blockSize).attr("style", "stroke-width: " + this.gridGutterSize + "px").attr("viewBox", "0 0 " + x * blockSize + " " + y * blockSize);
     var rows = grid.append("g").attr("class", "rows");
     var columns = grid.append("g").attr("class", "columns");

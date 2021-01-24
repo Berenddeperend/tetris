@@ -1,13 +1,15 @@
 import Block from "./block";
 import { select, selectAll } from "d3-selection";
 import { uniq } from "./utils";
-import { setGameState } from "./tetris";
+import Tetris from "./tetris";
 import Gestures from "./gestureControls";
 import KeyboardControls from "./keyboardControls";
 import TouchControls from "./touchControls";
 import HighScores from './highScores';
 
 export default class Stage {
+  game:Tetris;
+
   gridWidth: number;
   gridHeight: number;
   blockSize: number;
@@ -39,7 +41,8 @@ export default class Stage {
     gridGutterSize = 1,
     gridOverBlocks = true,
     queueScaleFactor = 0.75
-  } = {}) {
+  } = {}, game:Tetris) {
+    this.game = game;
     this.gridWidth = width;
     this.gridHeight = height;
     this.blockSize = blockSize;
@@ -121,7 +124,7 @@ export default class Stage {
   tick() {
     if (this.isGameOver) {
       this.beforeDestroy();
-      setGameState("gameOver");
+      this.game.setGameState("gameOver");
       return;
     }
 
@@ -135,7 +138,7 @@ export default class Stage {
   finishBlock(block: Block) {
     if (this.isGameOver) {
       this.beforeDestroy();
-      return setGameState("gameOver");
+      return this.game.setGameState("gameOver");
     }
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
@@ -148,7 +151,7 @@ export default class Stage {
     if (!this.activeBlock.blockPositionIsValid) {
       this.isGameOver = true;
       this.beforeDestroy();
-      return setGameState("gameOver");
+      return this.game.setGameState("gameOver");
     }
 
     this.completedRows.map((rowIndex) => {

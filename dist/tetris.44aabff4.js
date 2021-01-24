@@ -5009,8 +5009,6 @@ var d3_selection_1 = require("d3-selection");
 
 var utils_1 = require("./utils");
 
-var tetris_1 = require("./tetris");
-
 var gestureControls_1 = __importDefault(require("./gestureControls"));
 
 var keyboardControls_1 = __importDefault(require("./keyboardControls"));
@@ -5022,7 +5020,7 @@ var highScores_1 = __importDefault(require("./highScores"));
 var Stage =
 /** @class */
 function () {
-  function Stage(_a) {
+  function Stage(_a, game) {
     var _this = this;
 
     var _b = _a === void 0 ? {} : _a,
@@ -5044,6 +5042,7 @@ function () {
     this.blockIndex = 1;
     this.isGameOver = false;
     this.clearedLines = 0;
+    this.game = game;
     this.gridWidth = width;
     this.gridHeight = height;
     this.blockSize = blockSize;
@@ -5138,7 +5137,7 @@ function () {
   Stage.prototype.tick = function () {
     if (this.isGameOver) {
       this.beforeDestroy();
-      tetris_1.setGameState("gameOver");
+      this.game.setGameState("gameOver");
       return;
     }
 
@@ -5154,7 +5153,7 @@ function () {
 
     if (this.isGameOver) {
       this.beforeDestroy();
-      return tetris_1.setGameState("gameOver");
+      return this.game.setGameState("gameOver");
     }
 
     this.settledBlocks.push(block);
@@ -5166,7 +5165,7 @@ function () {
     if (!this.activeBlock.blockPositionIsValid) {
       this.isGameOver = true;
       this.beforeDestroy();
-      return tetris_1.setGameState("gameOver");
+      return this.game.setGameState("gameOver");
     }
 
     this.completedRows.map(function (rowIndex) {
@@ -5337,7 +5336,7 @@ function () {
 }();
 
 exports.default = Stage;
-},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.ts","./tetris":"src/tetris.ts","./gestureControls":"src/gestureControls.ts","./keyboardControls":"src/keyboardControls.ts","./touchControls":"src/touchControls.ts","./highScores":"src/highScores.ts"}],"src/splash.ts":[function(require,module,exports) {
+},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.ts","./gestureControls":"src/gestureControls.ts","./keyboardControls":"src/keyboardControls.ts","./touchControls":"src/touchControls.ts","./highScores":"src/highScores.ts"}],"src/splash.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5346,12 +5345,10 @@ Object.defineProperty(exports, "__esModule", {
 
 var d3_selection_1 = require("d3-selection");
 
-var tetris_1 = require("./tetris");
-
 var Splash =
 /** @class */
 function () {
-  function Splash() {
+  function Splash(game) {
     var splash = d3_selection_1.select("body").append("div").attr("class", "splash");
     splash.append("div").attr("class", "title").text("Tetris");
     splash.append("div").attr("class", "subtitle").text("By Berend"); // document.documentElement.style.setProperty(
@@ -5372,7 +5369,7 @@ function () {
       if (e.code === "Space") {
         window.removeEventListener("keydown", onKeyDown);
         d3_selection_1.select(".splash").remove();
-        tetris_1.setGameState("playing");
+        game.setGameState("playing");
       }
     };
 
@@ -5383,7 +5380,7 @@ function () {
 }();
 
 exports.default = Splash;
-},{"d3-selection":"node_modules/d3-selection/src/index.js","./tetris":"src/tetris.ts"}],"src/gameOver.ts":[function(require,module,exports) {
+},{"d3-selection":"node_modules/d3-selection/src/index.js"}],"src/gameOver.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -5398,14 +5395,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var d3_selection_1 = require("d3-selection");
 
-var tetris_1 = require("./tetris");
-
 var highScores_1 = __importDefault(require("./highScores"));
 
 var GameOver =
 /** @class */
 function () {
-  function GameOver(stage) {
+  function GameOver(game) {
+    var _this = this;
+
+    this.game = game;
     d3_selection_1.select(".stage").attr("class", "stage is-game-over").append("div").attr("class", "game-over").text("Game over");
 
     var onKeyDown = function onKeyDown(e) {
@@ -5414,12 +5412,13 @@ function () {
         d3_selection_1.select(".stage").remove();
         d3_selection_1.select(".game-over").remove();
         d3_selection_1.select(".ui").remove();
-        tetris_1.setGameState("playing");
+
+        _this.game.setGameState("playing");
       }
     };
 
     new highScores_1.default({
-      score: stage.score,
+      score: this.game.stage.score,
       name: "default",
       date: new Date()
     });
@@ -5433,7 +5432,7 @@ function () {
 }();
 
 exports.default = GameOver;
-},{"d3-selection":"node_modules/d3-selection/src/index.js","./tetris":"src/tetris.ts","./highScores":"src/highScores.ts"}],"src/tetris.ts":[function(require,module,exports) {
+},{"d3-selection":"node_modules/d3-selection/src/index.js","./highScores":"src/highScores.ts"}],"src/tetris.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -5445,7 +5444,6 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.setGameState = void 0;
 
 var stage_1 = __importDefault(require("./stage"));
 
@@ -5453,28 +5451,36 @@ var splash_1 = __importDefault(require("./splash"));
 
 var gameOver_1 = __importDefault(require("./gameOver"));
 
-var stage;
-
-function setGameState(gameState) {
-  gameState = gameState;
-
-  switch (gameState) {
-    case "splash":
-      return new splash_1.default();
-
-    case "playing":
-      return stage = new stage_1.default({
-        width: 10
-      });
-
-    case "gameOver":
-      console.log('stage', stage);
-      return new gameOver_1.default(stage);
+var Tetris =
+/** @class */
+function () {
+  function Tetris() {
+    this.gameMode = "default";
+    this.setGameState("splash");
   }
-}
 
-exports.setGameState = setGameState;
-setGameState("splash");
+  Tetris.prototype.setGameState = function (gameState) {
+    this.gameState = gameState;
+
+    switch (gameState) {
+      case "splash":
+        return new splash_1.default(this);
+
+      case "playing":
+        return this.stage = new stage_1.default({
+          width: 10
+        }, this);
+
+      case "gameOver":
+        return new gameOver_1.default(this);
+    }
+  };
+
+  return Tetris;
+}();
+
+exports.default = Tetris;
+new Tetris();
 },{"./stage":"src/stage.ts","./splash":"src/splash.ts","./gameOver":"src/gameOver.ts"}],"../../../.nvm/versions/node/v12.16.3/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

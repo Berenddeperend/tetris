@@ -1,11 +1,13 @@
 import { select } from "d3-selection";
-import { setGameState } from "./tetris";
+import Tetris from "./tetris";
 import HighScores from './highScores';
 import Stage from "./stage";
 
 
 export default class GameOver {
-  constructor(stage:Stage) {
+  game: Tetris;
+  constructor(game:Tetris) {
+    this.game = game;
     select(".stage")
       .attr("class", "stage is-game-over")
       .append("div")
@@ -18,12 +20,12 @@ export default class GameOver {
         select(".stage").remove();
         select(".game-over").remove();
         select(".ui").remove();
-        setGameState("playing");
+        this.game.setGameState("playing");
       }
     };
 
     new HighScores({
-      score: stage.score,
+      score: this.game.stage.score,
       name: "default",
       date: new Date
     })

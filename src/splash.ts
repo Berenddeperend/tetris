@@ -1,8 +1,8 @@
 import { select } from "d3-selection";
-import { setGameState } from "./tetris";
+import Tetris from "./tetris";
 
 export default class Splash {
-  constructor() {
+  constructor(game: Tetris) {
     const splash = select("body").append("div").attr("class", "splash");
 
     splash.append("div").attr("class", "title").text("Tetris");
@@ -42,7 +42,7 @@ export default class Splash {
       if (e.code === "Space") {
         window.removeEventListener("keydown", onKeyDown);
         select(".splash").remove();
-        setGameState("playing");
+        game.setGameState("playing");
       }
     };
     window.addEventListener("keydown", onKeyDown);

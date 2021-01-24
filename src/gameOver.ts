@@ -24,7 +24,7 @@ export default class GameOver {
 
     new HighScores({
       score: stage.score,
-      name: "Berend",
+      name: "default",
       date: new Date
     })
 

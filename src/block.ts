@@ -30,10 +30,10 @@ export default class Block {
   init(renderTo: renderBlockTo) {
     this.renderTo = renderTo;
     let d3RenderTarget;
-    if(renderTo === 'stage') {
-      this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2)
+    if (renderTo === "stage") {
+      this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2);
       d3RenderTarget = this.stage.d3Stage;
-    } else if (renderTo = 'queue') {
+    } else if ((renderTo = "queue")) {
       this.x = (4 - this.shape[0].length) / 2; //align center
       // this.x = 4 - this.shape[0].length; //align right
       d3RenderTarget = this.stage.d3Queue;
@@ -45,8 +45,7 @@ export default class Block {
 
     this.d3Self = d3RenderTarget
       .select("svg")
-      // .insert("g", this.stage.gridOverBlocks ? ":first-child" : null)
-      .insert("g", this.stage.gridOverBlocks ? '.gridlines' : null)
+      .insert("g", this.stage.gridOverBlocks ? ".gridlines" : null)
       .attr("class", `block ${this.color}`);
     this.draw();
   }
@@ -164,7 +163,7 @@ export default class Block {
   }
 
   updateGroupPosition() {
-    const scale = this.renderTo === 'queue' ? this.stage.queueScaleFactor : 1;
+    const scale = this.renderTo === "queue" ? this.stage.queueScaleFactor : 1;
     this.d3Self.attr(
       "transform",
       `translate(${this.x * this.stage.blockSize * scale}, ${

@@ -1,11 +1,10 @@
-import Tetris from './tetris';
+import Tetris from "./tetris";
 
 export default class KeyboardControls {
-  onKeyDown: (e:any) => any;
-  constructor(game:Tetris) {
+  onKeyDown: (e: any) => any;
+  constructor(game: Tetris) {
     this.onKeyDown = (e: any) => {
-
-      if(game.gameState === "playing") {
+      if (game.gameState === "playing") {
         switch (e.code) {
           case "ArrowRight":
             return game.stage.controls.right();
@@ -19,17 +18,15 @@ export default class KeyboardControls {
             return game.stage.controls.rotate();
         }
       }
-
-
     };
 
     this.init();
   }
-  
+
   init() {
     document.addEventListener("keydown", this.onKeyDown);
   }
-  
+
   destroy() {
     document.removeEventListener("keydown", this.onKeyDown);
   }

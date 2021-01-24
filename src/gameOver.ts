@@ -1,12 +1,10 @@
 import { select } from "d3-selection";
 import Tetris from "./tetris";
-import HighScores from './highScores';
-import Stage from "./stage";
-
+import HighScores from "./highScores";
 
 export default class GameOver {
   game: Tetris;
-  constructor(game:Tetris) {
+  constructor(game: Tetris) {
     this.game = game;
     select(".stage")
       .attr("class", "stage is-game-over")
@@ -27,8 +25,8 @@ export default class GameOver {
     new HighScores({
       score: this.game.stage.score,
       name: "default",
-      date: new Date
-    })
+      date: new Date(),
+    });
 
     window.setTimeout(() => {
       // prevent user from closing gameover screen instantly while still trying to rotate

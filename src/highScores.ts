@@ -51,9 +51,11 @@ export default class HighScores {
     window.localStorage.setItem("highScore", JSON.stringify(newScore));
   }
 
-  static getLocalHighScore():HighScore | null {
+  static getLocalHighScore(): HighScore | null {
     const scores = JSON.parse(window.localStorage.getItem("highScore"));
 
-    return scores ? (JSON.parse(window.localStorage.getItem("highScore")) as HighScore[])[0] : null;
+    return scores
+      ? (JSON.parse(window.localStorage.getItem("highScore")) as HighScore[])[0]
+      : null;
   }
 }

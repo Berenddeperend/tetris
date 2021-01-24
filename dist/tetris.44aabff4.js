@@ -241,10 +241,10 @@ function () {
     this.renderTo = renderTo;
     var d3RenderTarget;
 
-    if (renderTo === 'stage') {
+    if (renderTo === "stage") {
       this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2);
       d3RenderTarget = this.stage.d3Stage;
-    } else if (renderTo = 'queue') {
+    } else if (renderTo = "queue") {
       this.x = (4 - this.shape[0].length) / 2; //align center
       // this.x = 4 - this.shape[0].length; //align right
 
@@ -255,8 +255,7 @@ function () {
       this.d3Self.remove();
     }
 
-    this.d3Self = d3RenderTarget.select("svg") // .insert("g", this.stage.gridOverBlocks ? ":first-child" : null)
-    .insert("g", this.stage.gridOverBlocks ? '.gridlines' : null).attr("class", "block " + this.color);
+    this.d3Self = d3RenderTarget.select("svg").insert("g", this.stage.gridOverBlocks ? ".gridlines" : null).attr("class", "block " + this.color);
     this.draw();
   };
 
@@ -374,7 +373,7 @@ function () {
   };
 
   Block.prototype.updateGroupPosition = function () {
-    var scale = this.renderTo === 'queue' ? this.stage.queueScaleFactor : 1;
+    var scale = this.renderTo === "queue" ? this.stage.queueScaleFactor : 1;
     this.d3Self.attr("transform", "translate(" + this.x * this.stage.blockSize * scale + ", " + this.y * this.stage.blockSize * scale + ") scale(" + scale + ")");
   };
 
@@ -2401,7 +2400,7 @@ function () {
     var score = this.d3UI.append("div").attr("class", "score ui-block");
     score.append("div").attr("class", "label").text("Score");
     score.append("div").attr("class", "value").text(this.score);
-    var highScore = this.d3UI.append('div').attr('class', 'highscore ui-block');
+    var highScore = this.d3UI.append("div").attr("class", "highscore ui-block");
     highScore.append("div").attr("class", "label").text("Highscore");
     highScore.append("div").attr("class", "value").text((_a = highScores_1.default.getLocalHighScore()) === null || _a === void 0 ? void 0 : _a.score);
     this.drawGridLines();
@@ -5463,7 +5462,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63134" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59742" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

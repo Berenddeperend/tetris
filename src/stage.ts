@@ -2,10 +2,10 @@ import Block from "./block";
 import { select, selectAll } from "d3-selection";
 import { uniq } from "./utils";
 import Tetris from "./tetris";
-import HighScores from './highScores';
+import HighScores from "./highScores";
 
 export default class Stage {
-  game:Tetris;
+  game: Tetris;
 
   gridWidth: number;
   gridHeight: number;
@@ -27,14 +27,17 @@ export default class Stage {
   d3UI: any; //todo: better typing
   d3Queue: any; //todo: better typing
 
-  constructor({
-    width = 10,
-    height = 20,
-    blockSize = 24,
-    gridGutterSize = 1,
-    gridOverBlocks = true,
-    queueScaleFactor = 0.75
-  } = {}, game:Tetris) {
+  constructor(
+    {
+      width = 10,
+      height = 20,
+      blockSize = 24,
+      gridGutterSize = 1,
+      gridOverBlocks = true,
+      queueScaleFactor = 0.75,
+    } = {},
+    game: Tetris
+  ) {
     this.game = game;
     this.gridWidth = width;
     this.gridHeight = height;
@@ -98,7 +101,6 @@ export default class Stage {
       },
     };
   }
-
 
   tick() {
     if (this.isGameOver) {
@@ -244,14 +246,18 @@ export default class Stage {
 
     this.d3Queue = queue;
 
-    
     const score = this.d3UI.append("div").attr("class", "score ui-block");
     score.append("div").attr("class", "label").text("Score");
     score.append("div").attr("class", "value").text(this.score);
-    
-    const highScore = this.d3UI.append('div').attr('class', 'highscore ui-block')
+
+    const highScore = this.d3UI
+      .append("div")
+      .attr("class", "highscore ui-block");
     highScore.append("div").attr("class", "label").text("Highscore");
-    highScore.append("div").attr("class", "value").text(HighScores.getLocalHighScore()?.score);
+    highScore
+      .append("div")
+      .attr("class", "value")
+      .text(HighScores.getLocalHighScore()?.score);
 
     this.drawGridLines();
     this.updateScoreUI();

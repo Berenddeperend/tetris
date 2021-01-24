@@ -1,5 +1,5 @@
-import Stage from "./stage";
-import Tetris from "./tetris";
+import Stage from "../stage";
+import Tetris from "../tetris";
 
 export default class TouchControls {
   deviceWidth: number;

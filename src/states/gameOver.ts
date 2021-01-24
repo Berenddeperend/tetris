@@ -1,6 +1,6 @@
 import { select } from "d3-selection";
-import Tetris from "./tetris";
-import HighScores from "./highScores";
+import Tetris from "../tetris";
+import HighScores from "../highScores";
 
 export default class GameOver {
   game: Tetris;

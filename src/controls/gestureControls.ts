@@ -1,5 +1,5 @@
 import Hammer from "hammerjs";
-import Tetris from "./tetris";
+import Tetris from "../tetris";
 
 export default class GestureControls {
   hasInstaFallen: boolean = false;

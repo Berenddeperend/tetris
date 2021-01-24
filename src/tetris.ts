@@ -1,9 +1,9 @@
 import Stage from "./stage";
-import Splash from "./splash";
-import GameOver from "./gameOver";
-import KeyboardControls from "./keyboardControls";
-import TouchControls from "./touchControls";
-import GestureControls from "./gestureControls";
+import Splash from "./states/splash";
+import GameOver from "./states/gameOver";
+import KeyboardControls from "./controls/keyboardControls";
+import TouchControls from "./controls/touchControls";
+import GestureControls from "./controls/gestureControls";
 
 export type GameState = "splash" | "playing" | "gameOver";
 export type GameMode = "default";

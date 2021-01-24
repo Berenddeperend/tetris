@@ -1,5 +1,5 @@
 import { select } from "d3-selection";
-import Tetris from "./tetris";
+import Tetris from "../tetris";
 
 export default class Splash {
   constructor(game: Tetris) {

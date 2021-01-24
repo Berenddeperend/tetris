@@ -1,4 +1,4 @@
-import Tetris from "./tetris";
+import Tetris from "../tetris";
 
 export default class KeyboardControls {
   onKeyDown: (e: any) => any;

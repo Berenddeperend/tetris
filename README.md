@@ -41,3 +41,6 @@ On release:
 - Post to reddit.com/r/tetris
 - Write blog post
 - Ask Daniel to hack the highscore
+
+
+Project started at around 5 januari

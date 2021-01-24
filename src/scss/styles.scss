@@ -197,7 +197,7 @@ svg {
   border: 1px solid $orange;
   padding: 10px;
   position: relative;
-  // width: 75px;
+  min-width: 75px;
   box-shadow: 0 0 2px $orange;
   user-select: none;
 
@@ -218,3 +218,11 @@ svg {
 }
 
 
+.name-group {
+  display: flex;
+
+  .name {
+   width: 50px;
+   margin: 3px;
+  }
+}

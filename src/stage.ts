@@ -5,6 +5,7 @@ import { setGameState } from "./tetris";
 import Gestures from "./gestureControls";
 import KeyboardControls from "./keyboardControls";
 import TouchControls from "./touchControls";
+import HighScores from './highScores';
 
 export default class Stage {
   gridWidth: number;
@@ -256,9 +257,14 @@ export default class Stage {
 
     this.d3Queue = queue;
 
+    
     const score = this.d3UI.append("div").attr("class", "score ui-block");
     score.append("div").attr("class", "label").text("Score");
     score.append("div").attr("class", "value").text(this.score);
+    
+    const highScore = this.d3UI.append('div').attr('class', 'highscore ui-block')
+    highScore.append("div").attr("class", "label").text("Highscore");
+    highScore.append("div").attr("class", "value").text(HighScores.getLocalHighScore()?.score);
 
     this.drawGridLines();
     this.updateScoreUI();

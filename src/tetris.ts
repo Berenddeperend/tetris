@@ -1,19 +1,22 @@
-import Stage from './stage';
-import Splash from './splash';
-import GameOver from './gameOver';
+import Stage from "./stage";
+import Splash from "./splash";
+import GameOver from "./gameOver";
 
 export type GameState = "splash" | "playing" | "gameOver";
 
+let stage: Stage;
+
 export function setGameState(gameState: GameState) {
-  gameState = gameState; 
+  gameState = gameState;
   switch (gameState) {
-    case "splash": 
-      return new Splash;
+    case "splash":
+      return new Splash();
     case "playing":
-      return new Stage({width: 10});
-    case "gameOver": 
-      return new GameOver;
+      return (stage = new Stage({ width: 10 }));
+    case "gameOver":
+      console.log('stage', stage)
+      return new GameOver(stage );
   }
 }
 
-setGameState('splash')
+setGameState("playing");

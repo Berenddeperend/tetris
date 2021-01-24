@@ -1,10 +1,13 @@
 import { select } from "d3-selection";
 import { setGameState } from "./tetris";
+import HighScores from './highScores';
+import Stage from "./stage";
+
 
 export default class GameOver {
-  constructor() {
+  constructor(stage:Stage) {
     select(".stage")
-      .attr('class', 'stage is-game-over')
+      .attr("class", "stage is-game-over")
       .append("div")
       .attr("class", "game-over")
       .text("Game over");
@@ -14,10 +17,20 @@ export default class GameOver {
         window.removeEventListener("keydown", onKeyDown);
         select(".stage").remove();
         select(".game-over").remove();
-        select(".score").remove();
+        select(".ui").remove();
         setGameState("playing");
       }
     };
-    window.addEventListener("keydown", onKeyDown);
+
+    new HighScores({
+      score: stage.score,
+      name: "Berend",
+      date: new Date
+    })
+
+    window.setTimeout(() => {
+      // prevent user from closing gameover screen instantly while still trying to rotate
+      window.addEventListener("keydown", onKeyDown);
+    }, 500);
   }
 }

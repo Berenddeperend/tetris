@@ -1,9 +1,5 @@
 @import "./variables.scss";
 
-:root {
-  --stage-height: 0px;
-  --stage-width: 0px;
-}
 
 html {
   background: $black;
@@ -77,11 +73,16 @@ body {
 .stage {
   position: relative;
   transition: opacity 2s;
+  order: 2;
 
   // width: var(--stage-width);
   // display: flex;
   // justify-content: center;
   // align-items: center;
+
+  @media(min-width: $breakpoint) { 
+    order: 1;
+  }
 
   &:after {
     content: "";
@@ -95,6 +96,7 @@ body {
     background: $black;
     transition: opacity 2s;
   }
+  
 
   &.is-game-over {
     &::after {
@@ -179,6 +181,7 @@ svg {
 }
 
 .ui {
+  order: 0;
   margin-top: 20px;
   text-align: right;
   display: flex;
@@ -186,6 +189,7 @@ svg {
   justify-content: space-evenly;
 
   @media(min-width: $breakpoint) {
+    order: 1;
     flex-direction: column;
     margin: 0 0 0 20px;
     width: auto;
@@ -197,9 +201,12 @@ svg {
   border: 1px solid $orange;
   padding: 10px;
   position: relative;
-  min-width: 75px;
+  // min-width: 75px;
   box-shadow: 0 0 2px $orange;
   user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 
   .value {
     @include text-shadow(2px, false);
@@ -217,6 +224,11 @@ svg {
   }
 }
 
+.queue svg {
+  g {
+    // transform: scale(0.75);
+  }
+}
 
 .name-group {
   display: flex;

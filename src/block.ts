@@ -13,8 +13,10 @@ export default class Block {
   id: number;
   d3Self: any;
   stage: Stage;
+  renderTo: renderBlockTo;
 
   constructor(id: number = 0, stage: Stage, renderTo: renderBlockTo) {
+    this.renderTo = renderTo;
     this.stage = stage;
     const randomBlock =
       possibleForms[Math.floor(Math.random() * possibleForms.length)];
@@ -26,6 +28,7 @@ export default class Block {
   }
 
   init(renderTo: renderBlockTo) {
+    this.renderTo = renderTo;
     let d3RenderTarget;
     if(renderTo === 'stage') {
       this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2)
@@ -161,11 +164,12 @@ export default class Block {
   }
 
   updateGroupPosition() {
+    const scale = this.renderTo === 'queue' ? this.stage.queueScaleFactor : 1;
     this.d3Self.attr(
       "transform",
-      `translate(${this.x * this.stage.blockSize}, ${
-        this.y * this.stage.blockSize
-      })`
+      `translate(${this.x * this.stage.blockSize * scale}, ${
+        this.y * this.stage.blockSize * scale
+      }) scale(${scale})`
     );
   }
 }

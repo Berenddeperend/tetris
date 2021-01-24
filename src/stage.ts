@@ -13,6 +13,7 @@ export default class Stage {
   blockSize: number;
   gridGutterSize: number;
   gridOverBlocks: boolean;
+  queueScaleFactor: number;
 
   internalGrid: number[][];
   activeBlock: Block;
@@ -37,12 +38,14 @@ export default class Stage {
     blockSize = 24,
     gridGutterSize = 1,
     gridOverBlocks = true,
+    queueScaleFactor = 0.75
   } = {}) {
     this.gridWidth = width;
     this.gridHeight = height;
     this.blockSize = blockSize;
     this.gridGutterSize = gridGutterSize;
     this.gridOverBlocks = gridOverBlocks;
+    this.queueScaleFactor = queueScaleFactor;
     this.initUI();
     this.initializeInternalGrid();
     // this.initGestures();
@@ -252,8 +255,10 @@ export default class Stage {
       .append("div")
       .attr("class", "value")
       .append("svg")
-      .attr("width", this.blockSize * 4)
-      .attr("height", this.blockSize * 2);
+      // .attr('viewbox', "0 0 100 100")
+      // .attr('perserveAspectRatio', true)
+      .attr("width", this.blockSize * 4 * this.queueScaleFactor)
+      .attr("height", this.blockSize * 2 * this.queueScaleFactor);
 
     this.d3Queue = queue;
 

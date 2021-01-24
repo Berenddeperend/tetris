@@ -17,18 +17,18 @@ export default class Gestures {
       // gestures.on("pan", (e) => {
       console.log(e);
       switch (e.type) {
-        case "panleft":
-          return stage.controls.left();
-          // return this.throttledFn("panleft", () => stage.controls.left());
-        case "panright":
-          return stage.controls.right();
-          // return this.throttledFn("panright", () => stage.controls.right());
+        // case "panleft":
+        //   return stage.controls.left();
+        //   // return this.throttledFn("panleft", () => stage.controls.left());
+        // case "panright":
+        //   return stage.controls.right();
+        //   // return this.throttledFn("panright", () => stage.controls.right());
         case "swipedown":
           return stage.controls.down();
         case "swipeup":
           return stage.controls.instaFall();
-        case "tap":
-          return stage.controls.rotate();
+        // case "tap":
+        //   return stage.controls.rotate();
         case "panend":
           return (this.hasInstaFallen = false);
       }

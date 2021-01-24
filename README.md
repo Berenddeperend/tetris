@@ -1,13 +1,14 @@
+WIP: 
+- Touch/gesture controls
+
 Bugs:
-- Move controls of all states to *Controls.ts file
 - Reset tick after last-minute rotate
-- Gridlines as gutter in grid
 
 Features:
 - Better 'Game Over' screen. (in progress)
 - See highscore list
 - Submit names with highscore
-- UI 
+- UI
   - Responsive position
   - Check gameboy version for inspiration, or this one: https://m.media-amazon.com/images/S/aplus-media/vc/d2044fc9-3049-41ff-8262-6b52fad2794c.__CR0,69,2099,2099_PT0_SX300_V1___.jpg
   - Lines
@@ -21,6 +22,8 @@ Features:
 
 Maintenance:
 - Move collision logic to block class
+- Move controls of all states to *Controls.ts file
+- Gridlines as gutter in grid
 
 Future:
 - 2 player mode (one client)

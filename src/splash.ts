@@ -8,20 +8,18 @@ export default class Splash {
     splash.append("div").attr("class", "title").text("Tetris");
     splash.append("div").attr("class", "subtitle").text("By Berend");
 
-    // document.documentElement.style.setProperty(
-    //   "--stage-height",
-    //   `${y * blockSize}px`
-    // );
+    const breakpoint = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--breakpoint"
+      )
+    );
 
     splash
       .append("div")
       .attr("class", "begin")
       .selectAll("span")
       .data(() =>
-        window.innerWidth <
-        parseInt(
-          document.documentElement.style.getPropertyValue("--breakpoint")
-        )
+        window.innerWidth > breakpoint
           ? "press space to start".split("")
           : "touch here to start".split("")
       )

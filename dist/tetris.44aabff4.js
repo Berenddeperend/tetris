@@ -2458,13 +2458,10 @@ function () {
   function Splash(game) {
     var splash = d3_selection_1.select("body").append("div").attr("class", "splash");
     splash.append("div").attr("class", "title").text("Tetris");
-    splash.append("div").attr("class", "subtitle").text("By Berend"); // document.documentElement.style.setProperty(
-    //   "--stage-height",
-    //   `${y * blockSize}px`
-    // );
-
+    splash.append("div").attr("class", "subtitle").text("By Berend");
+    var breakpoint = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--breakpoint"));
     splash.append("div").attr("class", "begin").selectAll("span").data(function () {
-      return window.innerWidth < parseInt(document.documentElement.style.getPropertyValue("--breakpoint")) ? "press space to start".split("") : "touch here to start".split("");
+      return window.innerWidth > breakpoint ? "press space to start".split("") : "touch here to start".split("");
     }).enter().append("span").attr("class", "letter").attr("style", function (d, i) {
       return "animation-delay: -" + i * 2 + "s";
     }).text(function (d) {

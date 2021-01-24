@@ -1,7 +1,7 @@
 :root {
   --stage-height: 0px;
   --stage-width: 0px;
-  --breakpoint: $breakpoint;
+  --breakpoint: 500px;
 }
 
 @keyframes wiggle {

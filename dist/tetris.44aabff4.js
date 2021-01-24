@@ -2036,7 +2036,629 @@ var _style = require("./selection/style.js");
 var _window = _interopRequireDefault(require("./window.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./create.js":"node_modules/d3-selection/src/create.js","./creator.js":"node_modules/d3-selection/src/creator.js","./local.js":"node_modules/d3-selection/src/local.js","./matcher.js":"node_modules/d3-selection/src/matcher.js","./namespace.js":"node_modules/d3-selection/src/namespace.js","./namespaces.js":"node_modules/d3-selection/src/namespaces.js","./pointer.js":"node_modules/d3-selection/src/pointer.js","./pointers.js":"node_modules/d3-selection/src/pointers.js","./select.js":"node_modules/d3-selection/src/select.js","./selectAll.js":"node_modules/d3-selection/src/selectAll.js","./selection/index.js":"node_modules/d3-selection/src/selection/index.js","./selector.js":"node_modules/d3-selection/src/selector.js","./selectorAll.js":"node_modules/d3-selection/src/selectorAll.js","./selection/style.js":"node_modules/d3-selection/src/selection/style.js","./window.js":"node_modules/d3-selection/src/window.js"}],"node_modules/hammerjs/hammer.js":[function(require,module,exports) {
+},{"./create.js":"node_modules/d3-selection/src/create.js","./creator.js":"node_modules/d3-selection/src/creator.js","./local.js":"node_modules/d3-selection/src/local.js","./matcher.js":"node_modules/d3-selection/src/matcher.js","./namespace.js":"node_modules/d3-selection/src/namespace.js","./namespaces.js":"node_modules/d3-selection/src/namespaces.js","./pointer.js":"node_modules/d3-selection/src/pointer.js","./pointers.js":"node_modules/d3-selection/src/pointers.js","./select.js":"node_modules/d3-selection/src/select.js","./selectAll.js":"node_modules/d3-selection/src/selectAll.js","./selection/index.js":"node_modules/d3-selection/src/selection/index.js","./selector.js":"node_modules/d3-selection/src/selector.js","./selectorAll.js":"node_modules/d3-selection/src/selectorAll.js","./selection/style.js":"node_modules/d3-selection/src/selection/style.js","./window.js":"node_modules/d3-selection/src/window.js"}],"src/highScores.ts":[function(require,module,exports) {
+"use strict";
+
+var __read = this && this.__read || function (o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o),
+      r,
+      ar = [],
+      e;
+
+  try {
+    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
+      ar.push(r.value);
+    }
+  } catch (error) {
+    e = {
+      error: error
+    };
+  } finally {
+    try {
+      if (r && !r.done && (m = i["return"])) m.call(i);
+    } finally {
+      if (e) throw e.error;
+    }
+  }
+
+  return ar;
+};
+
+var __spread = this && this.__spread || function () {
+  for (var ar = [], i = 0; i < arguments.length; i++) {
+    ar = ar.concat(__read(arguments[i]));
+  }
+
+  return ar;
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var HighScores =
+/** @class */
+function () {
+  function HighScores(newScore) {
+    // const body = select('body').append('div').attr('class', 'name-group')
+    this.highScores = []; // const inputs = [
+    // body.append('input').attr('type', 'text').attr('class','name name0'),
+    // body.append('input').attr('type', 'text').attr('class','name name1'),
+    // body.append('input').attr('type', 'text').attr('class','name name2'),
+    // ];
+    // inputs.forEach((input, index) => {
+    //   window.addEventListener('input', (e)=> {
+    //     // debugger;
+    //     if(e.target === input.node()) {
+    //       if(index === inputs.length -1) {
+    //         (document.querySelector(`.name${index}`) as HTMLElement).blur();
+    //       } else {
+    //         (document.querySelector(`.name${index +1 }`) as HTMLElement).focus();
+    //       }
+    //     }
+    //   });
+    // });
+    // window.setTimeout(()=> {
+    //   (document.querySelector('.name0') as HTMLElement).focus();
+    // }, 200)
+
+    this.setScore(newScore);
+  }
+
+  HighScores.prototype.setScore = function (highScore) {
+    var prevScores = JSON.parse(window.localStorage.getItem("highScore"));
+    var newScore = prevScores ? __spread(prevScores, [highScore]).sort(function (a, b) {
+      return b.score - a.score;
+    }) : [highScore];
+    window.localStorage.setItem("highScore", JSON.stringify(newScore));
+  };
+
+  HighScores.getLocalHighScore = function () {
+    var scores = JSON.parse(window.localStorage.getItem("highScore"));
+    return scores ? JSON.parse(window.localStorage.getItem("highScore"))[0] : null;
+  };
+
+  return HighScores;
+}();
+
+exports.default = HighScores;
+},{}],"src/stage.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var block_1 = __importDefault(require("./block"));
+
+var d3_selection_1 = require("d3-selection");
+
+var utils_1 = require("./utils");
+
+var highScores_1 = __importDefault(require("./highScores"));
+
+var Stage =
+/** @class */
+function () {
+  function Stage(_a, game) {
+    var _this = this;
+
+    var _b = _a === void 0 ? {} : _a,
+        _c = _b.width,
+        width = _c === void 0 ? 10 : _c,
+        _d = _b.height,
+        height = _d === void 0 ? 20 : _d,
+        _e = _b.blockSize,
+        blockSize = _e === void 0 ? 24 : _e,
+        _f = _b.gridGutterSize,
+        gridGutterSize = _f === void 0 ? 1 : _f,
+        _g = _b.gridOverBlocks,
+        gridOverBlocks = _g === void 0 ? true : _g,
+        _h = _b.queueScaleFactor,
+        queueScaleFactor = _h === void 0 ? 0.75 : _h;
+
+    this.settledBlocks = [];
+    this.queue = [];
+    this.blockIndex = 1;
+    this.isGameOver = false;
+    this.clearedLines = 0;
+    this.game = game;
+    this.gridWidth = width;
+    this.gridHeight = height;
+    this.blockSize = blockSize;
+    this.gridGutterSize = gridGutterSize;
+    this.gridOverBlocks = gridOverBlocks;
+    this.queueScaleFactor = queueScaleFactor;
+    this.initUI();
+    this.initializeInternalGrid();
+    this.activeBlock = new block_1.default(this.blockIndex, this, "stage");
+    this.queue.push(new block_1.default(++this.blockIndex, this, "queue"));
+    this.tickInterval = window.setInterval(function () {
+      _this.tick();
+    }, 1000);
+  }
+
+  Stage.prototype.initializeInternalGrid = function () {
+    this.internalGrid = [];
+
+    for (var y = 0; y < this.gridHeight; y++) {
+      this.internalGrid.push([]);
+
+      for (var x = 0; x < this.gridWidth; x++) {
+        this.internalGrid[y][x] = 0;
+      }
+    }
+  };
+
+  Object.defineProperty(Stage.prototype, "controls", {
+    get: function get() {
+      var _this = this;
+
+      return {
+        left: function left() {
+          if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, -1)) {
+            _this.activeBlock.moveX(-1);
+
+            return "left";
+          }
+        },
+        right: function right() {
+          if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, 1)) {
+            _this.activeBlock.moveX(1);
+
+            return "right";
+          }
+        },
+        down: function down() {
+          _this.tick();
+
+          return "down";
+        },
+        instaFall: function instaFall() {
+          while (!_this.blockWillCollideYOnNextTick(_this.activeBlock)) {
+            _this.activeBlock.moveDown();
+          }
+
+          clearInterval(_this.tickInterval);
+          _this.tickInterval = window.setInterval(function () {
+            _this.tick();
+          }, 1000);
+
+          _this.finishBlock(_this.activeBlock);
+
+          return "instaFall";
+        },
+        rotate: function rotate() {
+          _this.activeBlock.rotate();
+
+          return "rotate";
+        }
+      };
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  Stage.prototype.tick = function () {
+    if (this.isGameOver) {
+      this.beforeDestroy();
+      this.game.setGameState("gameOver");
+      return;
+    }
+
+    if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
+      this.finishBlock(this.activeBlock);
+    } else {
+      this.activeBlock.moveDown();
+    }
+  };
+
+  Stage.prototype.finishBlock = function (block) {
+    var _this = this;
+
+    if (this.isGameOver) {
+      this.beforeDestroy();
+      return this.game.setGameState("gameOver");
+    }
+
+    this.settledBlocks.push(block);
+    this.placeBlockInGrid(block);
+    this.activeBlock = this.queue.pop();
+    this.activeBlock.init("stage");
+    this.queue.push(new block_1.default(++this.blockIndex, this, "queue")); //if the block spawned invalidly, instant game over
+
+    if (!this.activeBlock.blockPositionIsValid) {
+      this.isGameOver = true;
+      this.beforeDestroy();
+      return this.game.setGameState("gameOver");
+    }
+
+    this.completedRows.map(function (rowIndex) {
+      _this.clearedLines++;
+
+      _this.updateScoreUI();
+
+      var uniqueBlockIdsInRow = utils_1.uniq(_this.internalGrid[rowIndex]);
+      var blocksIdsThatShouldFall = utils_1.uniq(_this.internalGrid.filter(function (row, i) {
+        return i < rowIndex;
+      }) //
+      .flat().filter(function (cell) {
+        return cell > 0;
+      }).filter(function (gridCel) {
+        return !uniqueBlockIdsInRow.includes(gridCel);
+      }));
+
+      _this.settledBlocks.filter(function (settledBlock) {
+        return uniqueBlockIdsInRow.includes(settledBlock.id);
+      }).forEach(function (blockWithClearedRow) {
+        return blockWithClearedRow.clearRow(rowIndex);
+      });
+
+      blocksIdsThatShouldFall.forEach(function (blockId) {
+        return _this.settledBlocks[blockId - 1].moveDown();
+      });
+
+      _this.internalGrid.splice(rowIndex, 1);
+
+      _this.internalGrid.unshift(new Array(_this.gridWidth).fill(0));
+    });
+  };
+
+  Stage.prototype.updateScoreUI = function () {
+    this.d3UI.select(".score .value").text(this.score);
+  };
+
+  Stage.prototype.placeBlockInGrid = function (block) {
+    var _this = this;
+
+    block.shape.map(function (y, yIndex) {
+      y.map(function (x, xIndex) {
+        if (x && y) {
+          _this.internalGrid[yIndex + block.y][xIndex + block.x] = block.id;
+        }
+      });
+    });
+  };
+
+  Stage.prototype.blockWillCollideYOnNextTick = function (block) {
+    var _this = this;
+
+    return block.shape.map(function (row, rowIndex) {
+      return row.map(function (atom, columnIndex) {
+        if (!atom) return false; //Empty atom in this slot
+
+        if (block.y + rowIndex + 1 >= _this.gridHeight) {
+          return true; //Block reached bottom of stage
+        }
+
+        return (//returns the value of the target spot in the internal grid for the atom
+          _this.internalGrid[block.y + rowIndex + 1] && _this.internalGrid[block.y + rowIndex + 1][block.x + columnIndex]
+        );
+      });
+    }).flat().some(function (d) {
+      return d;
+    });
+  };
+
+  Stage.prototype.blockWillCollideXOnNextTick = function (block, dir) {
+    var _this = this;
+
+    return block.shape.map(function (row, rowIndex) {
+      return row.map(function (atom, columnIndex) {
+        if (!atom) return false;
+        return (//returns the value of the target spot in the internal grid for the atom
+          _this.internalGrid[block.y + rowIndex] && _this.internalGrid[block.y + rowIndex][block.x + columnIndex + dir]
+        );
+      });
+    }).flat().some(function (d) {
+      return d;
+    });
+  };
+
+  Object.defineProperty(Stage.prototype, "completedRows", {
+    get: function get() {
+      return this.internalGrid.reduce(function (acc, row, rowIndex) {
+        if (row.every(function (d) {
+          return d;
+        })) {
+          acc.push(rowIndex);
+        }
+
+        return acc;
+      }, []);
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Stage.prototype, "score", {
+    get: function get() {
+      return this.clearedLines;
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  Stage.prototype.initUI = function () {
+    var _a;
+
+    this.d3Stage = d3_selection_1.selectAll("body").append("div").attr("class", "stage");
+    this.d3Stage.append("svg");
+    this.d3UI = d3_selection_1.select("body").append("div").attr("class", "ui");
+    var queue = this.d3UI.append("div").attr("class", "queue ui-block");
+    queue.append("div").attr("class", "label").text("Next");
+    queue.append("div").attr("class", "value").append("svg") // .attr('viewbox', "0 0 100 100")
+    // .attr('perserveAspectRatio', true)
+    .attr("width", this.blockSize * 4 * this.queueScaleFactor).attr("height", this.blockSize * 2 * this.queueScaleFactor);
+    this.d3Queue = queue;
+    var score = this.d3UI.append("div").attr("class", "score ui-block");
+    score.append("div").attr("class", "label").text("Score");
+    score.append("div").attr("class", "value").text(this.score);
+    var highScore = this.d3UI.append('div').attr('class', 'highscore ui-block');
+    highScore.append("div").attr("class", "label").text("Highscore");
+    highScore.append("div").attr("class", "value").text((_a = highScores_1.default.getLocalHighScore()) === null || _a === void 0 ? void 0 : _a.score);
+    this.drawGridLines();
+    this.updateScoreUI();
+  };
+
+  Stage.prototype.drawGridLines = function (x, y, blockSize) {
+    if (x === void 0) {
+      x = this.gridWidth;
+    }
+
+    if (y === void 0) {
+      y = this.gridHeight;
+    }
+
+    if (blockSize === void 0) {
+      blockSize = this.blockSize;
+    }
+
+    document.documentElement.style.setProperty("--stage-height", y * blockSize + "px");
+    document.documentElement.style.setProperty("--stage-width", x * blockSize + "px");
+    var grid = d3_selection_1.selectAll(".stage svg").attr("style", "width: " + x * blockSize + "px; height: " + y * blockSize + "px").append("g").attr("class", "gridlines").attr("width", x * blockSize).attr("height", y * blockSize).attr("style", "stroke-width: " + this.gridGutterSize + "px").attr("viewBox", "0 0 " + x * blockSize + " " + y * blockSize);
+    var rows = grid.append("g").attr("class", "rows");
+    var columns = grid.append("g").attr("class", "columns");
+
+    for (var i = 0; i < y + 1; i++) {
+      rows.append("line").attr("x1", 0).attr("x2", x * blockSize).attr("y1", i * blockSize).attr("y2", i * blockSize);
+    }
+
+    for (var i = 0; i < x + 1; i++) {
+      columns.append("line").attr("y1", 0).attr("y2", y * blockSize).attr("x1", i * blockSize).attr("x2", i * blockSize);
+    }
+  };
+
+  Stage.prototype.beforeDestroy = function () {
+    clearInterval(this.tickInterval);
+  };
+
+  return Stage;
+}();
+
+exports.default = Stage;
+},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.ts","./highScores":"src/highScores.ts"}],"src/splash.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var d3_selection_1 = require("d3-selection");
+
+var Splash =
+/** @class */
+function () {
+  function Splash(game) {
+    var splash = d3_selection_1.select("body").append("div").attr("class", "splash");
+    splash.append("div").attr("class", "title").text("Tetris");
+    splash.append("div").attr("class", "subtitle").text("By Berend"); // document.documentElement.style.setProperty(
+    //   "--stage-height",
+    //   `${y * blockSize}px`
+    // );
+
+    splash.append("div").attr("class", "begin").selectAll("span").data(function () {
+      return window.innerWidth < parseInt(document.documentElement.style.getPropertyValue("--breakpoint")) ? "press space to start".split("") : "touch here to start".split("");
+    }).enter().append("span").attr("class", "letter").attr("style", function (d, i) {
+      return "animation-delay: -" + i * 2 + "s";
+    }).text(function (d) {
+      return d;
+    });
+    splash.append("a").attr("class", "social").attr("href", "https://github.com/Berenddeperend/tetris").attr("target", "_blank").text("Github");
+
+    var onKeyDown = function onKeyDown(e) {
+      if (e.code === "Space") {
+        window.removeEventListener("keydown", onKeyDown);
+        d3_selection_1.select(".splash").remove();
+        game.setGameState("playing");
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+  }
+
+  return Splash;
+}();
+
+exports.default = Splash;
+},{"d3-selection":"node_modules/d3-selection/src/index.js"}],"src/gameOver.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var d3_selection_1 = require("d3-selection");
+
+var highScores_1 = __importDefault(require("./highScores"));
+
+var GameOver =
+/** @class */
+function () {
+  function GameOver(game) {
+    var _this = this;
+
+    this.game = game;
+    d3_selection_1.select(".stage").attr("class", "stage is-game-over").append("div").attr("class", "game-over").text("Game over");
+
+    var onKeyDown = function onKeyDown(e) {
+      if (e.code === "Space") {
+        window.removeEventListener("keydown", onKeyDown);
+        d3_selection_1.select(".stage").remove();
+        d3_selection_1.select(".game-over").remove();
+        d3_selection_1.select(".ui").remove();
+
+        _this.game.setGameState("playing");
+      }
+    };
+
+    new highScores_1.default({
+      score: this.game.stage.score,
+      name: "default",
+      date: new Date()
+    });
+    window.setTimeout(function () {
+      // prevent user from closing gameover screen instantly while still trying to rotate
+      window.addEventListener("keydown", onKeyDown);
+    }, 500);
+  }
+
+  return GameOver;
+}();
+
+exports.default = GameOver;
+},{"d3-selection":"node_modules/d3-selection/src/index.js","./highScores":"src/highScores.ts"}],"src/keyboardControls.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var KeyboardControls =
+/** @class */
+function () {
+  function KeyboardControls(game) {
+    this.onKeyDown = function (e) {
+      if (game.gameState === "playing") {
+        switch (e.code) {
+          case "ArrowRight":
+            return game.stage.controls.right();
+
+          case "ArrowLeft":
+            return game.stage.controls.left();
+
+          case "ArrowDown":
+            return game.stage.controls.down();
+
+          case "ArrowUp":
+            return game.stage.controls.instaFall();
+
+          case "Space":
+            return game.stage.controls.rotate();
+        }
+      }
+    };
+
+    this.init();
+  }
+
+  KeyboardControls.prototype.init = function () {
+    document.addEventListener("keydown", this.onKeyDown);
+  };
+
+  KeyboardControls.prototype.destroy = function () {
+    document.removeEventListener("keydown", this.onKeyDown);
+  };
+
+  return KeyboardControls;
+}();
+
+exports.default = KeyboardControls;
+},{}],"src/touchControls.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var TouchControls =
+/** @class */
+function () {
+  function TouchControls(game) {
+    var _this = this;
+
+    this.onTap = function (e) {
+      if (_this.game.gameState === "playing") {
+        if (_this.interval) {
+          clearInterval(_this.interval);
+        }
+
+        var action = function action() {
+          var x = e.touches[e.touches.length - 1].clientX;
+          var y = e.touches[e.touches.length - 1].clientY;
+          var xPercentage = Math.round(x) / _this.deviceWidth * 100;
+          var yPercentage = Math.round(y) / _this.deviceHeight * 100;
+
+          if (yPercentage > 80) {
+            return _this.game.stage.controls.down();
+          }
+
+          if (xPercentage < 25) {
+            return _this.game.stage.controls.left();
+          }
+
+          if (xPercentage > 75) {
+            return _this.game.stage.controls.right();
+          }
+
+          return _this.game.stage.controls.rotate();
+        };
+
+        var executedAction = action();
+
+        if (['left', 'right', 'down'].includes(executedAction)) {
+          _this.interval = window.setInterval(action, 80);
+        }
+      }
+    };
+
+    this.onTapRelease = function (e) {
+      clearInterval(_this.interval);
+    };
+
+    this.deviceWidth = document.querySelector("body").clientWidth;
+    this.deviceHeight = document.querySelector("body").clientHeight;
+    this.game = game;
+    this.init();
+  }
+
+  TouchControls.prototype.init = function () {
+    document.addEventListener("touchstart", this.onTap);
+    document.addEventListener("touchend", this.onTapRelease);
+  };
+
+  TouchControls.prototype.destroy = function () {
+    document.removeEventListener("touchstart", this.onTap);
+  };
+
+  return TouchControls;
+}();
+
+exports.default = TouchControls;
+},{}],"node_modules/hammerjs/hammer.js":[function(require,module,exports) {
 var define;
 /*! Hammer.JS - v2.0.7 - 2016-04-22
  * http://hammerjs.github.io/
@@ -4699,10 +5321,10 @@ Object.defineProperty(exports, "__esModule", {
 
 var hammerjs_1 = __importDefault(require("hammerjs"));
 
-var Gestures =
+var GestureControls =
 /** @class */
 function () {
-  function Gestures(stage) {
+  function GestureControls(game) {
     var _this = this;
 
     this.hasInstaFallen = false;
@@ -4711,34 +5333,32 @@ function () {
     this.panCounter = 0;
     this.dir = "";
     var body = document.querySelector("body");
-    var gestures = new hammerjs_1.default(body, {}); // gestures.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
-
+    var gestures = new hammerjs_1.default(body, {});
     gestures.on("panleft panright swipeup swipedown tap", function (e) {
-      // gestures.on("pan", (e) => {
-      console.log(e);
+      if (game.gameState === "playing") {
+        switch (e.type) {
+          // case "panleft":
+          //   return stage.controls.left();
+          //   // return this.throttledFn("panleft", () => stage.controls.left());
+          // case "panright":
+          //   return stage.controls.right();
+          //   // return this.throttledFn("panright", () => stage.controls.right());
+          case "swipedown":
+            return game.stage.controls.down();
 
-      switch (e.type) {
-        // case "panleft":
-        //   return stage.controls.left();
-        //   // return this.throttledFn("panleft", () => stage.controls.left());
-        // case "panright":
-        //   return stage.controls.right();
-        //   // return this.throttledFn("panright", () => stage.controls.right());
-        case "swipedown":
-          return stage.controls.down();
+          case "swipeup":
+            return game.stage.controls.instaFall();
+          // case "tap":
+          //   return stage.controls.rotate();
 
-        case "swipeup":
-          return stage.controls.instaFall();
-        // case "tap":
-        //   return stage.controls.rotate();
-
-        case "panend":
-          return _this.hasInstaFallen = false;
+          case "panend":
+            return _this.hasInstaFallen = false;
+        }
       }
     });
   }
 
-  Gestures.prototype.throttledFn = function (hammerEventType, fn) {
+  GestureControls.prototype.throttledFn = function (hammerEventType, fn) {
     if (this.dir === hammerEventType) {
       this.panCounter++;
     } else {
@@ -4751,688 +5371,13 @@ function () {
     }
   };
 
-  Gestures.prototype.destroy = function () {};
+  GestureControls.prototype.destroy = function () {};
 
-  return Gestures;
+  return GestureControls;
 }();
 
-exports.default = Gestures; // export default class KeyboardControls {
-//   stage: Stage;
-//   onKeyDown:any;
-//   constructor(stage: Stage) {
-//     this.stage = stage;
-//     this.onKeyDown = function (e: any) {
-//       switch (e.code) {
-//         case "ArrowRight":
-//           return stage.controls.right();
-//         case "ArrowLeft":
-//           return stage.controls.left();
-//         case "ArrowDown":
-//           return stage.controls.down();
-//         case "ArrowUp":
-//           return stage.controls.instaFall();
-//         case "Space":
-//           return stage.controls.rotate();
-//       }
-//     }.bind(this.stage);
-//     this.init();
-//   }
-//   init() {
-//     document.addeentListener("keydown", this.onKeyDown);
-//   }
-//   destroy() {
-//     console.log('removing controls')
-//     document.removeeentListener("keydown", this.onKeyDown);
-//   }
-// }
-},{"hammerjs":"node_modules/hammerjs/hammer.js"}],"src/keyboardControls.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var KeyboardControls =
-/** @class */
-function () {
-  function KeyboardControls(stage) {
-    this.stage = stage;
-
-    this.onKeyDown = function (e) {
-      switch (e.code) {
-        case "ArrowRight":
-          return stage.controls.right();
-
-        case "ArrowLeft":
-          return stage.controls.left();
-
-        case "ArrowDown":
-          return stage.controls.down();
-
-        case "ArrowUp":
-          return stage.controls.instaFall();
-
-        case "Space":
-          return stage.controls.rotate();
-      }
-    };
-
-    this.init();
-  }
-
-  KeyboardControls.prototype.init = function () {
-    document.addEventListener("keydown", this.onKeyDown);
-  };
-
-  KeyboardControls.prototype.destroy = function () {
-    console.log('removing controls');
-    document.removeEventListener("keydown", this.onKeyDown);
-  };
-
-  return KeyboardControls;
-}();
-
-exports.default = KeyboardControls;
-},{}],"src/touchControls.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var TouchControls =
-/** @class */
-function () {
-  function TouchControls(stage) {
-    var _this = this;
-
-    this.onTap = function (e) {
-      if (_this.interval) {
-        clearInterval(_this.interval);
-      }
-
-      var action = function action() {
-        var x = e.touches[e.touches.length - 1].clientX;
-        var y = e.touches[e.touches.length - 1].clientY;
-        var xPercentage = Math.round(x) / _this.deviceWidth * 100;
-        var yPercentage = Math.round(y) / _this.deviceHeight * 100;
-
-        if (yPercentage > 80) {
-          return _this.stage.controls.down();
-        }
-
-        if (xPercentage < 25) {
-          return _this.stage.controls.left();
-        }
-
-        if (xPercentage > 75) {
-          return _this.stage.controls.right();
-        }
-
-        return _this.stage.controls.rotate();
-      };
-
-      var executedAction = action();
-
-      if (['left', 'right', 'down'].includes(executedAction)) {
-        _this.interval = window.setInterval(action, 80);
-      }
-    };
-
-    this.onTapRelease = function (e) {
-      clearInterval(_this.interval);
-    };
-
-    this.deviceWidth = document.querySelector("body").clientWidth;
-    this.deviceHeight = document.querySelector("body").clientHeight;
-    this.stage = stage;
-    this.init();
-  }
-
-  TouchControls.prototype.init = function () {
-    document.addEventListener("touchstart", this.onTap);
-    document.addEventListener("touchend", this.onTapRelease);
-  };
-
-  TouchControls.prototype.destroy = function () {
-    document.removeEventListener("touchstart", this.onTap);
-  };
-
-  return TouchControls;
-}();
-
-exports.default = TouchControls;
-},{}],"src/highScores.ts":[function(require,module,exports) {
-"use strict";
-
-var __read = this && this.__read || function (o, n) {
-  var m = typeof Symbol === "function" && o[Symbol.iterator];
-  if (!m) return o;
-  var i = m.call(o),
-      r,
-      ar = [],
-      e;
-
-  try {
-    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
-      ar.push(r.value);
-    }
-  } catch (error) {
-    e = {
-      error: error
-    };
-  } finally {
-    try {
-      if (r && !r.done && (m = i["return"])) m.call(i);
-    } finally {
-      if (e) throw e.error;
-    }
-  }
-
-  return ar;
-};
-
-var __spread = this && this.__spread || function () {
-  for (var ar = [], i = 0; i < arguments.length; i++) {
-    ar = ar.concat(__read(arguments[i]));
-  }
-
-  return ar;
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var HighScores =
-/** @class */
-function () {
-  function HighScores(newScore) {
-    // const body = select('body').append('div').attr('class', 'name-group')
-    this.highScores = []; // const inputs = [
-    // body.append('input').attr('type', 'text').attr('class','name name0'),
-    // body.append('input').attr('type', 'text').attr('class','name name1'),
-    // body.append('input').attr('type', 'text').attr('class','name name2'),
-    // ];
-    // inputs.forEach((input, index) => {
-    //   window.addEventListener('input', (e)=> {
-    //     // debugger;
-    //     if(e.target === input.node()) {
-    //       if(index === inputs.length -1) {
-    //         (document.querySelector(`.name${index}`) as HTMLElement).blur();
-    //       } else {
-    //         (document.querySelector(`.name${index +1 }`) as HTMLElement).focus();
-    //       }
-    //     }
-    //   });
-    // });
-    // window.setTimeout(()=> {
-    //   (document.querySelector('.name0') as HTMLElement).focus();
-    // }, 200)
-
-    this.setScore(newScore);
-  }
-
-  HighScores.prototype.setScore = function (highScore) {
-    var prevScores = JSON.parse(window.localStorage.getItem("highScore"));
-    var newScore = prevScores ? __spread(prevScores, [highScore]).sort(function (a, b) {
-      return b.score - a.score;
-    }) : [highScore];
-    window.localStorage.setItem("highScore", JSON.stringify(newScore));
-  };
-
-  HighScores.getLocalHighScore = function () {
-    var scores = JSON.parse(window.localStorage.getItem("highScore"));
-    return scores ? JSON.parse(window.localStorage.getItem("highScore"))[0] : null;
-  };
-
-  return HighScores;
-}();
-
-exports.default = HighScores;
-},{}],"src/stage.ts":[function(require,module,exports) {
-"use strict";
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var block_1 = __importDefault(require("./block"));
-
-var d3_selection_1 = require("d3-selection");
-
-var utils_1 = require("./utils");
-
-var gestureControls_1 = __importDefault(require("./gestureControls"));
-
-var keyboardControls_1 = __importDefault(require("./keyboardControls"));
-
-var touchControls_1 = __importDefault(require("./touchControls"));
-
-var highScores_1 = __importDefault(require("./highScores"));
-
-var Stage =
-/** @class */
-function () {
-  function Stage(_a, game) {
-    var _this = this;
-
-    var _b = _a === void 0 ? {} : _a,
-        _c = _b.width,
-        width = _c === void 0 ? 10 : _c,
-        _d = _b.height,
-        height = _d === void 0 ? 20 : _d,
-        _e = _b.blockSize,
-        blockSize = _e === void 0 ? 24 : _e,
-        _f = _b.gridGutterSize,
-        gridGutterSize = _f === void 0 ? 1 : _f,
-        _g = _b.gridOverBlocks,
-        gridOverBlocks = _g === void 0 ? true : _g,
-        _h = _b.queueScaleFactor,
-        queueScaleFactor = _h === void 0 ? 0.75 : _h;
-
-    this.settledBlocks = [];
-    this.queue = [];
-    this.blockIndex = 1;
-    this.isGameOver = false;
-    this.clearedLines = 0;
-    this.game = game;
-    this.gridWidth = width;
-    this.gridHeight = height;
-    this.blockSize = blockSize;
-    this.gridGutterSize = gridGutterSize;
-    this.gridOverBlocks = gridOverBlocks;
-    this.queueScaleFactor = queueScaleFactor;
-    this.initUI();
-    this.initializeInternalGrid(); // this.initGestures();
-
-    this.initKeyboardControls();
-    this.initTouchControls();
-    this.activeBlock = new block_1.default(this.blockIndex, this, "stage");
-    this.queue.push(new block_1.default(++this.blockIndex, this, "queue"));
-    this.tickInterval = window.setInterval(function () {
-      _this.tick();
-    }, 1000);
-  }
-
-  Stage.prototype.initializeInternalGrid = function () {
-    this.internalGrid = [];
-
-    for (var y = 0; y < this.gridHeight; y++) {
-      this.internalGrid.push([]);
-
-      for (var x = 0; x < this.gridWidth; x++) {
-        this.internalGrid[y][x] = 0;
-      }
-    }
-  };
-
-  Object.defineProperty(Stage.prototype, "controls", {
-    get: function get() {
-      var _this = this;
-
-      return {
-        left: function left() {
-          if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, -1)) {
-            _this.activeBlock.moveX(-1);
-
-            return "left";
-          }
-        },
-        right: function right() {
-          if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, 1)) {
-            _this.activeBlock.moveX(1);
-
-            return "right";
-          }
-        },
-        down: function down() {
-          _this.tick();
-
-          return "down";
-        },
-        instaFall: function instaFall() {
-          while (!_this.blockWillCollideYOnNextTick(_this.activeBlock)) {
-            _this.activeBlock.moveDown();
-          }
-
-          clearInterval(_this.tickInterval);
-          _this.tickInterval = window.setInterval(function () {
-            _this.tick();
-          }, 1000);
-
-          _this.finishBlock(_this.activeBlock);
-
-          return "instaFall";
-        },
-        rotate: function rotate() {
-          _this.activeBlock.rotate();
-
-          return "rotate";
-        }
-      };
-    },
-    enumerable: false,
-    configurable: true
-  });
-
-  Stage.prototype.initKeyboardControls = function () {
-    this.keyboardControls = new keyboardControls_1.default(this);
-  };
-
-  Stage.prototype.initTouchControls = function () {
-    this.touchControls = new touchControls_1.default(this);
-  };
-
-  Stage.prototype.initGestures = function () {
-    this.gestureControls = new gestureControls_1.default(this);
-  };
-
-  Stage.prototype.tick = function () {
-    if (this.isGameOver) {
-      this.beforeDestroy();
-      this.game.setGameState("gameOver");
-      return;
-    }
-
-    if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
-      this.finishBlock(this.activeBlock);
-    } else {
-      this.activeBlock.moveDown();
-    }
-  };
-
-  Stage.prototype.finishBlock = function (block) {
-    var _this = this;
-
-    if (this.isGameOver) {
-      this.beforeDestroy();
-      return this.game.setGameState("gameOver");
-    }
-
-    this.settledBlocks.push(block);
-    this.placeBlockInGrid(block);
-    this.activeBlock = this.queue.pop();
-    this.activeBlock.init("stage");
-    this.queue.push(new block_1.default(++this.blockIndex, this, "queue")); //if the block spawned invalidly, instant game over
-
-    if (!this.activeBlock.blockPositionIsValid) {
-      this.isGameOver = true;
-      this.beforeDestroy();
-      return this.game.setGameState("gameOver");
-    }
-
-    this.completedRows.map(function (rowIndex) {
-      _this.clearedLines++;
-
-      _this.updateScoreUI();
-
-      var uniqueBlockIdsInRow = utils_1.uniq(_this.internalGrid[rowIndex]);
-      var blocksIdsThatShouldFall = utils_1.uniq(_this.internalGrid.filter(function (row, i) {
-        return i < rowIndex;
-      }) //
-      .flat().filter(function (cell) {
-        return cell > 0;
-      }).filter(function (gridCel) {
-        return !uniqueBlockIdsInRow.includes(gridCel);
-      }));
-
-      _this.settledBlocks.filter(function (settledBlock) {
-        return uniqueBlockIdsInRow.includes(settledBlock.id);
-      }).forEach(function (blockWithClearedRow) {
-        return blockWithClearedRow.clearRow(rowIndex);
-      });
-
-      blocksIdsThatShouldFall.forEach(function (blockId) {
-        return _this.settledBlocks[blockId - 1].moveDown();
-      });
-
-      _this.internalGrid.splice(rowIndex, 1);
-
-      _this.internalGrid.unshift(new Array(_this.gridWidth).fill(0));
-    });
-  };
-
-  Stage.prototype.updateScoreUI = function () {
-    this.d3UI.select(".score .value").text(this.score);
-  };
-
-  Stage.prototype.placeBlockInGrid = function (block) {
-    var _this = this;
-
-    block.shape.map(function (y, yIndex) {
-      y.map(function (x, xIndex) {
-        if (x && y) {
-          _this.internalGrid[yIndex + block.y][xIndex + block.x] = block.id;
-        }
-      });
-    });
-  };
-
-  Stage.prototype.blockWillCollideYOnNextTick = function (block) {
-    var _this = this;
-
-    return block.shape.map(function (row, rowIndex) {
-      return row.map(function (atom, columnIndex) {
-        if (!atom) return false; //Empty atom in this slot
-
-        if (block.y + rowIndex + 1 >= _this.gridHeight) {
-          return true; //Block reached bottom of stage
-        }
-
-        return (//returns the value of the target spot in the internal grid for the atom
-          _this.internalGrid[block.y + rowIndex + 1] && _this.internalGrid[block.y + rowIndex + 1][block.x + columnIndex]
-        );
-      });
-    }).flat().some(function (d) {
-      return d;
-    });
-  };
-
-  Stage.prototype.blockWillCollideXOnNextTick = function (block, dir) {
-    var _this = this;
-
-    return block.shape.map(function (row, rowIndex) {
-      return row.map(function (atom, columnIndex) {
-        if (!atom) return false;
-        return (//returns the value of the target spot in the internal grid for the atom
-          _this.internalGrid[block.y + rowIndex] && _this.internalGrid[block.y + rowIndex][block.x + columnIndex + dir]
-        );
-      });
-    }).flat().some(function (d) {
-      return d;
-    });
-  };
-
-  Object.defineProperty(Stage.prototype, "completedRows", {
-    get: function get() {
-      return this.internalGrid.reduce(function (acc, row, rowIndex) {
-        if (row.every(function (d) {
-          return d;
-        })) {
-          acc.push(rowIndex);
-        }
-
-        return acc;
-      }, []);
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Stage.prototype, "score", {
-    get: function get() {
-      return this.clearedLines;
-    },
-    enumerable: false,
-    configurable: true
-  });
-
-  Stage.prototype.initUI = function () {
-    var _a;
-
-    this.d3Stage = d3_selection_1.selectAll("body").append("div").attr("class", "stage");
-    this.d3Stage.append("svg");
-    this.d3UI = d3_selection_1.select("body").append("div").attr("class", "ui");
-    var queue = this.d3UI.append("div").attr("class", "queue ui-block");
-    queue.append("div").attr("class", "label").text("Next");
-    queue.append("div").attr("class", "value").append("svg") // .attr('viewbox', "0 0 100 100")
-    // .attr('perserveAspectRatio', true)
-    .attr("width", this.blockSize * 4 * this.queueScaleFactor).attr("height", this.blockSize * 2 * this.queueScaleFactor);
-    this.d3Queue = queue;
-    var score = this.d3UI.append("div").attr("class", "score ui-block");
-    score.append("div").attr("class", "label").text("Score");
-    score.append("div").attr("class", "value").text(this.score);
-    var highScore = this.d3UI.append('div').attr('class', 'highscore ui-block');
-    highScore.append("div").attr("class", "label").text("Highscore");
-    highScore.append("div").attr("class", "value").text((_a = highScores_1.default.getLocalHighScore()) === null || _a === void 0 ? void 0 : _a.score);
-    this.drawGridLines();
-    this.updateScoreUI();
-  };
-
-  Stage.prototype.drawGridLines = function (x, y, blockSize) {
-    if (x === void 0) {
-      x = this.gridWidth;
-    }
-
-    if (y === void 0) {
-      y = this.gridHeight;
-    }
-
-    if (blockSize === void 0) {
-      blockSize = this.blockSize;
-    }
-
-    document.documentElement.style.setProperty("--stage-height", y * blockSize + "px");
-    document.documentElement.style.setProperty("--stage-width", x * blockSize + "px");
-    var grid = d3_selection_1.selectAll(".stage svg").attr("style", "width: " + x * blockSize + "px; height: " + y * blockSize + "px").append("g").attr("class", "gridlines").attr("width", x * blockSize).attr("height", y * blockSize).attr("style", "stroke-width: " + this.gridGutterSize + "px").attr("viewBox", "0 0 " + x * blockSize + " " + y * blockSize);
-    var rows = grid.append("g").attr("class", "rows");
-    var columns = grid.append("g").attr("class", "columns");
-
-    for (var i = 0; i < y + 1; i++) {
-      rows.append("line").attr("x1", 0).attr("x2", x * blockSize).attr("y1", i * blockSize).attr("y2", i * blockSize);
-    }
-
-    for (var i = 0; i < x + 1; i++) {
-      columns.append("line").attr("y1", 0).attr("y2", y * blockSize).attr("x1", i * blockSize).attr("x2", i * blockSize);
-    }
-  };
-
-  Stage.prototype.beforeDestroy = function () {
-    var _a, _b, _c;
-
-    clearInterval(this.tickInterval);
-    (_a = this.keyboardControls) === null || _a === void 0 ? void 0 : _a.destroy();
-    (_b = this.touchControls) === null || _b === void 0 ? void 0 : _b.destroy();
-    (_c = this.gestureControls) === null || _c === void 0 ? void 0 : _c.destroy();
-  };
-
-  return Stage;
-}();
-
-exports.default = Stage;
-},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.ts","./gestureControls":"src/gestureControls.ts","./keyboardControls":"src/keyboardControls.ts","./touchControls":"src/touchControls.ts","./highScores":"src/highScores.ts"}],"src/splash.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var d3_selection_1 = require("d3-selection");
-
-var Splash =
-/** @class */
-function () {
-  function Splash(game) {
-    var splash = d3_selection_1.select("body").append("div").attr("class", "splash");
-    splash.append("div").attr("class", "title").text("Tetris");
-    splash.append("div").attr("class", "subtitle").text("By Berend"); // document.documentElement.style.setProperty(
-    //   "--stage-height",
-    //   `${y * blockSize}px`
-    // );
-
-    splash.append("div").attr("class", "begin").selectAll("span").data(function () {
-      return window.innerWidth < parseInt(document.documentElement.style.getPropertyValue("--breakpoint")) ? "press space to start".split("") : "touch here to start".split("");
-    }).enter().append("span").attr("class", "letter").attr("style", function (d, i) {
-      return "animation-delay: -" + i * 2 + "s";
-    }).text(function (d) {
-      return d;
-    });
-    splash.append("a").attr("class", "social").attr("href", "https://github.com/Berenddeperend/tetris").attr("target", "_blank").text("Github");
-
-    var onKeyDown = function onKeyDown(e) {
-      if (e.code === "Space") {
-        window.removeEventListener("keydown", onKeyDown);
-        d3_selection_1.select(".splash").remove();
-        game.setGameState("playing");
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-  }
-
-  return Splash;
-}();
-
-exports.default = Splash;
-},{"d3-selection":"node_modules/d3-selection/src/index.js"}],"src/gameOver.ts":[function(require,module,exports) {
-"use strict";
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var d3_selection_1 = require("d3-selection");
-
-var highScores_1 = __importDefault(require("./highScores"));
-
-var GameOver =
-/** @class */
-function () {
-  function GameOver(game) {
-    var _this = this;
-
-    this.game = game;
-    d3_selection_1.select(".stage").attr("class", "stage is-game-over").append("div").attr("class", "game-over").text("Game over");
-
-    var onKeyDown = function onKeyDown(e) {
-      if (e.code === "Space") {
-        window.removeEventListener("keydown", onKeyDown);
-        d3_selection_1.select(".stage").remove();
-        d3_selection_1.select(".game-over").remove();
-        d3_selection_1.select(".ui").remove();
-
-        _this.game.setGameState("playing");
-      }
-    };
-
-    new highScores_1.default({
-      score: this.game.stage.score,
-      name: "default",
-      date: new Date()
-    });
-    window.setTimeout(function () {
-      // prevent user from closing gameover screen instantly while still trying to rotate
-      window.addEventListener("keydown", onKeyDown);
-    }, 500);
-  }
-
-  return GameOver;
-}();
-
-exports.default = GameOver;
-},{"d3-selection":"node_modules/d3-selection/src/index.js","./highScores":"src/highScores.ts"}],"src/tetris.ts":[function(require,module,exports) {
+exports.default = GestureControls;
+},{"hammerjs":"node_modules/hammerjs/hammer.js"}],"src/tetris.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -5451,12 +5396,21 @@ var splash_1 = __importDefault(require("./splash"));
 
 var gameOver_1 = __importDefault(require("./gameOver"));
 
+var keyboardControls_1 = __importDefault(require("./keyboardControls"));
+
+var touchControls_1 = __importDefault(require("./touchControls"));
+
+var gestureControls_1 = __importDefault(require("./gestureControls"));
+
 var Tetris =
 /** @class */
 function () {
   function Tetris() {
     this.gameMode = "default";
     this.setGameState("splash");
+    new keyboardControls_1.default(this);
+    new touchControls_1.default(this);
+    new gestureControls_1.default(this);
   }
 
   Tetris.prototype.setGameState = function (gameState) {
@@ -5481,7 +5435,7 @@ function () {
 
 exports.default = Tetris;
 new Tetris();
-},{"./stage":"src/stage.ts","./splash":"src/splash.ts","./gameOver":"src/gameOver.ts"}],"../../../.nvm/versions/node/v12.16.3/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./stage":"src/stage.ts","./splash":"src/splash.ts","./gameOver":"src/gameOver.ts","./keyboardControls":"src/keyboardControls.ts","./touchControls":"src/touchControls.ts","./gestureControls":"src/gestureControls.ts"}],"../../../.nvm/versions/node/v12.16.3/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

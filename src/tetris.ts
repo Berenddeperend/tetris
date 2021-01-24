@@ -1,6 +1,9 @@
 import Stage from "./stage";
 import Splash from "./splash";
 import GameOver from "./gameOver";
+import KeyboardControls from "./keyboardControls";
+import TouchControls from "./touchControls";
+import GestureControls from "./gestureControls";
 
 export type GameState = "splash" | "playing" | "gameOver";
 export type GameMode = "default";
@@ -12,6 +15,9 @@ export default class Tetris {
 
   constructor() {
     this.setGameState("splash");
+    new KeyboardControls(this);
+    new TouchControls(this);
+    new GestureControls(this);
   }
 
   setGameState(gameState: GameState) {

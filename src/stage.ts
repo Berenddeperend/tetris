@@ -2,9 +2,6 @@ import Block from "./block";
 import { select, selectAll } from "d3-selection";
 import { uniq } from "./utils";
 import Tetris from "./tetris";
-import Gestures from "./gestureControls";
-import KeyboardControls from "./keyboardControls";
-import TouchControls from "./touchControls";
 import HighScores from './highScores';
 
 export default class Stage {
@@ -25,10 +22,6 @@ export default class Stage {
   isGameOver: boolean = false;
   tickInterval: number;
   clearedLines: number = 0;
-
-  keyboardControls: KeyboardControls;
-  gestureControls: Gestures;
-  touchControls: TouchControls;
 
   d3Stage: any; //todo: better typing
   d3UI: any; //todo: better typing
@@ -51,9 +44,6 @@ export default class Stage {
     this.queueScaleFactor = queueScaleFactor;
     this.initUI();
     this.initializeInternalGrid();
-    // this.initGestures();
-    this.initKeyboardControls();
-    this.initTouchControls();
 
     this.activeBlock = new Block(this.blockIndex, this, "stage");
     this.queue.push(new Block(++this.blockIndex, this, "queue"));
@@ -109,17 +99,6 @@ export default class Stage {
     };
   }
 
-  initKeyboardControls() {
-    this.keyboardControls = new KeyboardControls(this);
-  }
-
-  initTouchControls() {
-    this.touchControls = new TouchControls(this);
-  }
-
-  initGestures() {
-    this.gestureControls = new Gestures(this);
-  }
 
   tick() {
     if (this.isGameOver) {
@@ -324,8 +303,5 @@ export default class Stage {
 
   beforeDestroy() {
     clearInterval(this.tickInterval);
-    this.keyboardControls?.destroy();
-    this.touchControls?.destroy();
-    this.gestureControls?.destroy();
   }
 }

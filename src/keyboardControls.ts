@@ -1,24 +1,26 @@
-import Stage from './stage';
+import Tetris from './tetris';
 
 export default class KeyboardControls {
-  stage: Stage;
   onKeyDown: (e:any) => any;
-  constructor(stage: Stage) {
-    this.stage = stage;
-
+  constructor(game:Tetris) {
     this.onKeyDown = (e: any) => {
-      switch (e.code) {
-        case "ArrowRight":
-          return stage.controls.right();
-        case "ArrowLeft":
-          return stage.controls.left();
-        case "ArrowDown":
-          return stage.controls.down();
-        case "ArrowUp":
-          return stage.controls.instaFall();
-        case "Space":
-          return stage.controls.rotate();
+
+      if(game.gameState === "playing") {
+        switch (e.code) {
+          case "ArrowRight":
+            return game.stage.controls.right();
+          case "ArrowLeft":
+            return game.stage.controls.left();
+          case "ArrowDown":
+            return game.stage.controls.down();
+          case "ArrowUp":
+            return game.stage.controls.instaFall();
+          case "Space":
+            return game.stage.controls.rotate();
+        }
       }
+
+
     };
 
     this.init();
@@ -29,7 +31,6 @@ export default class KeyboardControls {
   }
   
   destroy() {
-    console.log('removing controls')
     document.removeEventListener("keydown", this.onKeyDown);
   }
 }

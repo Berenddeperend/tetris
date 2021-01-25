@@ -1,7 +1,6 @@
 WIP: 
 - Touch/gesture controls -> 70%
 - Highscores -> 40%
-- Move all controls to appropriate states
 
 Bugs:
 - Reset tick after last-minute rotate
@@ -19,8 +18,8 @@ Features:
 - Cool effect on line clear, extra effect on Tetris
 - Show block shadow
 - Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
-- Drought, blocks since tallblock
-- 'Record pace' notifications
+- Drought, blocks since tallblock (Joost)
+- 'Record pace' notifications (Erik v R)
 
 
 Maintenance:
@@ -30,11 +29,12 @@ Maintenance:
 Future:
 - 2 player mode (one client)
 - Backend for highscores (rpi or firebase)
-- Validate highscore by saving game history
+- Validate highscore by saving game history (Erik S)
 - Touchscreen support through hammer.js
 - Stats
 - Sound
 - DIY Analytics
+- Idea credits
 
 Maybe:
 - Game drawing clock (event loop? investigate) -> disable hold instafall/rotate, hold left/right same speed for everyone

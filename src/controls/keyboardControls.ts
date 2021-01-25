@@ -18,6 +18,19 @@ export default class KeyboardControls {
             return game.stage.controls.rotate();
         }
       }
+      else if (game.gameState === "splash") {
+        switch (e.code) {
+          case "Space":
+            return game.splash.controls.continue();
+        }
+      }
+
+      else if (game.gameState === "gameOver") {
+        switch (e.code) {
+          case "Space":
+            return game.gameOver.controls.retry();
+        }
+      }
     };
 
     this.init();

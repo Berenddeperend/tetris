@@ -12,15 +12,15 @@ export default class GameOver {
       .attr("class", "game-over")
       .text("Game over");
 
-    const onKeyDown = (e: any) => {
-      if (e.code === "Space") {
-        window.removeEventListener("keydown", onKeyDown);
-        select(".stage").remove();
-        select(".game-over").remove();
-        select(".ui").remove();
-        this.game.setGameState("playing");
-      }
-    };
+    // const onKeyDown = (e: any) => {
+    //   if (e.code === "Space") {
+    //     window.removeEventListener("keydown", onKeyDown);
+    //     select(".stage").remove();
+    //     select(".game-over").remove();
+    //     select(".ui").remove();
+    //     this.game.setGameState("playing");
+    //   }
+    // };
 
     new HighScores({
       score: this.game.stage.score,
@@ -28,9 +28,20 @@ export default class GameOver {
       date: new Date(),
     });
 
-    window.setTimeout(() => {
-      // prevent user from closing gameover screen instantly while still trying to rotate
-      window.addEventListener("keydown", onKeyDown);
-    }, 500);
+    // window.setTimeout(() => {
+    //   // prevent user from closing gameover screen instantly while still trying to rotate
+    //   window.addEventListener("keydown", onKeyDown);
+    // }, 500);
+  }  
+
+  get controls() {
+    return {
+      retry: () => {
+        select(".stage").remove();
+        select(".game-over").remove();
+        select(".ui").remove();
+        this.game.setGameState("playing");
+      }
+    }
   }
 }

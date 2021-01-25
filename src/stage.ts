@@ -231,6 +231,7 @@ export default class Stage {
   initUI() {
     this.d3Stage = selectAll("body").append("div").attr("class", "stage");
     this.d3Stage.append("svg");
+
     this.d3UI = select("body").append("div").attr("class", "ui");
 
     const queue = this.d3UI.append("div").attr("class", "queue ui-block");

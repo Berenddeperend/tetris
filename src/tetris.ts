@@ -12,24 +12,40 @@ export default class Tetris {
   gameState: GameState;
   gameMode: GameMode = "default";
   stage: Stage;
+  splash: Splash;
+  gameOver: GameOver;
 
   constructor() {
     this.setGameState("splash");
     new KeyboardControls(this);
     new TouchControls(this);
     new GestureControls(this);
+    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`); //https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
   }
 
   setGameState(gameState: GameState) {
     this.gameState = gameState;
     switch (gameState) {
       case "splash":
-        return new Splash(this);
+        return this.splash = new Splash(this);
       case "playing":
         return (this.stage = new Stage({ width: 10 }, this));
       case "gameOver":
-        return new GameOver(this);
+        return this.gameOver = new GameOver(this);
     }
+  }
+
+  get isMobile() {
+    const breakpoint = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--breakpoint"
+      )
+    );
+    return window.innerWidth > breakpoint;
+  }
+
+  get isDesktop() {
+    return !this.isMobile;
   }
 }
 

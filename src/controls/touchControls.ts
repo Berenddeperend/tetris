@@ -16,6 +16,10 @@ export default class TouchControls {
   }
 
   onTap: (e: any) => any = (e: TouchEvent) => {
+    // if(this.game.gameState=== "splash")  {
+
+    // }
+
     if(this.game.gameState === "playing") {
       if(this.interval) {
         clearInterval(this.interval);

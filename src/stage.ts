@@ -247,7 +247,7 @@ export default class Stage {
     this.d3Queue = queue;
 
     const score = this.d3UI.append("div").attr("class", "score ui-block");
-    score.append("div").attr("class", "label").text("Score");
+    score.append("div").attr("class", "label").text("Lines");
     score.append("div").attr("class", "value").text(this.score);
 
     const highScore = this.d3UI
@@ -257,7 +257,7 @@ export default class Stage {
     highScore
       .append("div")
       .attr("class", "value")
-      .text(HighScores.getLocalHighScore()?.score);
+      .text(HighScores.getLocalHighScore()?.score || 0);
 
     this.drawGridLines();
     this.updateScoreUI();

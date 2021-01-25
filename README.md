@@ -1,8 +1,11 @@
 WIP: 
-- Touch/gesture controls
+- Touch/gesture controls -> 70%
+- Highscores -> 40%
+- Move all controls to appropriate states
 
 Bugs:
 - Reset tick after last-minute rotate
+- SVG 'next' viewbox
 
 Features:
 - Better 'Game Over' screen. (in progress)
@@ -22,7 +25,6 @@ Features:
 
 Maintenance:
 - Move collision logic to block class
-- Move controls of all states to *Controls.ts file
 - Gridlines as gutter in grid
 
 Future:
@@ -32,9 +34,10 @@ Future:
 - Touchscreen support through hammer.js
 - Stats
 - Sound
+- DIY Analytics
 
 Maybe:
-- Game drawing clock (event loop? investigate)
+- Game drawing clock (event loop? investigate) -> disable hold instafall/rotate, hold left/right same speed for everyone
 - Snake/Pacman style level overflow
 - "Tetris UI", select mode by dropping block in a column
 - Swap out Parceljs (https://2020.stateofjs.com/en-US/technologies/build-tools/)
@@ -42,7 +45,7 @@ Maybe:
 - Change d3 for either native JS or Preact
 
 On release:
-- Post to reddit.com/r/tetris
+- Post to reddit.com/r/tetris (as video) "I wrote a Tetris clone with co-op mode"
 - Write blog post
 - Ask Daniel to hack the highscore
 

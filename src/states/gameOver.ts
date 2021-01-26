@@ -23,7 +23,7 @@ export default class GameOver {
     // };
 
     new HighScores({
-      score: this.game.stage.score,
+      score: this.game?.stage?.score,
       name: "default",
       date: new Date(),
     });

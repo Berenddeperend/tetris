@@ -2081,27 +2081,7 @@ var HighScores =
 /** @class */
 function () {
   function HighScores(newScore) {
-    // const body = select('body').append('div').attr('class', 'name-group')
-    this.highScores = []; // const inputs = [
-    // body.append('input').attr('type', 'text').attr('class','name name0'),
-    // body.append('input').attr('type', 'text').attr('class','name name1'),
-    // body.append('input').attr('type', 'text').attr('class','name name2'),
-    // ];
-    // inputs.forEach((input, index) => {
-    //   window.addEventListener('input', (e)=> {
-    //     // debugger;
-    //     if(e.target === input.node()) {
-    //       if(index === inputs.length -1) {
-    //         (document.querySelector(`.name${index}`) as HTMLElement).blur();
-    //       } else {
-    //         (document.querySelector(`.name${index +1 }`) as HTMLElement).focus();
-    //       }
-    //     }
-    //   });
-    // });
-    // window.setTimeout(()=> {
-    //   (document.querySelector('.name0') as HTMLElement).focus();
-    // }, 200)
+    this.highScores = []; // new InputName();
 
     this.setScore(newScore);
   }
@@ -2518,6 +2498,8 @@ var GameOver =
 /** @class */
 function () {
   function GameOver(game) {
+    var _a, _b;
+
     this.game = game;
     d3_selection_1.select(".stage").attr("class", "stage is-game-over").append("div").attr("class", "game-over").text("Game over"); // const onKeyDown = (e: any) => {
     //   if (e.code === "Space") {
@@ -2530,7 +2512,7 @@ function () {
     // };
 
     new highScores_1.default({
-      score: this.game.stage.score,
+      score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
       name: "default",
       date: new Date()
     }); // window.setTimeout(() => {

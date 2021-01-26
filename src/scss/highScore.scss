@@ -1,0 +1,16 @@
+.name-group {
+  display: flex;
+
+  .name {
+    font-family: gameboy;
+    background: none;
+    color: white;
+    border: none;
+    width: 50px;
+    margin: 3px;    
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 @import "./variables.scss";
-
+@import "./highScore.scss";
 
 html {
   background: $black;
@@ -231,14 +231,5 @@ svg {
 .queue svg {
   g {
     // transform: scale(0.75);
-  }
-}
-
-.name-group {
-  display: flex;
-
-  .name {
-   width: 50px;
-   margin: 3px;
   }
 }

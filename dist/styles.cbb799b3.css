@@ -23,6 +23,21 @@
   font-family: "gameboy";
   src: url("/gameboy.1128e73c.ttf") format("truetype");
 }
+.name-group {
+  display: flex;
+}
+.name-group .name {
+  font-family: gameboy;
+  background: none;
+  color: white;
+  border: none;
+  width: 50px;
+  margin: 3px;
+}
+.name-group .name:focus {
+  outline: none;
+}
+
 html {
   background: #2b0f54;
   font-family: gameboy;
@@ -242,14 +257,6 @@ svg {
   left: 5px;
   background: #2b0f54;
   padding: 0 4px 0 8px;
-}
-
-.name-group {
-  display: flex;
-}
-.name-group .name {
-  width: 50px;
-  margin: 3px;
 }
 
 /*# sourceMappingURL=/styles.cbb799b3.css.map */

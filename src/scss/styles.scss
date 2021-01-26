@@ -171,6 +171,7 @@ svg {
 
 .gridlines {
   z-index: 2;
+  user-select: none;
 
   .rows,
   .columns {

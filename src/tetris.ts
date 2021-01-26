@@ -20,7 +20,13 @@ export default class Tetris {
     new KeyboardControls(this);
     new TouchControls(this);
     new GestureControls(this);
-    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`); //https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+
+
+    function setVH() {
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`); //https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+    }
+    window.addEventListener('resize', setVH);
+    setVH();
   }
 
   setGameState(gameState: GameState) {
@@ -41,7 +47,7 @@ export default class Tetris {
         "--breakpoint"
       )
     );
-    return window.innerWidth > breakpoint;
+    return window.innerWidth < breakpoint;
   }
 
   get isDesktop() {

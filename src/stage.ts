@@ -41,6 +41,7 @@ export default class Stage {
     this.game = game;
     this.gridWidth = width;
     this.gridHeight = height;
+    // this.blockSize = this.game.isDesktop ? blockSize : 18;
     this.blockSize = blockSize;
     this.gridGutterSize = gridGutterSize;
     this.gridOverBlocks = gridOverBlocks;

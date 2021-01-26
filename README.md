@@ -40,7 +40,7 @@ Maybe:
 - Game drawing clock (event loop? investigate) -> disable hold instafall/rotate, hold left/right same speed for everyone
 - Snake/Pacman style level overflow
 - "Tetris UI", select mode by dropping block in a column
-- Swap out Parceljs (https://2020.stateofjs.com/en-US/technologies/build-tools/)
+- Swap out Parceljs -> snowpack (https://2020.stateofjs.com/en-US/technologies/build-tools/)
 - Implement 8bit style wordart
 - Change d3 for either native JS or Preact
 

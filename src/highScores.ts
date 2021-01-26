@@ -1,7 +1,5 @@
-import { formatPrefix, json } from "d3";
 import { select, selectAll } from "d3-selection";
 import Stage from "./stage";
-import InputName from './inputName';
 
 export type HighScore = {
   name: string;
@@ -13,8 +11,7 @@ export default class HighScores {
   highScores: HighScore[] = [];
 
   constructor(newScore: HighScore) {
-    // new InputName();
-    this.setScore(newScore);
+    // this.setScore(newScore);
   }
 
   setScore(highScore: HighScore) {

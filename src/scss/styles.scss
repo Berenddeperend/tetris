@@ -71,6 +71,10 @@ body {
   &.red { fill: $red; }
 }
 
+.stage-container {
+  border: 1px solid red;
+}
+
 .stage {
   position: relative;
   transition: opacity 2s;

@@ -35,6 +35,7 @@ Future:
 - Sound
 - DIY Analytics
 - Idea credits
+- "Task failed succesfully" easter egg
 
 Maybe:
 - Game drawing clock (event loop? investigate) -> disable hold instafall/rotate, hold left/right same speed for everyone

@@ -20,7 +20,7 @@ $breakpoint: 500px;
 
 
 @keyframes wiggle {
-  $intensity: 3px;
+  $intensity: 0.3rem;
   0% {
     transform: translateY($intensity);
   }

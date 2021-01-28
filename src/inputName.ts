@@ -9,16 +9,20 @@ export default class InputName {
       .append("h2")
       .attr("class", "title")
       .text("What's your name?");
-    const nameGroup = this.d3Self.append("div").attr("class", "name-group");
+
+    const nameGroup = this.d3Self.append("form").attr("class", "name-group").attr('autocomplete', 'off');
 
     const nameLength = 3;
-    let inputs = [];
+    let inputs = [
+      // nameGroup.append('input').attr('type', 'text').attr('name', 'hidden').style('display:none')
+    ];
     for (let i = 0; i < nameLength; i++) {
       inputs.push(
         nameGroup
           .append("input")
           .attr("type", "text")
           .attr("class", `name name${i}`)
+          .attr('maxlength', 1)
           .attr("placeholder", "-")
       );
     }
@@ -27,12 +31,15 @@ export default class InputName {
       window.addEventListener("keydown", (e: KeyboardEvent) => {
         if (e.target === input.node()) {
           if (e.key === "Backspace") {
+            // debugger;
             const element = document.querySelector(
               `.name${index}`
             ) as HTMLInputElement;
+
+            
             element.value = "";
 
-            if (index > 0) {
+            if (index > 1) {
               (document.querySelector(
                 `.name${index - 1}`
               ) as HTMLElement).focus();
@@ -48,6 +55,7 @@ export default class InputName {
             `.name${index}`
           ) as HTMLInputElement;
 
+          // element.value = e.data;
           if (index === inputs.length - 1) {
             element.value = e.data;
           } else {

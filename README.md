@@ -3,24 +3,27 @@ WIP:
 - Highscores -> 40%
 
 Bugs:
-- Reset tick after last-minute rotate
+- Can't rotate block sticky to left side
 - SVG 'next' viewbox
 
 Features:
+- Reset tick after last-minute rotate
 - Better 'Game Over' screen. (in progress)
 - See highscore list
 - Submit names with highscore
 - UI
   - Responsive position
   - Check gameboy version for inspiration, or this one: https://m.media-amazon.com/images/S/aplus-media/vc/d2044fc9-3049-41ff-8262-6b52fad2794c.__CR0,69,2099,2099_PT0_SX300_V1___.jpg
+  - Remove highscore
   - Lines
   - Level
+  - Score
 - Cool effect on line clear, extra effect on Tetris
 - Show block shadow
 - Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
+- Favicon
 - Drought, blocks since tallblock (Joost)
 - 'Record pace' notifications (Erik v R)
-
 
 Maintenance:
 - Move collision logic to block class
@@ -42,6 +45,7 @@ Maybe:
 - Snake/Pacman style level overflow
 - "Tetris UI", select mode by dropping block in a column
 - Swap out Parceljs -> snowpack (https://2020.stateofjs.com/en-US/technologies/build-tools/)
+- In-game keyboard?
 - Implement 8bit style wordart
 - Change d3 for either native JS or Preact
 

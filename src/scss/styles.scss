@@ -110,19 +110,48 @@ body {
   }
 }
 
-.game-over {
+
+.game-over-container {
   position: absolute;
-  top: 50%;
+  top: 10%;
   left: 50%;
   z-index: 2;
   transform: translate(-50%, -50%);
   text-align: center;
+  width: 100px;
+  
+  animation: game-over-title 2s; //steps(20, jump-start);
 
-  // animation: wiggle 1.05s infinite;
-  // animation-timing-function: ease-in-out;
+  @keyframes game-over-title {
+    0% {
+      top: 50%;
+      opacity: 0;
+    } 
+    10% {
+      opacity: 1;
+    }
 
-  font-size: 2.2rem;
-  @include text-shadow(0.3rem, true);
+    70% {
+      top: 50%;
+    } 
+    100% {
+      top: 10%;
+    }
+  }
+
+
+  .game-over {
+    font-size: 2.2rem;
+    @include text-shadow(0.3rem, true);
+    
+    .letter {
+      // animation: wiggle 1.05s infinite;
+      display: inline-block;
+    }
+  }
+
+
+
 }
 
 .splash {
@@ -182,7 +211,7 @@ svg {
     // stroke: darken($orange, 50%);
     stroke: $orange;
     stroke-linecap: square;
-    opacity: 0;
+    // opacity: 0;
   }
 }
 

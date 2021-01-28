@@ -5,3 +5,9 @@ export default class DOM {
     return el
   }
 }
+
+export function render(html: string) {
+  const el = new HTMLElement();
+  el.innerHTML = html;
+  return el
+}

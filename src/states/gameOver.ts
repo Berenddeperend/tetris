@@ -7,11 +7,22 @@ export default class GameOver {
   game: Tetris;
   constructor(game: Tetris) {
     this.game = game;
-    select(".stage")
+    game.stage.d3Stage
       .attr("class", "stage is-game-over")
+
+    
+      .append('div').attr('class', 'game-over-container')
       .append("div")
       .attr("class", "game-over")
-      .text("Game over");
+      // .text("Game over");
+
+      .selectAll("span")
+      .data(() => "Game over".split(""))
+      .enter()
+      .append("span")
+      .attr("class", "letter")
+      .attr("style", (d, i) => `animation-delay: -${i * 2}s`)
+      .text((d) => d);
 
     new HighScores({
       score: this.game?.stage?.score,
@@ -19,7 +30,7 @@ export default class GameOver {
       date: new Date(),
     });
 
-    new InputName();
+    // new InputName();
 
     // window.setTimeout(() => {
     //   // prevent user from closing gameover screen instantly while still trying to rotate

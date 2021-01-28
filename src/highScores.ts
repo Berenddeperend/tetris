@@ -9,10 +9,31 @@ export type HighScore = {
 
 export default class HighScores {
   highScores: HighScore[] = [];
+  d3Self: any
 
   constructor(newScore: HighScore) {
     // this.setScore(newScore);
+
+    // this.d3Self = select('.stage').append('div').attr('class', 'high-score')
+    // this.d3Self.append('h2').text('High score list');
+    // const table = this.d3Self.append('table')
+    
+    // table.node().insertAdjacentHTML('beforeend', `
+    //   <tr><td>hi mom</td></tr>
+    // `)
+
+    // const tr = table
+    // .selectAll("tr")
+    // .data(() =>
+    //   this.getAllLocalHighScores()
+    // )
+    // .enter()
+    // .append("tr")
+    // .append('td')
+    // .text(d=> d.score)
   }
+
+
 
   setScore(highScore: HighScore) {
     const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
@@ -23,6 +44,14 @@ export default class HighScores {
       : [highScore];
 
     window.localStorage.setItem("highScore", JSON.stringify(newScore));
+  }
+
+  getAllLocalHighScores() {
+    const scores = JSON.parse(window.localStorage.getItem("highScore"));
+
+    return scores
+      ? (JSON.parse(window.localStorage.getItem("highScore")) as HighScore[])
+      : null;    
   }
 
   static getLocalHighScore(): HighScore | null {

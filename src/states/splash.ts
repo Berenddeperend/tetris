@@ -1,5 +1,6 @@
 import { select } from "d3-selection";
 import Tetris from "../tetris";
+import {render} from './../dom';
 
 export default class Splash {
   game: Tetris;
@@ -10,6 +11,16 @@ export default class Splash {
 
     splash.append("div").attr("class", "title").text("Tetris");
     splash.append("div").attr("class", "subtitle").text("By Berend");
+
+    // document.querySelector('body').appendChild(render(`
+    //   <table>
+    //   <tr>
+    //   <td>hello</td>
+    //   <td>hello</td>
+    //   <td>hello</td>
+    //   </tr>
+    //   </table>
+    // `))
 
     splash
       .append("div")

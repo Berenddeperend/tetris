@@ -273,19 +273,19 @@ export default class Stage {
   ) {
     document.documentElement.style.setProperty(
       "--stage-height",
-      `${y * blockSize}px`
+      `${y * blockSize/ 10}rem`
     );
     document.documentElement.style.setProperty(
       "--stage-width",
-      `${x * blockSize}px`
+      `${x * blockSize / 10}rem`
     );
     const grid = selectAll(".stage svg")
-      .attr("style", `width: ${x * blockSize}px; height: ${y * blockSize}px`)
+      .attr("style", `width: ${x * blockSize / 10}rem; height: ${y * blockSize / 10}rem`)
       .append("g")
       .attr("class", "gridlines")
       .attr("width", x * blockSize)
       .attr("height", y * blockSize)
-      .attr("style", `stroke-width: ${this.gridGutterSize}px`)
+      .attr("style", `stroke-width: ${this.gridGutterSize / 10}rem`)
       .attr("viewBox", `0 0 ${x * blockSize} ${y * blockSize}`);
 
     const rows = grid.append("g").attr("class", "rows");

@@ -2081,7 +2081,22 @@ var HighScores =
 /** @class */
 function () {
   function HighScores(newScore) {
-    this.highScores = []; // this.setScore(newScore);
+    // this.setScore(newScore);
+    this.highScores = []; // this.d3Self = select('.stage').append('div').attr('class', 'high-score')
+    // this.d3Self.append('h2').text('High score list');
+    // const table = this.d3Self.append('table')
+    // table.node().insertAdjacentHTML('beforeend', `
+    //   <tr><td>hi mom</td></tr>
+    // `)
+    // const tr = table
+    // .selectAll("tr")
+    // .data(() =>
+    //   this.getAllLocalHighScores()
+    // )
+    // .enter()
+    // .append("tr")
+    // .append('td')
+    // .text(d=> d.score)
   }
 
   HighScores.prototype.setScore = function (highScore) {
@@ -2090,6 +2105,11 @@ function () {
       return b.score - a.score;
     }) : [highScore];
     window.localStorage.setItem("highScore", JSON.stringify(newScore));
+  };
+
+  HighScores.prototype.getAllLocalHighScores = function () {
+    var scores = JSON.parse(window.localStorage.getItem("highScore"));
+    return scores ? JSON.parse(window.localStorage.getItem("highScore")) : null;
   };
 
   HighScores.getLocalHighScore = function () {
@@ -2399,9 +2419,9 @@ function () {
       blockSize = this.blockSize;
     }
 
-    document.documentElement.style.setProperty("--stage-height", y * blockSize + "px");
-    document.documentElement.style.setProperty("--stage-width", x * blockSize + "px");
-    var grid = d3_selection_1.selectAll(".stage svg").attr("style", "width: " + x * blockSize + "px; height: " + y * blockSize + "px").append("g").attr("class", "gridlines").attr("width", x * blockSize).attr("height", y * blockSize).attr("style", "stroke-width: " + this.gridGutterSize + "px").attr("viewBox", "0 0 " + x * blockSize + " " + y * blockSize);
+    document.documentElement.style.setProperty("--stage-height", y * blockSize / 10 + "rem");
+    document.documentElement.style.setProperty("--stage-width", x * blockSize / 10 + "rem");
+    var grid = d3_selection_1.selectAll(".stage svg").attr("style", "width: " + x * blockSize / 10 + "rem; height: " + y * blockSize / 10 + "rem").append("g").attr("class", "gridlines").attr("width", x * blockSize).attr("height", y * blockSize).attr("style", "stroke-width: " + this.gridGutterSize / 10 + "rem").attr("viewBox", "0 0 " + x * blockSize + " " + y * blockSize);
     var rows = grid.append("g").attr("class", "rows");
     var columns = grid.append("g").attr("class", "columns");
 
@@ -2438,7 +2458,16 @@ function () {
     this.game = game;
     var splash = d3_selection_1.select("body").append("div").attr("class", "splash");
     splash.append("div").attr("class", "title").text("Tetris");
-    splash.append("div").attr("class", "subtitle").text("By Berend");
+    splash.append("div").attr("class", "subtitle").text("By Berend"); // document.querySelector('body').appendChild(render(`
+    //   <table>
+    //   <tr>
+    //   <td>hello</td>
+    //   <td>hello</td>
+    //   <td>hello</td>
+    //   </tr>
+    //   </table>
+    // `))
+
     splash.append("div").attr("class", "begin").selectAll("span").data(function () {
       return game.isDesktop ? "press space to start".split("") : "touch here to start".split("");
     }).enter().append("span").attr("class", "letter").attr("style", function (d, i) {
@@ -2475,67 +2504,6 @@ function () {
 }();
 
 exports.default = Splash;
-},{"d3-selection":"node_modules/d3-selection/src/index.js"}],"src/inputName.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var d3_selection_1 = require("d3-selection");
-
-var InputName =
-/** @class */
-function () {
-  function InputName() {
-    this.d3Self = d3_selection_1.select("body").append("div").attr("class", "submit-name");
-    var title = this.d3Self.append("h2").attr("class", "title").text("What's your name?");
-    var nameGroup = this.d3Self.append("form").attr("class", "name-group").attr('autocomplete', 'off');
-    var nameLength = 3;
-    var inputs = [// nameGroup.append('input').attr('type', 'text').attr('name', 'hidden').style('display:none')
-    ];
-
-    for (var i = 0; i < nameLength; i++) {
-      inputs.push(nameGroup.append("input").attr("type", "text").attr("class", "name name" + i).attr('maxlength', 1).attr("placeholder", "-"));
-    }
-
-    inputs.forEach(function (input, index) {
-      window.addEventListener("keydown", function (e) {
-        if (e.target === input.node()) {
-          if (e.key === "Backspace") {
-            // debugger;
-            var element = document.querySelector(".name" + index);
-            element.value = "";
-
-            if (index > 1) {
-              document.querySelector(".name" + (index - 1)).focus();
-            }
-          }
-        }
-      });
-      window.addEventListener("input", function (e) {
-        if (e.inputType === "deleteContentBackward") return;
-
-        if (e.target === input.node()) {
-          var element = document.querySelector(".name" + index); // element.value = e.data;
-
-          if (index === inputs.length - 1) {
-            element.value = e.data;
-          } else {
-            document.querySelector(".name" + (index + 1)).focus();
-          }
-        }
-      });
-    });
-    window.setTimeout(function () {
-      document.querySelector(".name0").focus();
-    }, 200);
-  }
-
-  return InputName;
-}();
-
-exports.default = InputName;
 },{"d3-selection":"node_modules/d3-selection/src/index.js"}],"src/states/gameOver.ts":[function(require,module,exports) {
 "use strict";
 
@@ -2553,8 +2521,6 @@ var d3_selection_1 = require("d3-selection");
 
 var highScores_1 = __importDefault(require("../highScores"));
 
-var inputName_1 = __importDefault(require("../inputName"));
-
 var GameOver =
 /** @class */
 function () {
@@ -2562,13 +2528,20 @@ function () {
     var _a, _b;
 
     this.game = game;
-    d3_selection_1.select(".stage").attr("class", "stage is-game-over").append("div").attr("class", "game-over").text("Game over");
+    game.stage.d3Stage.attr("class", "stage is-game-over").append('div').attr('class', 'game-over-container').append("div").attr("class", "game-over") // .text("Game over");
+    .selectAll("span").data(function () {
+      return "Game over".split("");
+    }).enter().append("span").attr("class", "letter").attr("style", function (d, i) {
+      return "animation-delay: -" + i * 2 + "s";
+    }).text(function (d) {
+      return d;
+    });
     new highScores_1.default({
       score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
       name: "default",
       date: new Date()
-    });
-    new inputName_1.default(); // window.setTimeout(() => {
+    }); // new InputName();
+    // window.setTimeout(() => {
     //   // prevent user from closing gameover screen instantly while still trying to rotate
     //   window.addEventListener("keydown", onKeyDown);
     // }, 500);
@@ -2595,7 +2568,7 @@ function () {
 }();
 
 exports.default = GameOver;
-},{"d3-selection":"node_modules/d3-selection/src/index.js","../highScores":"src/highScores.ts","../inputName":"src/inputName.ts"}],"src/controls/keyboardControls.ts":[function(require,module,exports) {
+},{"d3-selection":"node_modules/d3-selection/src/index.js","../highScores":"src/highScores.ts"}],"src/controls/keyboardControls.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

@@ -24,6 +24,8 @@ export default class GameOver {
       .attr("style", (d, i) => `animation-delay: -${i * 2}s`)
       .text((d) => d);
 
+      select('.game-over-container').append('div').attr('class', 'highscore')
+
     new HighScores({
       score: this.game?.stage?.score,
       name: "default",

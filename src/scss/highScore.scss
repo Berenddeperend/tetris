@@ -25,6 +25,24 @@
   }
 }
 
-.high-score {
+.highscore-table {
+
+
+  tbody {
+    
+    td {
+      padding: 0.2rem 1rem;
   
+      &.rank {
+        // color: $orange;
+        color: #868686;
+        padding: 0;
+      }
+  
+      &.score {
+        text-align: right;
+      }
+    }
+  }
+
 }

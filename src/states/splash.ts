@@ -32,8 +32,7 @@ export default class Splash {
   get controls() {
     return {
       continue: () => {
-        // select(".splash").remove();
-        render("", document.body);
+        render("", document.body); //this can be better
         this.game.setGameState("playing");
       },
     };

@@ -54,5 +54,10 @@ On release:
 - Write blog post
 - Ask Daniel to hack the highscore
 
+d3 to preact:
+[x] Splash
+[ ] Stage
+[ ] Block
+[ ] Game Over
 
 Project started at around 5 januari

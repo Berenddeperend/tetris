@@ -47,6 +47,17 @@
   outline: none;
 }
 
+.highscore-table tbody td {
+  padding: 0.2rem 1rem;
+}
+.highscore-table tbody td.rank {
+  color: #868686;
+  padding: 0;
+}
+.highscore-table tbody td.score {
+  text-align: right;
+}
+
 html {
   background: #2b0f54;
   font-family: gameboy;

@@ -2510,6 +2510,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 },{"./create.js":"node_modules/d3-selection/src/create.js","./creator.js":"node_modules/d3-selection/src/creator.js","./local.js":"node_modules/d3-selection/src/local.js","./matcher.js":"node_modules/d3-selection/src/matcher.js","./namespace.js":"node_modules/d3-selection/src/namespace.js","./namespaces.js":"node_modules/d3-selection/src/namespaces.js","./pointer.js":"node_modules/d3-selection/src/pointer.js","./pointers.js":"node_modules/d3-selection/src/pointers.js","./select.js":"node_modules/d3-selection/src/select.js","./selectAll.js":"node_modules/d3-selection/src/selectAll.js","./selection/index.js":"node_modules/d3-selection/src/selection/index.js","./selector.js":"node_modules/d3-selection/src/selector.js","./selectorAll.js":"node_modules/d3-selection/src/selectorAll.js","./selection/style.js":"node_modules/d3-selection/src/selection/style.js","./window.js":"node_modules/d3-selection/src/window.js"}],"src/highScores.ts":[function(require,module,exports) {
 "use strict";
 
+var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
+  if (Object.defineProperty) {
+    Object.defineProperty(cooked, "raw", {
+      value: raw
+    });
+  } else {
+    cooked.raw = raw;
+  }
+
+  return cooked;
+};
+
 var __read = this && this.__read || function (o, n) {
   var m = typeof Symbol === "function" && o[Symbol.iterator];
   if (!m) return o;
@@ -2549,26 +2561,20 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var dom_1 = require("./dom");
+
 var HighScores =
 /** @class */
 function () {
   function HighScores(newScore) {
     // this.setScore(newScore);
-    this.highScores = []; // this.d3Self = select('.stage').append('div').attr('class', 'high-score')
-    // this.d3Self.append('h2').text('High score list');
-    // const table = this.d3Self.append('table')
-    // table.node().insertAdjacentHTML('beforeend', `
-    //   <tr><td>hi mom</td></tr>
-    // `)
-    // const tr = table
-    // .selectAll("tr")
-    // .data(() =>
-    //   this.getAllLocalHighScores()
-    // )
-    // .enter()
-    // .append("tr")
-    // .append('td')
-    // .text(d=> d.score)
+    this.highScores = [];
+    this.html = dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n      <h3>High scores</h3>\n\n      <table class=\"highscore-table\">\n        <tbody>\n          ", "\n        </tbody>\n      </table>\n    "], ["\n      <h3>High scores</h3>\n\n      <table class=\"highscore-table\">\n        <tbody>\n          ", "\n        </tbody>\n      </table>\n    "])), this.getAllLocalHighScores().filter(function (highScore) {
+      return highScore.score > 5;
+    }).map(function (highScore, index) {
+      return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n                <tr>\n                  <td class=\"rank\">", "</td>\n                  <td class=\"name\">BER</td>\n                  <td class=\"score\">", "</td>\n                </tr>\n              "], ["\n                <tr>\n                  <td class=\"rank\">", "</td>\n                  <td class=\"name\">BER</td>\n                  <td class=\"score\">", "</td>\n                </tr>\n              "])), index + 1, highScore.score);
+    }));
+    dom_1.render(this.html, document.querySelector(".highscore"));
   }
 
   HighScores.prototype.setScore = function (highScore) {
@@ -2593,7 +2599,8 @@ function () {
 }();
 
 exports.default = HighScores;
-},{}],"src/stage.ts":[function(require,module,exports) {
+var templateObject_1, templateObject_2;
+},{"./dom":"src/dom.ts"}],"src/stage.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -2952,8 +2959,7 @@ function () {
 
       return {
         continue: function _continue() {
-          // select(".splash").remove();
-          dom_1.render("", document.body);
+          dom_1.render("", document.body); //this can be better
 
           _this.game.setGameState("playing");
         }
@@ -2999,6 +3005,7 @@ function () {
     }).text(function (d) {
       return d;
     });
+    d3_selection_1.select('.game-over-container').append('div').attr('class', 'highscore');
     new highScores_1.default({
       score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
       name: "default",
@@ -6001,7 +6008,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57981" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50875" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

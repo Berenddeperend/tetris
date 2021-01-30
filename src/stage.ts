@@ -4,6 +4,8 @@ import { uniq } from "./utils";
 import Tetris from "./tetris";
 import HighScores from "./highScores";
 
+import { html, render, PreactNode } from "./dom";
+
 export default class Stage {
   game: Tetris;
 

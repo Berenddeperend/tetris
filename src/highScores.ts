@@ -1,5 +1,5 @@
-import { select, selectAll } from "d3-selection";
 import Stage from "./stage";
+import { html, render, PreactNode } from "./dom";
 
 export type HighScore = {
   name: string;
@@ -9,31 +9,33 @@ export type HighScore = {
 
 export default class HighScores {
   highScores: HighScore[] = [];
-  d3Self: any
+  html: PreactNode;
 
   constructor(newScore: HighScore) {
     // this.setScore(newScore);
 
-    // this.d3Self = select('.stage').append('div').attr('class', 'high-score')
-    // this.d3Self.append('h2').text('High score list');
-    // const table = this.d3Self.append('table')
-    
-    // table.node().insertAdjacentHTML('beforeend', `
-    //   <tr><td>hi mom</td></tr>
-    // `)
+    this.html = html`
+      <h3>High scores</h3>
 
-    // const tr = table
-    // .selectAll("tr")
-    // .data(() =>
-    //   this.getAllLocalHighScores()
-    // )
-    // .enter()
-    // .append("tr")
-    // .append('td')
-    // .text(d=> d.score)
+      <table class="highscore-table">
+        <tbody>
+          ${this.getAllLocalHighScores()
+            .filter((highScore) => highScore.score > 5)
+            .map((highScore, index) => {
+              return html`
+                <tr>
+                  <td class="rank">${index + 1}</td>
+                  <td class="name">BER</td>
+                  <td class="score">${highScore.score}</td>
+                </tr>
+              `;
+            })}
+        </tbody>
+      </table>
+    `;
+
+    render(this.html, document.querySelector(".highscore"));
   }
-
-
 
   setScore(highScore: HighScore) {
     const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
@@ -46,12 +48,12 @@ export default class HighScores {
     window.localStorage.setItem("highScore", JSON.stringify(newScore));
   }
 
-  getAllLocalHighScores() {
+  getAllLocalHighScores(): HighScore[] | null {
     const scores = JSON.parse(window.localStorage.getItem("highScore"));
 
     return scores
       ? (JSON.parse(window.localStorage.getItem("highScore")) as HighScore[])
-      : null;    
+      : null;
   }
 
   static getLocalHighScore(): HighScore | null {

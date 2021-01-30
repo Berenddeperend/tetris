@@ -1,0 +1,25 @@
+:root {
+  --stage-height: 0px;
+  --stage-width: 0px;
+  --breakpoint: 500px;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: translateY(0.3rem);
+  }
+  50% {
+    transform: translateY(-0.3rem) translateX(-0.15rem);
+  }
+  100% {
+    transform: translateY(0.3rem);
+  }
+}
+@font-face {
+  font-family: "pixel";
+  src: url("./../fonts/04B_30__.TTF") format("truetype");
+}
+@font-face {
+  font-family: "gameboy";
+  src: url("./../fonts/gameboy.ttf") format("truetype");
+}

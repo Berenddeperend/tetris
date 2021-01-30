@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "d3-selection": "./d3-selection.js",
+    "hammerjs": "./hammerjs.js"
+  }
+}

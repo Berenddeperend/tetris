@@ -1,7 +1,5 @@
 import { select } from "d3-selection";
 import Tetris from "../tetris";
-import {render} from './../dom';
-
 export default class Splash {
   game: Tetris;
 
@@ -43,6 +41,8 @@ export default class Splash {
       .attr("href", "https://github.com/Berenddeperend/tetris")
       .attr("target", "_blank")
       .text("Github");
+
+      
 
     // const onKeyDown = (e: any) => {
     //   if (e.code === "Space") {

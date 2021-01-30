@@ -1,13 +1,5 @@
-export default class DOM {
-  render(html: string) {
-    const el = new HTMLElement;
-    el.innerHTML = html;
-    return el
-  }
-}
-
-export function render(html: string) {
-  const el = new HTMLElement();
-  el.innerHTML = html;
-  return el
-}
+import htm from "htm"
+import { h, render } from 'preact';
+const html = htm.bind(h);
+type PreactNode = preact.VNode<any> | preact.VNode<any>[];
+export { render, html, PreactNode };

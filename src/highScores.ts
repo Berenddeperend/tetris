@@ -13,7 +13,7 @@ export default class HighScores {
   html: PreactNode;
 
   constructor(newScore: HighScore) {
-    // this.setScore(newScore);
+    this.setScore(newScore);
 
     this.html = html`
       <h3 class="highscore-title">Highscores</h3>

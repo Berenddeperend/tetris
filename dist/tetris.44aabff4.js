@@ -2603,6 +2603,18 @@ var templateObject_1, templateObject_2;
 },{"./dom":"src/dom.ts"}],"src/stage.ts":[function(require,module,exports) {
 "use strict";
 
+var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
+  if (Object.defineProperty) {
+    Object.defineProperty(cooked, "raw", {
+      value: raw
+    });
+  } else {
+    cooked.raw = raw;
+  }
+
+  return cooked;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -2620,6 +2632,8 @@ var d3_selection_1 = require("d3-selection");
 var utils_1 = require("./utils");
 
 var highScores_1 = __importDefault(require("./highScores"));
+
+var dom_1 = require("./dom");
 
 var Stage =
 /** @class */
@@ -2867,7 +2881,7 @@ function () {
     var _a;
 
     this.d3Stage = d3_selection_1.selectAll("body").append("div").attr("class", "stage");
-    this.d3Stage.append("svg");
+    this.d3Stage.append("svg").attr("style", "width: " + this.gridWidth * this.blockSize / 10 + "rem; height: " + this.gridHeight * this.blockSize / 10 + "rem");
     this.d3UI = d3_selection_1.select("body").append("div").attr("class", "ui");
     var queue = this.d3UI.append("div").attr("class", "queue ui-block");
     queue.append("div").attr("class", "label").text("Next");
@@ -2885,35 +2899,21 @@ function () {
     this.updateScoreUI();
   };
 
-  Stage.prototype.drawGridLines = function (x, y, blockSize) {
-    if (x === void 0) {
-      x = this.gridWidth;
-    }
+  Stage.prototype.drawGridLines = function () {
+    var _this = this;
 
-    if (y === void 0) {
-      y = this.gridHeight;
-    }
-
-    if (blockSize === void 0) {
-      blockSize = this.blockSize;
-    }
-
-    document.documentElement.style.setProperty("--stage-height", y * blockSize / 10 + "rem");
-    document.documentElement.style.setProperty("--stage-width", x * blockSize / 10 + "rem");
-    var grid = d3_selection_1.selectAll(".stage svg").attr("style", "width: " + x * blockSize / 10 + "rem; height: " + y * blockSize / 10 + "rem").append("g").attr("class", "gridlines").attr("width", x * blockSize).attr("height", y * blockSize).attr("style", "stroke-width: " + this.gridGutterSize / 10 + "rem").attr("viewBox", "0 0 " + x * blockSize + " " + y * blockSize);
-    var rows = grid.append("g").attr("class", "rows");
-    var columns = grid.append("g").attr("class", "columns");
-
-    for (var i = 0; i < y + 1; i++) {
-      rows.append("line").attr("x1", 0).attr("x2", x * blockSize).attr("y1", i * blockSize).attr("y2", i * blockSize);
-    }
-
-    for (var i = 0; i < x + 1; i++) {
-      columns.append("line").attr("y1", 0).attr("y2", y * blockSize).attr("x1", i * blockSize).attr("x2", i * blockSize);
-    }
+    document.documentElement.style.setProperty("--stage-height", this.gridHeight * this.blockSize / 10 + "rem");
+    document.documentElement.style.setProperty("--stage-width", this.gridWidth * this.blockSize / 10 + "rem");
+    var grid = dom_1.html(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n      <g\n        class=\"gridlines\"\n        width=\"", "\"\n        height=\"", "\"\n        style=\"stroke-width: ", "rem;\"\n        viewBox=\"0 0 ", " ", "\"\n      >\n        <g class=\"rows\"\n          >", "</g\n        >\n\n        <g class=\"columns\"\n          >", "</g\n        >\n      </g>\n    "], ["\n      <g\n        class=\"gridlines\"\n        width=\"", "\"\n        height=\"", "\"\n        style=\"stroke-width: ", "rem;\"\n        viewBox=\"0 0 ", " ", "\"\n      >\n        <g class=\"rows\"\n          >", "</g\n        >\n\n        <g class=\"columns\"\n          >", "</g\n        >\n      </g>\n    "])), this.gridWidth * this.blockSize, this.gridHeight * this.blockSize, this.gridGutterSize / 10, this.gridWidth * this.blockSize, this.gridHeight * this.blockSize, new Array(this.gridHeight + 1).fill("").map(function (d, i) {
+      return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n              <line\n                x1=\"0\"\n                x2=\"", "\"\n                y1=\"", "\"\n                y2=\"", "\"\n              ></line>\n            "], ["\n              <line\n                x1=\"0\"\n                x2=\"", "\"\n                y1=\"", "\"\n                y2=\"", "\"\n              ></line>\n            "])), _this.gridWidth * _this.blockSize, i * _this.blockSize, i * _this.blockSize);
+    }), new Array(this.gridWidth + 1).fill("").map(function (d, i) {
+      return dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n              <line\n                y1=\"0\"\n                y2=\"", "\"\n                x1=\"", "\"\n                x2=\"", "\"\n              ></line>\n            "], ["\n              <line\n                y1=\"0\"\n                y2=\"", "\"\n                x1=\"", "\"\n                x2=\"", "\"\n              ></line>\n            "])), _this.gridHeight * _this.blockSize, i * _this.blockSize, i * _this.blockSize);
+    }));
+    dom_1.render(grid, document.querySelector(".stage svg"));
   };
 
   Stage.prototype.beforeDestroy = function () {
+    this.d3Stage.attr("class", "stage is-game-over");
     clearInterval(this.tickInterval);
   };
 
@@ -2921,7 +2921,8 @@ function () {
 }();
 
 exports.default = Stage;
-},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.ts","./highScores":"src/highScores.ts"}],"src/states/splash.ts":[function(require,module,exports) {
+var templateObject_1, templateObject_2, templateObject_3;
+},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.ts","./highScores":"src/highScores.ts","./dom":"src/dom.ts"}],"src/states/splash.ts":[function(require,module,exports) {
 "use strict";
 
 var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
@@ -2976,6 +2977,18 @@ var templateObject_1;
 },{"../dom":"src/dom.ts","../utils":"src/utils.ts"}],"src/states/gameOver.ts":[function(require,module,exports) {
 "use strict";
 
+var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
+  if (Object.defineProperty) {
+    Object.defineProperty(cooked, "raw", {
+      value: raw
+    });
+  } else {
+    cooked.raw = raw;
+  }
+
+  return cooked;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -2990,6 +3003,10 @@ var d3_selection_1 = require("d3-selection");
 
 var highScores_1 = __importDefault(require("../highScores"));
 
+var dom_1 = require("../dom");
+
+var utils_1 = require("../utils");
+
 var GameOver =
 /** @class */
 function () {
@@ -2997,15 +3014,21 @@ function () {
     var _a, _b;
 
     this.game = game;
-    game.stage.d3Stage.attr("class", "stage is-game-over").append('div').attr('class', 'game-over-container').append("div").attr("class", "game-over") // .text("Game over");
-    .selectAll("span").data(function () {
-      return "Game over".split("");
-    }).enter().append("span").attr("class", "letter").attr("style", function (d, i) {
-      return "animation-delay: -" + i * 2 + "s";
-    }).text(function (d) {
-      return d;
-    });
-    d3_selection_1.select('.game-over-container').append('div').attr('class', 'highscore');
+    this.html = dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      <div class=\"game-over-container\">\n        <div class=\"game-over\">", "</div>\n      </div>\n\n      <div class=\"highscore\"></div>\n    "], ["\n      <div class=\"game-over-container\">\n        <div class=\"game-over\">", "</div>\n      </div>\n\n      <div class=\"highscore\"></div>\n    "])), utils_1.explodeText('game over'));
+    dom_1.render(this.html, document.querySelector('.stage')); // game.stage.d3Stage
+    //   .attr("class", "stage is-game-over") //moved to stage
+    // .append('div').attr('class', 'game-over-container')
+    // .append("div")
+    // .attr("class", "game-over")
+    // .selectAll("span")
+    // .data(() => "Game over".split(""))
+    // .enter()
+    // .append("span")
+    // .attr("class", "letter")
+    // .attr("style", (d, i) => `animation-delay: -${i * 2}s`)
+    // .text((d) => d);
+    // select('.game-over-container').append('div').attr('class', 'highscore')
+
     new highScores_1.default({
       score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
       name: "default",
@@ -3038,7 +3061,8 @@ function () {
 }();
 
 exports.default = GameOver;
-},{"d3-selection":"node_modules/d3-selection/src/index.js","../highScores":"src/highScores.ts"}],"src/controls/keyboardControls.ts":[function(require,module,exports) {
+var templateObject_1;
+},{"d3-selection":"node_modules/d3-selection/src/index.js","../highScores":"src/highScores.ts","../dom":"src/dom.ts","../utils":"src/utils.ts"}],"src/controls/keyboardControls.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5930,7 +5954,7 @@ var Tetris =
 function () {
   function Tetris() {
     this.gameMode = "default";
-    this.setGameState("splash");
+    this.setGameState("playing");
     new keyboardControls_1.default(this);
     new touchControls_1.default(this);
     new gestureControls_1.default(this);

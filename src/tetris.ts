@@ -16,7 +16,7 @@ export default class Tetris {
   gameOver: GameOver;
 
   constructor() {
-    this.setGameState("splash");
+    this.setGameState("playing");
     new KeyboardControls(this);
     new TouchControls(this);
     new GestureControls(this);

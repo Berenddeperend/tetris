@@ -3,28 +3,42 @@ import Tetris from "../tetris";
 import HighScores from "../highScores";
 import InputName from "../inputName";
 
+import { html, render, PreactNode } from "../dom";
+import { explodeText } from '../utils';
+
 export default class GameOver {
   game: Tetris;
+  html: PreactNode;
+
   constructor(game: Tetris) {
     this.game = game;
-    game.stage.d3Stage
-      .attr("class", "stage is-game-over")
 
+    this.html = html`
+      <div class="game-over-container">
+        <div class="game-over">${explodeText('game over')}</div>
+      </div>
+
+      <div class="highscore"></div>
+    `
+    render(this.html, document.querySelector('.stage'));
+
+
+
+    // game.stage.d3Stage
+    //   .attr("class", "stage is-game-over") //moved to stage
     
-      .append('div').attr('class', 'game-over-container')
-      .append("div")
-      .attr("class", "game-over")
-      // .text("Game over");
+      // .append('div').attr('class', 'game-over-container')
+      // .append("div")
+      // .attr("class", "game-over")
+      // .selectAll("span")
+      // .data(() => "Game over".split(""))
+      // .enter()
+      // .append("span")
+      // .attr("class", "letter")
+      // .attr("style", (d, i) => `animation-delay: -${i * 2}s`)
+      // .text((d) => d);
 
-      .selectAll("span")
-      .data(() => "Game over".split(""))
-      .enter()
-      .append("span")
-      .attr("class", "letter")
-      .attr("style", (d, i) => `animation-delay: -${i * 2}s`)
-      .text((d) => d);
-
-      select('.game-over-container').append('div').attr('class', 'highscore')
+      // select('.game-over-container').append('div').attr('class', 'highscore')
 
     new HighScores({
       score: this.game?.stage?.score,

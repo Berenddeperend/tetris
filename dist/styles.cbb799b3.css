@@ -47,17 +47,46 @@
   outline: none;
 }
 
+.highscore-list {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: 15em;
+  font-size: 1.3rem;
+  transform: translate(-50%, -50%);
+}
+
+.highscore-title {
+  text-align: center;
+  background: #ff4f69;
+  padding: 0.2em 0;
+  margin-bottom: 0.5em;
+}
+
+.highscore-table {
+  width: 100%;
+}
 .highscore-table tbody td {
-  padding: 0.2rem 1rem;
+  padding: 0.2em 1rem;
 }
 .highscore-table tbody td.rank {
   color: #868686;
-  padding: 0;
+  padding-left: 0;
 }
 .highscore-table tbody td.score {
   text-align: right;
+  padding-right: 0;
 }
 
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 html {
   background: #2b0f54;
   font-family: gameboy;
@@ -69,6 +98,10 @@ html {
 a {
   color: white;
   text-decoration: none;
+}
+
+table {
+  border-collapse: collapse;
 }
 
 body {
@@ -168,33 +201,18 @@ body:after {
   transition: opacity 2s;
 }
 .stage.is-game-over::after {
+  animation: fadein 0.4s steps(4, end);
   opacity: 0.7;
 }
 
 .game-over-container {
   position: absolute;
-  top: 10%;
+  top: 50%;
   left: 50%;
   z-index: 2;
   transform: translate(-50%, -50%);
   text-align: center;
   width: 100px;
-  animation: game-over-title 2s;
-}
-@keyframes game-over-title {
-  0% {
-    top: 50%;
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  70% {
-    top: 50%;
-  }
-  100% {
-    top: 10%;
-  }
 }
 .game-over-container .game-over {
   font-size: 2.2rem;
@@ -204,6 +222,7 @@ body:after {
   text-shadow: 0.6rem 0.6rem #ab1f65, -0.45rem -0.45rem #ff4f69;
 }
 .game-over-container .game-over .letter {
+  animation: wiggle 1.05s infinite;
   display: inline-block;
 }
 

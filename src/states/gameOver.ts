@@ -4,7 +4,8 @@ import HighScores from "../highScores";
 import InputName from "../inputName";
 
 import { html, render, PreactNode } from "../dom";
-import { explodeText } from '../utils';
+import { explodeText } from "../utils";
+import animations, { Animation } from "../animations";
 
 export default class GameOver {
   game: Tetris;
@@ -15,36 +16,31 @@ export default class GameOver {
 
     this.html = html`
       <div class="game-over-container">
-        <div class="game-over">${explodeText('game over')}</div>
+        <div class="game-over">${explodeText("game over")}</div>
       </div>
 
-      <div class="highscore"></div>
-    `
-    render(this.html, document.querySelector('.stage'));
+      <div class="highscore-list"></div>
+    `;
 
+    render(this.html, document.querySelector(".stage"));
 
+    const gameOverContainer = document.querySelector(".game-over-container");
 
-    // game.stage.d3Stage
-    //   .attr("class", "stage is-game-over") //moved to stage
-    
-      // .append('div').attr('class', 'game-over-container')
-      // .append("div")
-      // .attr("class", "game-over")
-      // .selectAll("span")
-      // .data(() => "Game over".split(""))
-      // .enter()
-      // .append("span")
-      // .attr("class", "letter")
-      // .attr("style", (d, i) => `animation-delay: -${i * 2}s`)
-      // .text((d) => d);
+    // @ts-ignore
+    gameOverContainer.animate(...animations.fadeIn);
 
-      // select('.game-over-container').append('div').attr('class', 'highscore')
-
-    new HighScores({
-      score: this.game?.stage?.score,
-      name: "default",
-      date: new Date(),
-    });
+    window.setTimeout(() => {
+      // @ts-ignore
+      const animation = gameOverContainer.animate(...animations.fadeOut);
+      animation.onfinish = () => {
+        gameOverContainer.remove();
+        new HighScores({
+          score: this.game?.stage?.score,
+          name: "default",
+          date: new Date(),
+        });
+      };
+    }, 2000);
 
     // new InputName();
 
@@ -52,7 +48,7 @@ export default class GameOver {
     //   // prevent user from closing gameover screen instantly while still trying to rotate
     //   window.addEventListener("keydown", onKeyDown);
     // }, 500);
-  }  
+  }
 
   get controls() {
     return {
@@ -61,7 +57,7 @@ export default class GameOver {
         select(".game-over").remove();
         select(".ui").remove();
         this.game.setGameState("playing");
-      }
-    }
+      },
+    };
   }
 }

@@ -54,6 +54,15 @@ export default class Stage {
     this.activeBlock = new Block(this.blockIndex, this, "stage");
     this.queue.push(new Block(++this.blockIndex, this, "queue"));
 
+    document.documentElement.style.setProperty(
+      "--stage-height",
+      `${(this.gridHeight * this.blockSize) / 10}rem`
+    );
+    document.documentElement.style.setProperty(
+      "--stage-width",
+      `${(this.gridWidth * this.blockSize) / 10}rem`
+    );
+
     this.tickInterval = window.setInterval(() => {
       this.tick();
     }, 1000);
@@ -268,15 +277,6 @@ export default class Stage {
   }
 
   drawGridLines() {
-    document.documentElement.style.setProperty(
-      "--stage-height",
-      `${(this.gridHeight * this.blockSize) / 10}rem`
-    );
-    document.documentElement.style.setProperty(
-      "--stage-width",
-      `${(this.gridWidth * this.blockSize) / 10}rem`
-    );
-
     const grid = html`
       <g
         class="gridlines"

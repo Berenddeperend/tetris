@@ -2507,7 +2507,31 @@ var _style = require("./selection/style.js");
 var _window = _interopRequireDefault(require("./window.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./create.js":"node_modules/d3-selection/src/create.js","./creator.js":"node_modules/d3-selection/src/creator.js","./local.js":"node_modules/d3-selection/src/local.js","./matcher.js":"node_modules/d3-selection/src/matcher.js","./namespace.js":"node_modules/d3-selection/src/namespace.js","./namespaces.js":"node_modules/d3-selection/src/namespaces.js","./pointer.js":"node_modules/d3-selection/src/pointer.js","./pointers.js":"node_modules/d3-selection/src/pointers.js","./select.js":"node_modules/d3-selection/src/select.js","./selectAll.js":"node_modules/d3-selection/src/selectAll.js","./selection/index.js":"node_modules/d3-selection/src/selection/index.js","./selector.js":"node_modules/d3-selection/src/selector.js","./selectorAll.js":"node_modules/d3-selection/src/selectorAll.js","./selection/style.js":"node_modules/d3-selection/src/selection/style.js","./window.js":"node_modules/d3-selection/src/window.js"}],"src/highScores.ts":[function(require,module,exports) {
+},{"./create.js":"node_modules/d3-selection/src/create.js","./creator.js":"node_modules/d3-selection/src/creator.js","./local.js":"node_modules/d3-selection/src/local.js","./matcher.js":"node_modules/d3-selection/src/matcher.js","./namespace.js":"node_modules/d3-selection/src/namespace.js","./namespaces.js":"node_modules/d3-selection/src/namespaces.js","./pointer.js":"node_modules/d3-selection/src/pointer.js","./pointers.js":"node_modules/d3-selection/src/pointers.js","./select.js":"node_modules/d3-selection/src/select.js","./selectAll.js":"node_modules/d3-selection/src/selectAll.js","./selection/index.js":"node_modules/d3-selection/src/selection/index.js","./selector.js":"node_modules/d3-selection/src/selector.js","./selectorAll.js":"node_modules/d3-selection/src/selectorAll.js","./selection/style.js":"node_modules/d3-selection/src/selection/style.js","./window.js":"node_modules/d3-selection/src/window.js"}],"src/animations.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  fadeIn: [[{
+    opacity: 0
+  }, {
+    opacity: 1
+  }], {
+    duration: 400,
+    easing: "steps(4, end)"
+  }],
+  fadeOut: [[{
+    opacity: 1
+  }, {
+    opacity: 0
+  }], {
+    duration: 400,
+    easing: "steps(4, end)"
+  }]
+};
+},{}],"src/highScores.ts":[function(require,module,exports) {
 "use strict";
 
 var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
@@ -2557,24 +2581,36 @@ var __spread = this && this.__spread || function () {
   return ar;
 };
 
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var dom_1 = require("./dom");
 
+var animations_1 = __importDefault(require("./animations"));
+
 var HighScores =
 /** @class */
 function () {
   function HighScores(newScore) {
     // this.setScore(newScore);
+    var _a;
+
     this.highScores = [];
-    this.html = dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n      <h3>High scores</h3>\n\n      <table class=\"highscore-table\">\n        <tbody>\n          ", "\n        </tbody>\n      </table>\n    "], ["\n      <h3>High scores</h3>\n\n      <table class=\"highscore-table\">\n        <tbody>\n          ", "\n        </tbody>\n      </table>\n    "])), this.getAllLocalHighScores().filter(function (highScore) {
-      return highScore.score > 5;
+    this.html = dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n      <h3 class=\"highscore-title\">Highscores</h3>\n\n      <table class=\"highscore-table\">\n        <tbody>\n          ", "\n        </tbody>\n      </table>\n    "], ["\n      <h3 class=\"highscore-title\">Highscores</h3>\n\n      <table class=\"highscore-table\">\n        <tbody>\n          ", "\n        </tbody>\n      </table>\n    "])), this.getAllLocalHighScores().filter(function (highScore, index) {
+      return index < 5;
     }).map(function (highScore, index) {
-      return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n                <tr>\n                  <td class=\"rank\">", "</td>\n                  <td class=\"name\">BER</td>\n                  <td class=\"score\">", "</td>\n                </tr>\n              "], ["\n                <tr>\n                  <td class=\"rank\">", "</td>\n                  <td class=\"name\">BER</td>\n                  <td class=\"score\">", "</td>\n                </tr>\n              "])), index + 1, highScore.score);
+      return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n                <tr>\n                  <td class=\"rank\">", "</td>\n                  <td class=\"name\">BEREND</td>\n                  <td class=\"score\">", "</td>\n                </tr>\n              "], ["\n                <tr>\n                  <td class=\"rank\">", "</td>\n                  <td class=\"name\">BEREND</td>\n                  <td class=\"score\">", "</td>\n                </tr>\n              "])), index + 1, highScore.score);
     }));
-    dom_1.render(this.html, document.querySelector(".highscore"));
+    dom_1.render(this.html, document.querySelector(".highscore-list")); // @ts-ignore
+
+    (_a = document.querySelector(".highscore-list")).animate.apply(_a, __spread(animations_1.default.fadeIn));
   }
 
   HighScores.prototype.setScore = function (highScore) {
@@ -2587,7 +2623,7 @@ function () {
 
   HighScores.prototype.getAllLocalHighScores = function () {
     var scores = JSON.parse(window.localStorage.getItem("highScore"));
-    return scores ? JSON.parse(window.localStorage.getItem("highScore")) : null;
+    return scores ? JSON.parse(window.localStorage.getItem("highScore")) : [];
   };
 
   HighScores.getLocalHighScore = function () {
@@ -2600,7 +2636,7 @@ function () {
 
 exports.default = HighScores;
 var templateObject_1, templateObject_2;
-},{"./dom":"src/dom.ts"}],"src/stage.ts":[function(require,module,exports) {
+},{"./dom":"src/dom.ts","./animations":"src/animations.ts"}],"src/stage.ts":[function(require,module,exports) {
 "use strict";
 
 var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
@@ -2672,6 +2708,8 @@ function () {
     this.initializeInternalGrid();
     this.activeBlock = new block_1.default(this.blockIndex, this, "stage");
     this.queue.push(new block_1.default(++this.blockIndex, this, "queue"));
+    document.documentElement.style.setProperty("--stage-height", this.gridHeight * this.blockSize / 10 + "rem");
+    document.documentElement.style.setProperty("--stage-width", this.gridWidth * this.blockSize / 10 + "rem");
     this.tickInterval = window.setInterval(function () {
       _this.tick();
     }, 1000);
@@ -2902,8 +2940,6 @@ function () {
   Stage.prototype.drawGridLines = function () {
     var _this = this;
 
-    document.documentElement.style.setProperty("--stage-height", this.gridHeight * this.blockSize / 10 + "rem");
-    document.documentElement.style.setProperty("--stage-width", this.gridWidth * this.blockSize / 10 + "rem");
     var grid = dom_1.html(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n      <g\n        class=\"gridlines\"\n        width=\"", "\"\n        height=\"", "\"\n        style=\"stroke-width: ", "rem;\"\n        viewBox=\"0 0 ", " ", "\"\n      >\n        <g class=\"rows\"\n          >", "</g\n        >\n\n        <g class=\"columns\"\n          >", "</g\n        >\n      </g>\n    "], ["\n      <g\n        class=\"gridlines\"\n        width=\"", "\"\n        height=\"", "\"\n        style=\"stroke-width: ", "rem;\"\n        viewBox=\"0 0 ", " ", "\"\n      >\n        <g class=\"rows\"\n          >", "</g\n        >\n\n        <g class=\"columns\"\n          >", "</g\n        >\n      </g>\n    "])), this.gridWidth * this.blockSize, this.gridHeight * this.blockSize, this.gridGutterSize / 10, this.gridWidth * this.blockSize, this.gridHeight * this.blockSize, new Array(this.gridHeight + 1).fill("").map(function (d, i) {
       return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n              <line\n                x1=\"0\"\n                x2=\"", "\"\n                y1=\"", "\"\n                y2=\"", "\"\n              ></line>\n            "], ["\n              <line\n                x1=\"0\"\n                x2=\"", "\"\n                y1=\"", "\"\n                y2=\"", "\"\n              ></line>\n            "])), _this.gridWidth * _this.blockSize, i * _this.blockSize, i * _this.blockSize);
     }), new Array(this.gridWidth + 1).fill("").map(function (d, i) {
@@ -2989,6 +3025,41 @@ var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked
   return cooked;
 };
 
+var __read = this && this.__read || function (o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o),
+      r,
+      ar = [],
+      e;
+
+  try {
+    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
+      ar.push(r.value);
+    }
+  } catch (error) {
+    e = {
+      error: error
+    };
+  } finally {
+    try {
+      if (r && !r.done && (m = i["return"])) m.call(i);
+    } finally {
+      if (e) throw e.error;
+    }
+  }
+
+  return ar;
+};
+
+var __spread = this && this.__spread || function () {
+  for (var ar = [], i = 0; i < arguments.length; i++) {
+    ar = ar.concat(__read(arguments[i]));
+  }
+
+  return ar;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -3007,33 +3078,35 @@ var dom_1 = require("../dom");
 
 var utils_1 = require("../utils");
 
+var animations_1 = __importDefault(require("../animations"));
+
 var GameOver =
 /** @class */
 function () {
   function GameOver(game) {
-    var _a, _b;
+    var _this = this;
 
     this.game = game;
-    this.html = dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      <div class=\"game-over-container\">\n        <div class=\"game-over\">", "</div>\n      </div>\n\n      <div class=\"highscore\"></div>\n    "], ["\n      <div class=\"game-over-container\">\n        <div class=\"game-over\">", "</div>\n      </div>\n\n      <div class=\"highscore\"></div>\n    "])), utils_1.explodeText('game over'));
-    dom_1.render(this.html, document.querySelector('.stage')); // game.stage.d3Stage
-    //   .attr("class", "stage is-game-over") //moved to stage
-    // .append('div').attr('class', 'game-over-container')
-    // .append("div")
-    // .attr("class", "game-over")
-    // .selectAll("span")
-    // .data(() => "Game over".split(""))
-    // .enter()
-    // .append("span")
-    // .attr("class", "letter")
-    // .attr("style", (d, i) => `animation-delay: -${i * 2}s`)
-    // .text((d) => d);
-    // select('.game-over-container').append('div').attr('class', 'highscore')
+    this.html = dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      <div class=\"game-over-container\">\n        <div class=\"game-over\">", "</div>\n      </div>\n\n      <div class=\"highscore-list\"></div>\n    "], ["\n      <div class=\"game-over-container\">\n        <div class=\"game-over\">", "</div>\n      </div>\n\n      <div class=\"highscore-list\"></div>\n    "])), utils_1.explodeText("game over"));
+    dom_1.render(this.html, document.querySelector(".stage"));
+    var gameOverContainer = document.querySelector(".game-over-container"); // @ts-ignore
 
-    new highScores_1.default({
-      score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
-      name: "default",
-      date: new Date()
-    }); // new InputName();
+    gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeIn));
+    window.setTimeout(function () {
+      // @ts-ignore
+      var animation = gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeOut));
+
+      animation.onfinish = function () {
+        var _a, _b;
+
+        gameOverContainer.remove();
+        new highScores_1.default({
+          score: (_b = (_a = _this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
+          name: "default",
+          date: new Date()
+        });
+      };
+    }, 2000); // new InputName();
     // window.setTimeout(() => {
     //   // prevent user from closing gameover screen instantly while still trying to rotate
     //   window.addEventListener("keydown", onKeyDown);
@@ -3062,7 +3135,7 @@ function () {
 
 exports.default = GameOver;
 var templateObject_1;
-},{"d3-selection":"node_modules/d3-selection/src/index.js","../highScores":"src/highScores.ts","../dom":"src/dom.ts","../utils":"src/utils.ts"}],"src/controls/keyboardControls.ts":[function(require,module,exports) {
+},{"d3-selection":"node_modules/d3-selection/src/index.js","../highScores":"src/highScores.ts","../dom":"src/dom.ts","../utils":"src/utils.ts","../animations":"src/animations.ts"}],"src/controls/keyboardControls.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6032,7 +6105,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50875" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62977" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

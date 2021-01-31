@@ -4,6 +4,8 @@ import { uniq } from "./utils";
 import Tetris from "./tetris";
 import HighScores from "./highScores";
 
+import { html, render, PreactNode } from "./dom";
+
 export default class Stage {
   game: Tetris;
 
@@ -51,6 +53,15 @@ export default class Stage {
 
     this.activeBlock = new Block(this.blockIndex, this, "stage");
     this.queue.push(new Block(++this.blockIndex, this, "queue"));
+
+    document.documentElement.style.setProperty(
+      "--stage-height",
+      `${(this.gridHeight * this.blockSize) / 10}rem`
+    );
+    document.documentElement.style.setProperty(
+      "--stage-width",
+      `${(this.gridWidth * this.blockSize) / 10}rem`
+    );
 
     this.tickInterval = window.setInterval(() => {
       this.tick();
@@ -230,9 +241,8 @@ export default class Stage {
   }
 
   initUI() {
-    this.d3Stage = selectAll("body")
-    .append("div").attr("class", "stage");
-    this.d3Stage.append("svg");
+    this.d3Stage = selectAll("body").append("div").attr("class", "stage");
+    this.d3Stage.append("svg").attr("style", `width: ${this.gridWidth * this.blockSize / 10}rem; height: ${this.gridHeight * this.blockSize / 10}rem`);
 
     this.d3UI = select("body").append("div").attr("class", "ui");
 
@@ -266,51 +276,48 @@ export default class Stage {
     this.updateScoreUI();
   }
 
-  drawGridLines(
-    x: number = this.gridWidth,
-    y: number = this.gridHeight,
-    blockSize: number = this.blockSize
-  ) {
-    document.documentElement.style.setProperty(
-      "--stage-height",
-      `${y * blockSize/ 10}rem`
-    );
-    document.documentElement.style.setProperty(
-      "--stage-width",
-      `${x * blockSize / 10}rem`
-    );
-    const grid = selectAll(".stage svg")
-      .attr("style", `width: ${x * blockSize / 10}rem; height: ${y * blockSize / 10}rem`)
-      .append("g")
-      .attr("class", "gridlines")
-      .attr("width", x * blockSize)
-      .attr("height", y * blockSize)
-      .attr("style", `stroke-width: ${this.gridGutterSize / 10}rem`)
-      .attr("viewBox", `0 0 ${x * blockSize} ${y * blockSize}`);
+  drawGridLines() {
+    const grid = html`
+      <g
+        class="gridlines"
+        width="${this.gridWidth * this.blockSize}"
+        height="${this.gridHeight * this.blockSize}"
+        style="stroke-width: ${this.gridGutterSize / 10}rem;"
+        viewBox="0 0 ${this.gridWidth * this.blockSize} ${this.gridHeight *
+        this.blockSize}"
+      >
+        <g class="rows"
+          >${new Array(this.gridHeight + 1).fill("").map((d, i) => {
+            return html`
+              <line
+                x1="0"
+                x2="${this.gridWidth * this.blockSize}"
+                y1="${i * this.blockSize}"
+                y2="${i * this.blockSize}"
+              ></line>
+            `;
+          })}</g
+        >
 
-    const rows = grid.append("g").attr("class", "rows");
-    const columns = grid.append("g").attr("class", "columns");
-
-    for (let i = 0; i < y + 1; i++) {
-      rows
-        .append("line")
-        .attr("x1", 0)
-        .attr("x2", x * blockSize)
-        .attr("y1", i * blockSize)
-        .attr("y2", i * blockSize);
-    }
-
-    for (let i = 0; i < x + 1; i++) {
-      columns
-        .append("line")
-        .attr("y1", 0)
-        .attr("y2", y * blockSize)
-        .attr("x1", i * blockSize)
-        .attr("x2", i * blockSize);
-    }
+        <g class="columns"
+          >${new Array(this.gridWidth + 1).fill("").map((d, i) => {
+            return html`
+              <line
+                y1="0"
+                y2="${this.gridHeight * this.blockSize}"
+                x1="${i * this.blockSize}"
+                x2="${i * this.blockSize}"
+              ></line>
+            `;
+          })}</g
+        >
+      </g>
+    `;
+    render(grid, document.querySelector(".stage svg"));
   }
 
   beforeDestroy() {
+    this.d3Stage.attr("class", "stage is-game-over");
     clearInterval(this.tickInterval);
   }
 }

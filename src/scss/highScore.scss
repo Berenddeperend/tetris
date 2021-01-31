@@ -17,7 +17,7 @@
     color: white;
     border: none;
     width: 3rem;
-    margin: 0.3rem;    
+    margin: 0.3rem;
 
     &:focus {
       outline: none;
@@ -25,6 +25,40 @@
   }
 }
 
-.high-score {
-  
+.highscore-list {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: 15em;
+  font-size: 1.3rem;
+  transform: translate(-50%, -50%);
+  // animation: fadein 1s;
+}
+
+.highscore-title {
+  text-align: center;
+  background: $red;
+  padding: 0.2em 0;
+  margin-bottom: 0.5em;
+}
+
+.highscore-table {
+  width: 100%;
+
+  tbody {
+    td {
+      padding: 0.2em 1rem;
+
+      &.rank {
+        color: #868686;
+        padding-left: 0;
+      }
+
+      &.score {
+        text-align: right;
+        padding-right: 0;
+      }
+    }
+  }
 }

@@ -1,62 +1,9 @@
 @import "./variables.scss";
 @import "./highScore.scss";
+@import "./animations.scss";
+@import "./global.scss";
 
-html {
-  background: $black;
-  font-family: gameboy;
-  font-size: 62.5%;
-  color: white;
-  touch-action: none;
-}
 
-a {
-  color: white;
-  text-decoration: none;
-}
-
-body {
-  width: 100vw;
-  // height: 100vh;
-  height: calc(var(--vh, 1vh) * 100); //https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  &:after {
-    //scanlines
-    @keyframes scanlines {
-      from {
-        transform: translateY(0);
-      }
-      to {
-        transform: translateY(-4px);
-      }
-    }
-    content: "";
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    z-index: 100;
-    background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.25) 0);
-    background-size: 100% 4px;
-    opacity: 0.3;
-    animation: scanlines 1s infinite linear;
-  }
-
-  @media(min-width: $breakpoint) {
-    flex-direction: row;
-  }
-}
-
-* {
-  box-sizing: border-box;
-}
 
 // prettier-ignore
 .block {
@@ -102,56 +49,33 @@ body {
     transition: opacity 2s;
   }
   
-
+  
   &.is-game-over {
     &::after {
+      animation: fadein .4s steps(4, end);
       opacity: 0.7;
     }
   }
 }
 
-
 .game-over-container {
   position: absolute;
-  top: 10%;
+  top: 50%;
   left: 50%;
   z-index: 2;
   transform: translate(-50%, -50%);
   text-align: center;
   width: 100px;
   
-  animation: game-over-title 2s; //steps(20, jump-start);
-
-  @keyframes game-over-title {
-    0% {
-      top: 50%;
-      opacity: 0;
-    } 
-    10% {
-      opacity: 1;
-    }
-
-    70% {
-      top: 50%;
-    } 
-    100% {
-      top: 10%;
-    }
-  }
-
-
   .game-over {
     font-size: 2.2rem;
     @include text-shadow(0.3rem, true);
     
     .letter {
-      // animation: wiggle 1.05s infinite;
+      animation: wiggle 1.05s infinite;
       display: inline-block;
     }
   }
-
-
-
 }
 
 .splash {

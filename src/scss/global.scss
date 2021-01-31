@@ -1,0 +1,59 @@
+html {
+  background: $black;
+  font-family: gameboy;
+  font-size: 62.5%;
+  color: white;
+  touch-action: none;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+body {
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100); //https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &:after {
+    //scanlines
+    @keyframes scanlines {
+      from {
+        transform: translateY(0);
+      }
+      to {
+        transform: translateY(-4px);
+      }
+    }
+    content: "";
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    z-index: 100;
+    background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.25) 0);
+    background-size: 100% 4px;
+    opacity: 0.3;
+    animation: scanlines 1s infinite linear;
+  }
+
+  @media(min-width: $breakpoint) {
+    flex-direction: row;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}

@@ -8,9 +8,8 @@ Bugs:
 
 Features:
 - Reset tick after last-minute rotate
-- Better 'Game Over' screen. (in progress)
-- See highscore list
 - Submit names with highscore
+- Highlight current score in highscore list
 - UI
   - Responsive position
   - Check gameboy version for inspiration, or this one: https://m.media-amazon.com/images/S/aplus-media/vc/d2044fc9-3049-41ff-8262-6b52fad2794c.__CR0,69,2099,2099_PT0_SX300_V1___.jpg
@@ -28,6 +27,7 @@ Features:
 Maintenance:
 - Move collision logic to block class
 - Gridlines as gutter in grid
+- typing for .animate(...args)
 
 Future:
 - 2 player mode (one client)
@@ -47,12 +47,17 @@ Maybe:
 - Swap out Parceljs -> snowpack (https://2020.stateofjs.com/en-US/technologies/build-tools/)
 - In-game keyboard?
 - Implement 8bit style wordart
-- Change d3 for either native JS or Preact
+- Animation library? (if so, https://animejs.com/)
 
 On release:
 - Post to reddit.com/r/tetris (as video) "I wrote a Tetris clone with co-op mode"
 - Write blog post
 - Ask Daniel to hack the highscore
 
+d3 to preact:
+[x] Splash
+[ ] Stage
+[ ] Block
+[x] Game Over
 
 Project started at around 5 januari

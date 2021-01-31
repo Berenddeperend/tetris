@@ -1,11 +1,12 @@
 import Stage from "./stage";
 import { html, render, PreactNode } from "./dom";
-import animations, {Animation} from './animations'
+import animations, { Animation } from "./animations";
 
 export type HighScore = {
   name: string;
   score: number;
   date: Date;
+  id?: number;
 };
 
 export default class HighScores {
@@ -13,7 +14,8 @@ export default class HighScores {
   html: PreactNode;
 
   constructor(newScore: HighScore) {
-    this.setScore(newScore);
+    const newScoreId = this.getAllLocalHighScores().length + 1
+    this.setScore({ ...newScore, id: newScoreId});
 
     this.html = html`
       <h3 class="highscore-title">Highscores</h3>
@@ -24,7 +26,7 @@ export default class HighScores {
             .filter((highScore, index) => index < 5)
             .map((highScore, index) => {
               return html`
-                <tr>
+                <tr class="${highScore.id === newScoreId ? 'current' : null}">
                   <td class="rank">${index + 1}</td>
                   <td class="name">BEREND</td>
                   <td class="score">${highScore.score}</td>

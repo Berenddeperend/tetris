@@ -7,3 +7,18 @@
     opacity: 1;
   }
 }
+
+@keyframes color-blink {
+  from {
+    color: $red;
+  }
+  
+  50% {
+    color: white;
+    
+  }
+  
+  to {
+    color: $red;
+  }
+}

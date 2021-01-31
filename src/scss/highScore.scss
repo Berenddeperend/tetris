@@ -33,7 +33,6 @@
   width: 15em;
   font-size: 1.3rem;
   transform: translate(-50%, -50%);
-  // animation: fadein 1s;
 }
 
 .highscore-title {
@@ -47,6 +46,14 @@
   width: 100%;
 
   tbody {
+    tr.current {
+      animation: color-blink 0.4s steps(2,start) infinite;
+
+      .rank {
+        color: inherit;
+      }
+    }
+
     td {
       padding: 0.2em 1rem;
 

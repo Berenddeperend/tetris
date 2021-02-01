@@ -7,6 +7,7 @@ Bugs:
 - SVG 'next' viewbox
 
 Features:
+- Highscore aanvullen tot 5 wanneer niet genoeg entries.
 - Reset tick after last-minute rotate
 - Submit names with highscore
 - Highlight current score in highscore list

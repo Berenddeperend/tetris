@@ -33,7 +33,14 @@
   width: 15em;
   font-size: 1.3rem;
   transform: translate(-50%, -50%);
+
 }
+
+.highscore-table-container {
+  max-height: 100px;
+  overflow-y: hidden;
+}
+
 
 .highscore-title {
   text-align: center;
@@ -44,6 +51,9 @@
 
 .highscore-table {
   width: 100%;
+  transition: transform 3s ease-out;
+
+  // transform: translateY(-1000px); //todo: calculate and dynamically set this this in js
 
   tbody {
     tr.current {

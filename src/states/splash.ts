@@ -14,7 +14,7 @@ export default class Splash {
         <div class="subtitle">By Berend</div>
         <div class="begin">
           ${game.isDesktop
-            ? explodeText("Press start to begin")
+            ? explodeText("Press space to start")
             : explodeText("Touch here to start")}
         </div>
         <a

@@ -2,6 +2,8 @@ import Stage from "./stage";
 import { html, render, PreactNode } from "./dom";
 import { Component } from "preact";
 import animations, { Animation } from "./animations";
+import InputName from "./inputName";
+import { times } from "./utils";
 
 export type HighScore = {
   name: string;
@@ -47,7 +49,9 @@ export default class HighScores {
             return html`
               <tr class="${highScore.id === newScoreId ? "current" : null}">
                 <td class="rank">${index + 1}</td>
-                <td class="name">BEREND</td>
+                <td class="name">
+                  ${highScore.id === newScoreId ? html`<${InputName}/>` : highScore?.name}
+                </td>
                 <td class="score">${highScore.score}</td>
               </tr>
             `;

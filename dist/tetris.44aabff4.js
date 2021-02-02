@@ -655,7 +655,7 @@ var __spread = this && this.__spread || function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.explodeText = exports.cloneDeep = exports.uniq = void 0;
+exports.times = exports.explodeText = exports.cloneDeep = exports.uniq = void 0;
 
 var dom_1 = require("./dom");
 
@@ -678,6 +678,18 @@ function explodeText(text) {
 }
 
 exports.explodeText = explodeText;
+
+function times(times, fn) {
+  var arr = [];
+
+  for (var i = 0; i < times; i++) {
+    arr.push(fn());
+  }
+
+  return arr;
+}
+
+exports.times = times;
 var templateObject_1, templateObject_2;
 },{"./dom":"src/dom.ts"}],"src/block.ts":[function(require,module,exports) {
 "use strict";
@@ -2531,7 +2543,92 @@ exports.default = {
     easing: "steps(4, end)"
   }]
 };
-},{}],"src/highScores.ts":[function(require,module,exports) {
+},{}],"src/inputName.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
+  if (Object.defineProperty) {
+    Object.defineProperty(cooked, "raw", {
+      value: raw
+    });
+  } else {
+    cooked.raw = raw;
+  }
+
+  return cooked;
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var dom_1 = require("./dom");
+
+var preact_1 = require("preact");
+
+var InputName =
+/** @class */
+function (_super) {
+  __extends(InputName, _super);
+
+  function InputName() {
+    var _this = _super.call(this) || this;
+
+    _this.ref = preact_1.createRef();
+    _this.state = {
+      nickName: ""
+    };
+    return _this;
+  }
+
+  InputName.prototype.setNickName = function (e) {
+    console.log(e);
+  };
+
+  InputName.prototype.componentDidMount = function () {
+    console.log(this.ref.current);
+  };
+
+  InputName.prototype.render = function () {
+    var _this = this;
+
+    return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      <input type=\"text\"  onInput=", " />\n    "], ["\n      <input type=\"text\"  onInput=", " />\n    "])), function () {
+      return _this.setNickName;
+    });
+  };
+
+  return InputName;
+}(preact_1.Component);
+
+exports.default = InputName;
+var templateObject_1;
+},{"./dom":"src/dom.ts","preact":"node_modules/preact/dist/preact.module.js"}],"src/highScores.ts":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -2639,6 +2736,8 @@ var preact_1 = require("preact");
 
 var animations_1 = __importDefault(require("./animations"));
 
+var inputName_1 = __importDefault(require("./inputName"));
+
 var HighScores =
 /** @class */
 function () {
@@ -2675,7 +2774,7 @@ function () {
           return self.getAllLocalHighScores().filter(function (highScore, index) {
             return index < _this.state.limit;
           }).map(function (highScore, index) {
-            return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n              <tr class=\"", "\">\n                <td class=\"rank\">", "</td>\n                <td class=\"name\">BEREND</td>\n                <td class=\"score\">", "</td>\n              </tr>\n            "], ["\n              <tr class=\"", "\">\n                <td class=\"rank\">", "</td>\n                <td class=\"name\">BEREND</td>\n                <td class=\"score\">", "</td>\n              </tr>\n            "])), highScore.id === newScoreId ? "current" : null, index + 1, highScore.score);
+            return dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n              <tr class=\"", "\">\n                <td class=\"rank\">", "</td>\n                <td class=\"name\">\n                  ", "\n                </td>\n                <td class=\"score\">", "</td>\n              </tr>\n            "], ["\n              <tr class=\"", "\">\n                <td class=\"rank\">", "</td>\n                <td class=\"name\">\n                  ", "\n                </td>\n                <td class=\"score\">", "</td>\n              </tr>\n            "])), highScore.id === newScoreId ? "current" : null, index + 1, highScore.id === newScoreId ? dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["<", "/>"], ["<", "/>"])), inputName_1.default) : highScore === null || highScore === void 0 ? void 0 : highScore.name, highScore.score);
           });
         };
 
@@ -2689,12 +2788,12 @@ function () {
     }(preact_1.Component);
 
     var Placeholders = function Placeholders() {
-      return dom_1.html(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n      ", "\n    "], ["\n      ", "\n    "])), new Array(4).fill("").map(function () {
-        return dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n          <tr class=\"placeholder\">\n            <td class=\"rank\">-</td>\n            <td class=\"name\">-</td>\n            <td class=\"score\">-</td>\n          </tr>\n        "], ["\n          <tr class=\"placeholder\">\n            <td class=\"rank\">-</td>\n            <td class=\"name\">-</td>\n            <td class=\"score\">-</td>\n          </tr>\n        "])));
+      return dom_1.html(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n      ", "\n    "], ["\n      ", "\n    "])), new Array(4).fill("").map(function () {
+        return dom_1.html(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n          <tr class=\"placeholder\">\n            <td class=\"rank\">-</td>\n            <td class=\"name\">-</td>\n            <td class=\"score\">-</td>\n          </tr>\n        "], ["\n          <tr class=\"placeholder\">\n            <td class=\"rank\">-</td>\n            <td class=\"name\">-</td>\n            <td class=\"score\">-</td>\n          </tr>\n        "])));
       }));
     };
 
-    this.html = dom_1.html(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n      <h3 class=\"highscore-title\">Highscores</h3>\n      <div class=\"highscore-table-container\">\n        <table class=\"highscore-table\">\n          <tbody>\n            <", " />\n            <", " />\n          </tbody>\n        </table>\n      </div>\n    "], ["\n      <h3 class=\"highscore-title\">Highscores</h3>\n      <div class=\"highscore-table-container\">\n        <table class=\"highscore-table\">\n          <tbody>\n            <", " />\n            <", " />\n          </tbody>\n        </table>\n      </div>\n    "])), Entries, Placeholders);
+    this.html = dom_1.html(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n      <h3 class=\"highscore-title\">Highscores</h3>\n      <div class=\"highscore-table-container\">\n        <table class=\"highscore-table\">\n          <tbody>\n            <", " />\n            <", " />\n          </tbody>\n        </table>\n      </div>\n    "], ["\n      <h3 class=\"highscore-title\">Highscores</h3>\n      <div class=\"highscore-table-container\">\n        <table class=\"highscore-table\">\n          <tbody>\n            <", " />\n            <", " />\n          </tbody>\n        </table>\n      </div>\n    "])), Entries, Placeholders);
     dom_1.render(this.html, document.querySelector(".highscore-list")); // @ts-ignore
 
     (_a = document.querySelector(".highscore-list")).animate.apply(_a, __spread(animations_1.default.fadeIn));
@@ -2722,8 +2821,8 @@ function () {
 }();
 
 exports.default = HighScores;
-var templateObject_1, templateObject_2, templateObject_3, templateObject_4;
-},{"./dom":"src/dom.ts","preact":"node_modules/preact/dist/preact.module.js","./animations":"src/animations.ts"}],"src/stage.ts":[function(require,module,exports) {
+var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5;
+},{"./dom":"src/dom.ts","preact":"node_modules/preact/dist/preact.module.js","./animations":"src/animations.ts","./inputName":"src/inputName.ts"}],"src/stage.ts":[function(require,module,exports) {
 "use strict";
 
 var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {

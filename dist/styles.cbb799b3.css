@@ -79,6 +79,9 @@
 .highscore-table tbody tr.current .rank {
   color: inherit;
 }
+.highscore-table tbody tr.placeholder {
+  color: #868686;
+}
 .highscore-table tbody td {
   padding: 0.2em 1rem;
 }

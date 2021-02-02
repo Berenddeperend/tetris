@@ -18,3 +18,11 @@ export function explodeText(text:string): preact.VNode<any> | preact.VNode<any>[
       `
   )}`;
 }
+
+export function times(times:number, fn:()=>any) {
+  const arr = []
+  for (let i = 0; i < times; i++) {
+    arr.push(fn())
+  }
+  return arr;
+}

@@ -5,7 +5,7 @@
   "main": "tetris.js",
   "scripts": {
     "serve": "npx parcel index.html",
-    "build": "rm -rf dist && npx parcel build index.html --public-url /tetris -d dist",
+    "build": "rm -rf dist && rm -rf .cache && npx parcel build index.html --public-url /tetris -d dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "publish": "node publish.js"
   },

@@ -13,11 +13,14 @@ export type HighScore = {
 };
 
 export default class HighScores {
-  highScores: HighScore[] = [];
+  highScores: HighScore[] = this.getAllLocalHighScores();
+  newHighScore: HighScore;
 
   constructor(newScore: HighScore) {
+    this.newHighScore = newScore;
     const self = this; //blegh
     const newScoreId = this.getAllLocalHighScores().length + 1;
+    this.newHighScore.id = newScoreId;
     this.setScore({ ...newScore, id: newScoreId });
 
     class Entries extends Component<{}, { limit: number }> {
@@ -38,7 +41,7 @@ export default class HighScores {
                 <td class="rank">{index + 1}</td>
                 <td class="name">
                   {highScore.id === newScoreId ? (
-                    <InputName />
+                    <InputName onNameChange={self.onNameChanged.bind(self)} />
                   ) : (
                     highScore?.name
                   )}
@@ -85,15 +88,29 @@ export default class HighScores {
     document.querySelector(".highscore-list").animate(...animations.fadeIn);
   }
 
+  onNameChanged(e) {
+    this.newHighScore.name = e.target.value;
+    this.removeHighScoreById(this.newHighScore.id);
+    this.setScore(this.newHighScore);
+  }
+
+  removeHighScoreById(id:number) {
+    const newHighScores = this.getAllLocalHighScores().filter(
+      (score) => score.id !== id
+    );
+
+    window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
+  }
+
   setScore(highScore: HighScore) {
     const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
-    const newScore = prevScores
+    const newScores = prevScores
       ? [...(prevScores as HighScore[]), highScore].sort(
           (a, b) => b.score - a.score
         )
       : [highScore];
 
-    window.localStorage.setItem("highScore", JSON.stringify(newScore));
+    window.localStorage.setItem("highScore", JSON.stringify(newScores));
   }
 
   getAllLocalHighScores(): HighScore[] {

@@ -1,29 +1,41 @@
 import { Component, createRef } from "preact";
 
-const lastUsedNickname = window.localStorage.getItem('lastUsedNickname');
+const lastUsedNickname = window.localStorage.getItem("lastUsedNickname");
 
-
-export default class InputName extends Component<{}, { nickName:string }> {
+export default class InputName extends Component<
+  { onNameChange: (e:InputEvent) => void },
+  { nickName: string }
+> {
   ref = createRef();
-  
+
   constructor() {
     super();
     this.state = {
-      nickName: lastUsedNickname
-    }
+      nickName: lastUsedNickname,
+    };
   }
 
-  setNickName = (e) => {
-    this.setState({ nickName: e.target.value })
-    window.localStorage.setItem('lastUsedNickname', e.target.value)
-  }
+  setNickName = (e) => { //todo: typing
+    this.setState({ nickName: e.target.value });
+    this.props.onNameChange(e)
+    window.localStorage.setItem("lastUsedNickname", e.target.value);
+  };
 
   componentDidMount() {
-    // console.log(this.ref)
     this.ref.current.focus();
   }
 
   render() {
-    return <input maxlength="6" ref={this.ref} type="text" value={this.state.nickName} class="input-name" onInput={this.setNickName} />
+    return (
+      <input
+        maxLength={6}
+        ref={this.ref}
+        type="text"
+        value={this.state.nickName}
+        class="input-name"
+        spellcheck={false}
+        onInput={this.setNickName}
+      />
+    );
   }
 }

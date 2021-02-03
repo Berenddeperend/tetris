@@ -1,4 +1,3 @@
-import { select } from "d3-selection";
 import Tetris from "../tetris";
 import HighScores from "../highScores";
 
@@ -35,11 +34,11 @@ export default class GameOver {
         gameOverContainer.remove();
         new HighScores({
           score: this.game?.stage?.score,
-          name: "default",
+          name: window.localStorage.getItem('lastUsedNickname'), //localstorage as store? lol sure
           date: new Date(),
         });
       };
-    }, 2000);
+    }, 300);
 
 
     // window.setTimeout(() => {
@@ -51,9 +50,9 @@ export default class GameOver {
   get controls() {
     return {
       retry: () => {
-        select(".stage").remove();
-        select(".game-over").remove();
-        select(".ui").remove();
+        document.querySelector(".stage").remove(); //not sure if this works yet.
+        document.querySelector(".game-over").remove(); //not sure if this works yet.
+        document.querySelector(".ui").remove(); //not sure if this works yet.
         this.game.setGameState("playing");
       },
     };

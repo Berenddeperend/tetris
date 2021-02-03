@@ -10,6 +10,7 @@ export type HighScore = {
   score: number;
   date: Date;
   id?: number;
+  v: string;
 };
 
 export default class HighScores {
@@ -22,7 +23,7 @@ export default class HighScores {
     const newScoreId = this.getAllLocalHighScores().length + 1;
     this.newHighScore.id = newScoreId;
     this.setScore({ ...newScore, id: newScoreId });
-
+    this.removeDeprecatedHighScores();
     class Entries extends Component<{}, { limit: number }> {
       constructor() {
         super();
@@ -92,6 +93,14 @@ export default class HighScores {
     this.newHighScore.name = e.target.value;
     this.removeHighScoreById(this.newHighScore.id);
     this.setScore(this.newHighScore);
+  }
+
+  removeDeprecatedHighScores() {
+    const newHighScores = this.getAllLocalHighScores().filter(
+      (score) => score.hasOwnProperty('v')
+    );
+
+    window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   }
 
   removeHighScoreById(id:number) {

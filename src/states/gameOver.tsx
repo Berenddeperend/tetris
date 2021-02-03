@@ -36,6 +36,7 @@ export default class GameOver {
           score: this.game?.stage?.score,
           name: window.localStorage.getItem('lastUsedNickname'), //localstorage as store? lol sure
           date: new Date(),
+          v: process.env.VERSION
         });
       };
     }, 300);

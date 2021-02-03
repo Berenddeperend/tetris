@@ -1,19 +1,19 @@
 import Tetris from "../tetris";
-import { html, render, PreactNode } from "../dom";
+// import { html, render, PreactNode } from "../dom";
+import { render } from "preact";
 import { explodeText } from "../utils";
 export default class Splash {
   game: Tetris;
-  html: PreactNode;
 
   constructor(game: Tetris) {
     this.game = game;
 
-    this.html = html`
+    const html = (
       <div class="splash">
         <div class="title">Tetris</div>
         <div class="subtitle">By Berend</div>
         <div class="begin">
-          ${game.isDesktop
+          {game.isDesktop
             ? explodeText("Press space to start")
             : explodeText("Touch here to start")}
         </div>
@@ -21,12 +21,13 @@ export default class Splash {
           class="social"
           href="https://github.com/Berenddeperend/tetris"
           target="_blank"
-          >Github</a
         >
+          Github
+        </a>
       </div>
-    `;
+    );
 
-    render(this.html, document.body);
+    render(html, document.body);
   }
 
   get controls() {

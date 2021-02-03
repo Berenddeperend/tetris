@@ -153,42 +153,6 @@ exports.possibleForms = [{
   color: "orange",
   shape: [[0, 0, 1], [1, 1, 1]]
 }];
-},{}],"node_modules/htm/dist/htm.module.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _default;
-
-var n = function (t, s, r, e) {
-  var u;
-  s[0] = 0;
-
-  for (var h = 1; h < s.length; h++) {
-    var p = s[h++],
-        a = s[h] ? (s[0] |= p ? 1 : 2, r[s[h++]]) : s[++h];
-    3 === p ? e[0] = a : 4 === p ? e[1] = Object.assign(e[1] || {}, a) : 5 === p ? (e[1] = e[1] || {})[s[++h]] = a : 6 === p ? e[1][s[++h]] += a + "" : p ? (u = t.apply(a, n(t, a, r, ["", null])), e.push(u), a[0] ? s[0] |= 2 : (s[h - 2] = 0, s[h] = u)) : e.push(a);
-  }
-
-  return e;
-},
-    t = new Map();
-
-function _default(s) {
-  var r = t.get(this);
-  return r || (r = new Map(), t.set(this, r)), (r = n(this, r.get(s) || (r.set(s, r = function (n) {
-    for (var t, s, r = 1, e = "", u = "", h = [0], p = function (n) {
-      1 === r && (n || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? h.push(0, n, e) : 3 === r && (n || e) ? (h.push(3, n, e), r = 2) : 2 === r && "..." === e && n ? h.push(4, n, 0) : 2 === r && e && !n ? h.push(5, 0, !0, e) : r >= 5 && ((e || !n && 5 === r) && (h.push(r, 0, e, s), r = 6), n && (h.push(r, n, 0, s), r = 6)), e = "";
-    }, a = 0; a < n.length; a++) {
-      a && (1 === r && p(), p(a));
-
-      for (var l = 0; l < n[a].length; l++) t = n[a][l], 1 === r ? "<" === t ? (p(), h = [h], r = 3) : e += t : 4 === r ? "--" === e && ">" === t ? (r = 1, e = "") : e = t + e[0] : u ? t === u ? u = "" : e += t : '"' === t || "'" === t ? u = t : ">" === t ? (p(), r = 1) : r && ("=" === t ? (r = 5, s = e, e = "") : "/" === t && (r < 5 || ">" === n[a][l + 1]) ? (p(), 3 === r && (h = h[0]), r = h, (h = h[0]).push(2, 0, r), r = 0) : " " === t || "\t" === t || "\n" === t || "\r" === t ? (p(), r = 2) : e += t), 3 === r && "!--" === e && (r = 4, h = h[0]);
-    }
-
-    return p(), h;
-  }(s)), r), arguments, [])).length > 1 ? r : r[0];
-}
 },{}],"node_modules/preact/dist/preact.module.js":[function(require,module,exports) {
 "use strict";
 
@@ -576,45 +540,66 @@ exports.options = n = {
 }, p.prototype.forceUpdate = function (n) {
   this.__v && (this.__e = !0, n && this.__h.push(n), k(this));
 }, p.prototype.render = y, u = [], i = "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, m.__r = 0, r = 0;
-},{}],"src/dom.ts":[function(require,module,exports) {
+},{}],"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js":[function(require,module,exports) {
 "use strict";
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.html = exports.render = void 0;
-
-var htm_1 = __importDefault(require("htm"));
-
-var preact_1 = require("preact");
-
-Object.defineProperty(exports, "render", {
+exports.jsxDEV = exports.jsxs = exports.jsx = o;
+Object.defineProperty(exports, "Fragment", {
   enumerable: true,
-  get: function get() {
-    return preact_1.render;
+  get: function () {
+    return _preact.Fragment;
   }
 });
-var html = htm_1.default.bind(preact_1.h);
-exports.html = html;
-},{"htm":"node_modules/htm/dist/htm.module.js","preact":"node_modules/preact/dist/preact.module.js"}],"src/utils.ts":[function(require,module,exports) {
+
+var _preact = require("preact");
+
+function o(_, o, e, n, t) {
+  var f = {};
+
+  for (var l in o) "ref" != l && (f[l] = o[l]);
+
+  var s,
+      u,
+      a = {
+    type: _,
+    props: f,
+    key: e,
+    ref: o && o.ref,
+    __k: null,
+    __: null,
+    __b: 0,
+    __e: null,
+    __d: void 0,
+    __c: null,
+    __h: null,
+    constructor: void 0,
+    __v: ++_preact.options.__v,
+    __source: n,
+    __self: t
+  };
+  if ("function" == typeof _ && (s = _.defaultProps)) for (u in s) void 0 === f[u] && (f[u] = s[u]);
+  return _preact.options.vnode && _preact.options.vnode(a), a;
+}
+},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/utils.tsx":[function(require,module,exports) {
 "use strict";
 
-var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
-  if (Object.defineProperty) {
-    Object.defineProperty(cooked, "raw", {
-      value: raw
-    });
-  } else {
-    cooked.raw = raw;
-  }
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
 
-  return cooked;
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
 };
 
 var __read = this && this.__read || function (o, n) {
@@ -657,7 +642,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.times = exports.explodeText = exports.cloneDeep = exports.uniq = void 0;
 
-var dom_1 = require("./dom");
+var jsx_runtime_1 = require("preact/jsx-runtime");
 
 function uniq(arr) {
   return __spread(new Set(arr));
@@ -672,9 +657,20 @@ function cloneDeep(o) {
 exports.cloneDeep = cloneDeep;
 
 function explodeText(text) {
-  return dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["", ""], ["", ""])), text.split("").map(function (letter, index) {
-    return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n        <span class=\"letter\" style=\"animation-delay: -", "s\">", "</span>\n      "], ["\n        <span class=\"letter\" style=\"animation-delay: -", "s\">", "</span>\n      "])), index * 2, letter);
-  }));
+  function inlineStyle(index) {
+    return {
+      animationDelay: "-" + index * 2 + "s"
+    };
+  }
+
+  return text.split("").map(function (letter, index) {
+    return jsx_runtime_1.jsx("span", __assign({
+      class: "letter",
+      style: inlineStyle(index)
+    }, {
+      children: letter
+    }), void 0);
+  });
 }
 
 exports.explodeText = explodeText;
@@ -690,8 +686,7 @@ function times(times, fn) {
 }
 
 exports.times = times;
-var templateObject_1, templateObject_2;
-},{"./dom":"src/dom.ts"}],"src/block.ts":[function(require,module,exports) {
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js"}],"src/block.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -865,7 +860,7 @@ function () {
 }();
 
 exports.default = Block;
-},{"./possibleForms":"src/possibleForms.ts","./utils":"src/utils.ts"}],"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
+},{"./possibleForms":"src/possibleForms.ts","./utils":"src/utils.tsx"}],"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2519,7 +2514,69 @@ var _style = require("./selection/style.js");
 var _window = _interopRequireDefault(require("./window.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./create.js":"node_modules/d3-selection/src/create.js","./creator.js":"node_modules/d3-selection/src/creator.js","./local.js":"node_modules/d3-selection/src/local.js","./matcher.js":"node_modules/d3-selection/src/matcher.js","./namespace.js":"node_modules/d3-selection/src/namespace.js","./namespaces.js":"node_modules/d3-selection/src/namespaces.js","./pointer.js":"node_modules/d3-selection/src/pointer.js","./pointers.js":"node_modules/d3-selection/src/pointers.js","./select.js":"node_modules/d3-selection/src/select.js","./selectAll.js":"node_modules/d3-selection/src/selectAll.js","./selection/index.js":"node_modules/d3-selection/src/selection/index.js","./selector.js":"node_modules/d3-selection/src/selector.js","./selectorAll.js":"node_modules/d3-selection/src/selectorAll.js","./selection/style.js":"node_modules/d3-selection/src/selection/style.js","./window.js":"node_modules/d3-selection/src/window.js"}],"src/animations.ts":[function(require,module,exports) {
+},{"./create.js":"node_modules/d3-selection/src/create.js","./creator.js":"node_modules/d3-selection/src/creator.js","./local.js":"node_modules/d3-selection/src/local.js","./matcher.js":"node_modules/d3-selection/src/matcher.js","./namespace.js":"node_modules/d3-selection/src/namespace.js","./namespaces.js":"node_modules/d3-selection/src/namespaces.js","./pointer.js":"node_modules/d3-selection/src/pointer.js","./pointers.js":"node_modules/d3-selection/src/pointers.js","./select.js":"node_modules/d3-selection/src/select.js","./selectAll.js":"node_modules/d3-selection/src/selectAll.js","./selection/index.js":"node_modules/d3-selection/src/selection/index.js","./selector.js":"node_modules/d3-selection/src/selector.js","./selectorAll.js":"node_modules/d3-selection/src/selectorAll.js","./selection/style.js":"node_modules/d3-selection/src/selection/style.js","./window.js":"node_modules/d3-selection/src/window.js"}],"node_modules/htm/dist/htm.module.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+
+var n = function (t, s, r, e) {
+  var u;
+  s[0] = 0;
+
+  for (var h = 1; h < s.length; h++) {
+    var p = s[h++],
+        a = s[h] ? (s[0] |= p ? 1 : 2, r[s[h++]]) : s[++h];
+    3 === p ? e[0] = a : 4 === p ? e[1] = Object.assign(e[1] || {}, a) : 5 === p ? (e[1] = e[1] || {})[s[++h]] = a : 6 === p ? e[1][s[++h]] += a + "" : p ? (u = t.apply(a, n(t, a, r, ["", null])), e.push(u), a[0] ? s[0] |= 2 : (s[h - 2] = 0, s[h] = u)) : e.push(a);
+  }
+
+  return e;
+},
+    t = new Map();
+
+function _default(s) {
+  var r = t.get(this);
+  return r || (r = new Map(), t.set(this, r)), (r = n(this, r.get(s) || (r.set(s, r = function (n) {
+    for (var t, s, r = 1, e = "", u = "", h = [0], p = function (n) {
+      1 === r && (n || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? h.push(0, n, e) : 3 === r && (n || e) ? (h.push(3, n, e), r = 2) : 2 === r && "..." === e && n ? h.push(4, n, 0) : 2 === r && e && !n ? h.push(5, 0, !0, e) : r >= 5 && ((e || !n && 5 === r) && (h.push(r, 0, e, s), r = 6), n && (h.push(r, n, 0, s), r = 6)), e = "";
+    }, a = 0; a < n.length; a++) {
+      a && (1 === r && p(), p(a));
+
+      for (var l = 0; l < n[a].length; l++) t = n[a][l], 1 === r ? "<" === t ? (p(), h = [h], r = 3) : e += t : 4 === r ? "--" === e && ">" === t ? (r = 1, e = "") : e = t + e[0] : u ? t === u ? u = "" : e += t : '"' === t || "'" === t ? u = t : ">" === t ? (p(), r = 1) : r && ("=" === t ? (r = 5, s = e, e = "") : "/" === t && (r < 5 || ">" === n[a][l + 1]) ? (p(), 3 === r && (h = h[0]), r = h, (h = h[0]).push(2, 0, r), r = 0) : " " === t || "\t" === t || "\n" === t || "\r" === t ? (p(), r = 2) : e += t), 3 === r && "!--" === e && (r = 4, h = h[0]);
+    }
+
+    return p(), h;
+  }(s)), r), arguments, [])).length > 1 ? r : r[0];
+}
+},{}],"src/dom.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.html = exports.render = void 0;
+
+var htm_1 = __importDefault(require("htm"));
+
+var preact_1 = require("preact");
+
+Object.defineProperty(exports, "render", {
+  enumerable: true,
+  get: function get() {
+    return preact_1.render;
+  }
+});
+var html = htm_1.default.bind(preact_1.h);
+exports.html = html;
+},{"htm":"node_modules/htm/dist/htm.module.js","preact":"node_modules/preact/dist/preact.module.js"}],"src/animations.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2543,7 +2600,7 @@ exports.default = {
     easing: "steps(4, end)"
   }]
 };
-},{}],"src/inputName.ts":[function(require,module,exports) {
+},{}],"src/inputName.tsx":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -2572,25 +2629,15 @@ var __extends = this && this.__extends || function () {
   };
 }();
 
-var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
-  if (Object.defineProperty) {
-    Object.defineProperty(cooked, "raw", {
-      value: raw
-    });
-  } else {
-    cooked.raw = raw;
-  }
-
-  return cooked;
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var dom_1 = require("./dom");
+var jsx_runtime_1 = require("preact/jsx-runtime");
 
 var preact_1 = require("preact");
+
+var lastUsedNickname = window.localStorage.getItem('lastUsedNickname');
 
 var InputName =
 /** @class */
@@ -2601,34 +2648,42 @@ function (_super) {
     var _this = _super.call(this) || this;
 
     _this.ref = preact_1.createRef();
+
+    _this.setNickName = function (e) {
+      _this.setState({
+        nickName: e.target.value
+      });
+
+      window.localStorage.setItem('lastUsedNickname', e.target.value);
+    };
+
     _this.state = {
-      nickName: ""
+      nickName: lastUsedNickname
     };
     return _this;
   }
 
-  InputName.prototype.setNickName = function (e) {
-    console.log(e);
-  };
-
   InputName.prototype.componentDidMount = function () {
-    console.log(this.ref.current);
+    // console.log(this.ref)
+    this.ref.current.focus();
   };
 
   InputName.prototype.render = function () {
-    var _this = this;
-
-    return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      <input type=\"text\"  onInput=", " />\n    "], ["\n      <input type=\"text\"  onInput=", " />\n    "])), function () {
-      return _this.setNickName;
-    });
+    return jsx_runtime_1.jsx("input", {
+      maxlength: "6",
+      ref: this.ref,
+      type: "text",
+      value: this.state.nickName,
+      class: "input-name",
+      onInput: this.setNickName
+    }, void 0);
   };
 
   return InputName;
 }(preact_1.Component);
 
 exports.default = InputName;
-var templateObject_1;
-},{"./dom":"src/dom.ts","preact":"node_modules/preact/dist/preact.module.js"}],"src/highScores.ts":[function(require,module,exports) {
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","preact":"node_modules/preact/dist/preact.module.js"}],"src/highScores.tsx":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -2656,18 +2711,6 @@ var __extends = this && this.__extends || function () {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
 }();
-
-var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
-  if (Object.defineProperty) {
-    Object.defineProperty(cooked, "raw", {
-      value: raw
-    });
-  } else {
-    cooked.raw = raw;
-  }
-
-  return cooked;
-};
 
 var __assign = this && this.__assign || function () {
   __assign = Object.assign || function (t) {
@@ -2730,6 +2773,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var jsx_runtime_1 = require("preact/jsx-runtime");
+
 var dom_1 = require("./dom");
 
 var preact_1 = require("preact");
@@ -2750,17 +2795,7 @@ function () {
     var newScoreId = this.getAllLocalHighScores().length + 1;
     this.setScore(__assign(__assign({}, newScore), {
       id: newScoreId
-    })); // ${
-    //   new Array(limit - this.getAllLocalHighScores().length).fill("").map(()=> {
-    //   return html`
-    //     <tr class="placeholder">
-    //       <td class="rank">-</td>
-    //       <td>-</td>
-    //       <td class="score">-</td>
-    //     </tr>
-    //   `
-    // }
-    // )
+    }));
 
     var Entries =
     /** @class */
@@ -2774,7 +2809,23 @@ function () {
           return self.getAllLocalHighScores().filter(function (highScore, index) {
             return index < _this.state.limit;
           }).map(function (highScore, index) {
-            return dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n              <tr class=\"", "\">\n                <td class=\"rank\">", "</td>\n                <td class=\"name\">\n                  ", "\n                </td>\n                <td class=\"score\">", "</td>\n              </tr>\n            "], ["\n              <tr class=\"", "\">\n                <td class=\"rank\">", "</td>\n                <td class=\"name\">\n                  ", "\n                </td>\n                <td class=\"score\">", "</td>\n              </tr>\n            "])), highScore.id === newScoreId ? "current" : null, index + 1, highScore.id === newScoreId ? dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["<", "/>"], ["<", "/>"])), inputName_1.default) : highScore === null || highScore === void 0 ? void 0 : highScore.name, highScore.score);
+            return jsx_runtime_1.jsxs("tr", __assign({
+              class: highScore.id === newScoreId ? "current" : null
+            }, {
+              children: [jsx_runtime_1.jsx("td", __assign({
+                class: "rank"
+              }, {
+                children: index + 1
+              }), void 0), jsx_runtime_1.jsx("td", __assign({
+                class: "name"
+              }, {
+                children: highScore.id === newScoreId ? jsx_runtime_1.jsx(inputName_1.default, {}, void 0) : highScore === null || highScore === void 0 ? void 0 : highScore.name
+              }), void 0), jsx_runtime_1.jsx("td", __assign({
+                class: "score"
+              }, {
+                children: highScore.score
+              }), void 0)]
+            }), void 0);
           });
         };
 
@@ -2788,13 +2839,47 @@ function () {
     }(preact_1.Component);
 
     var Placeholders = function Placeholders() {
-      return dom_1.html(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n      ", "\n    "], ["\n      ", "\n    "])), new Array(4).fill("").map(function () {
-        return dom_1.html(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n          <tr class=\"placeholder\">\n            <td class=\"rank\">-</td>\n            <td class=\"name\">-</td>\n            <td class=\"score\">-</td>\n          </tr>\n        "], ["\n          <tr class=\"placeholder\">\n            <td class=\"rank\">-</td>\n            <td class=\"name\">-</td>\n            <td class=\"score\">-</td>\n          </tr>\n        "])));
-      }));
+      return jsx_runtime_1.jsx(jsx_runtime_1.Fragment, {
+        children: new Array(4).fill("").map(function () {
+          return jsx_runtime_1.jsxs("tr", __assign({
+            class: "placeholder"
+          }, {
+            children: [jsx_runtime_1.jsx("td", __assign({
+              class: "rank"
+            }, {
+              children: "-"
+            }), void 0), jsx_runtime_1.jsx("td", __assign({
+              class: "name"
+            }, {
+              children: "-"
+            }), void 0), jsx_runtime_1.jsx("td", __assign({
+              class: "score"
+            }, {
+              children: "-"
+            }), void 0)]
+          }), void 0);
+        })
+      }, void 0);
     };
 
-    this.html = dom_1.html(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n      <h3 class=\"highscore-title\">Highscores</h3>\n      <div class=\"highscore-table-container\">\n        <table class=\"highscore-table\">\n          <tbody>\n            <", " />\n            <", " />\n          </tbody>\n        </table>\n      </div>\n    "], ["\n      <h3 class=\"highscore-title\">Highscores</h3>\n      <div class=\"highscore-table-container\">\n        <table class=\"highscore-table\">\n          <tbody>\n            <", " />\n            <", " />\n          </tbody>\n        </table>\n      </div>\n    "])), Entries, Placeholders);
-    dom_1.render(this.html, document.querySelector(".highscore-list")); // @ts-ignore
+    var html = jsx_runtime_1.jsxs(jsx_runtime_1.Fragment, {
+      children: [jsx_runtime_1.jsx("h3", __assign({
+        class: "highscore-title"
+      }, {
+        children: "Highscores"
+      }), void 0), jsx_runtime_1.jsx("div", __assign({
+        class: "highscore-table-container"
+      }, {
+        children: jsx_runtime_1.jsx("table", __assign({
+          class: "highscore-table"
+        }, {
+          children: jsx_runtime_1.jsxs("tbody", {
+            children: [jsx_runtime_1.jsx(Entries, {}, void 0), jsx_runtime_1.jsx(Placeholders, {}, void 0)]
+          }, void 0)
+        }), void 0)
+      }), void 0)]
+    }, void 0);
+    dom_1.render(html, document.querySelector(".highscore-list")); // @ts-ignore
 
     (_a = document.querySelector(".highscore-list")).animate.apply(_a, __spread(animations_1.default.fadeIn));
   }
@@ -2821,8 +2906,7 @@ function () {
 }();
 
 exports.default = HighScores;
-var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5;
-},{"./dom":"src/dom.ts","preact":"node_modules/preact/dist/preact.module.js","./animations":"src/animations.ts","./inputName":"src/inputName.ts"}],"src/stage.ts":[function(require,module,exports) {
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","./dom":"src/dom.ts","preact":"node_modules/preact/dist/preact.module.js","./animations":"src/animations.ts","./inputName":"src/inputName.tsx"}],"src/stage.ts":[function(require,module,exports) {
 "use strict";
 
 var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
@@ -3144,26 +3228,33 @@ function () {
 
 exports.default = Stage;
 var templateObject_1, templateObject_2, templateObject_3;
-},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.ts","./highScores":"src/highScores.ts","./dom":"src/dom.ts"}],"src/states/splash.ts":[function(require,module,exports) {
+},{"./block":"src/block.ts","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.tsx","./highScores":"src/highScores.tsx","./dom":"src/dom.ts"}],"src/states/splash.tsx":[function(require,module,exports) {
 "use strict";
 
-var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
-  if (Object.defineProperty) {
-    Object.defineProperty(cooked, "raw", {
-      value: raw
-    });
-  } else {
-    cooked.raw = raw;
-  }
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
 
-  return cooked;
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
 };
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var dom_1 = require("../dom");
+var jsx_runtime_1 = require("preact/jsx-runtime"); // import { html, render, PreactNode } from "../dom";
+
+
+var preact_1 = require("preact");
 
 var utils_1 = require("../utils");
 
@@ -3172,8 +3263,30 @@ var Splash =
 function () {
   function Splash(game) {
     this.game = game;
-    this.html = dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      <div class=\"splash\">\n        <div class=\"title\">Tetris</div>\n        <div class=\"subtitle\">By Berend</div>\n        <div class=\"begin\">\n          ", "\n        </div>\n        <a\n          class=\"social\"\n          href=\"https://github.com/Berenddeperend/tetris\"\n          target=\"_blank\"\n          >Github</a\n        >\n      </div>\n    "], ["\n      <div class=\"splash\">\n        <div class=\"title\">Tetris</div>\n        <div class=\"subtitle\">By Berend</div>\n        <div class=\"begin\">\n          ", "\n        </div>\n        <a\n          class=\"social\"\n          href=\"https://github.com/Berenddeperend/tetris\"\n          target=\"_blank\"\n          >Github</a\n        >\n      </div>\n    "])), game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Touch here to start"));
-    dom_1.render(this.html, document.body);
+    var html = jsx_runtime_1.jsxs("div", __assign({
+      class: "splash"
+    }, {
+      children: [jsx_runtime_1.jsx("div", __assign({
+        class: "title"
+      }, {
+        children: "Tetris"
+      }), void 0), jsx_runtime_1.jsx("div", __assign({
+        class: "subtitle"
+      }, {
+        children: "By Berend"
+      }), void 0), jsx_runtime_1.jsx("div", __assign({
+        class: "begin"
+      }, {
+        children: game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Touch here to start")
+      }), void 0), jsx_runtime_1.jsx("a", __assign({
+        class: "social",
+        href: "https://github.com/Berenddeperend/tetris",
+        target: "_blank"
+      }, {
+        children: "Github"
+      }), void 0)]
+    }), void 0);
+    preact_1.render(html, document.body);
   }
 
   Object.defineProperty(Splash.prototype, "controls", {
@@ -3182,7 +3295,7 @@ function () {
 
       return {
         continue: function _continue() {
-          dom_1.render("", document.body); //this can be better
+          preact_1.render("", document.body); //this can be better
 
           _this.game.setGameState("playing");
         }
@@ -3195,20 +3308,23 @@ function () {
 }();
 
 exports.default = Splash;
-var templateObject_1;
-},{"../dom":"src/dom.ts","../utils":"src/utils.ts"}],"src/states/gameOver.ts":[function(require,module,exports) {
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","preact":"node_modules/preact/dist/preact.module.js","../utils":"src/utils.tsx"}],"src/states/gameOver.tsx":[function(require,module,exports) {
 "use strict";
 
-var __makeTemplateObject = this && this.__makeTemplateObject || function (cooked, raw) {
-  if (Object.defineProperty) {
-    Object.defineProperty(cooked, "raw", {
-      value: raw
-    });
-  } else {
-    cooked.raw = raw;
-  }
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
 
-  return cooked;
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
 };
 
 var __read = this && this.__read || function (o, n) {
@@ -3256,11 +3372,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var jsx_runtime_1 = require("preact/jsx-runtime");
+
 var d3_selection_1 = require("d3-selection");
 
 var highScores_1 = __importDefault(require("../highScores"));
 
-var dom_1 = require("../dom");
+var preact_1 = require("preact");
 
 var utils_1 = require("../utils");
 
@@ -3273,8 +3391,20 @@ function () {
     var _this = this;
 
     this.game = game;
-    this.html = dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      <div class=\"game-over-container\">\n        <div class=\"game-over\">", "</div>\n      </div>\n\n      <div class=\"highscore-list\"></div>\n    "], ["\n      <div class=\"game-over-container\">\n        <div class=\"game-over\">", "</div>\n      </div>\n\n      <div class=\"highscore-list\"></div>\n    "])), utils_1.explodeText("game over"));
-    dom_1.render(this.html, document.querySelector(".stage"));
+    var html = jsx_runtime_1.jsxs(jsx_runtime_1.Fragment, {
+      children: [jsx_runtime_1.jsx("div", __assign({
+        class: "game-over-container"
+      }, {
+        children: jsx_runtime_1.jsx("div", __assign({
+          class: "game-over"
+        }, {
+          children: utils_1.explodeText("game over")
+        }), void 0)
+      }), void 0), jsx_runtime_1.jsx("div", {
+        class: "highscore-list"
+      }, void 0)]
+    }, void 0);
+    preact_1.render(html, document.querySelector(".stage"));
     var gameOverContainer = document.querySelector(".game-over-container"); // @ts-ignore
 
     gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeIn));
@@ -3292,8 +3422,7 @@ function () {
           date: new Date()
         });
       };
-    }, 2000); // new InputName();
-    // window.setTimeout(() => {
+    }, 2000); // window.setTimeout(() => {
     //   // prevent user from closing gameover screen instantly while still trying to rotate
     //   window.addEventListener("keydown", onKeyDown);
     // }, 500);
@@ -3320,8 +3449,7 @@ function () {
 }();
 
 exports.default = GameOver;
-var templateObject_1;
-},{"d3-selection":"node_modules/d3-selection/src/index.js","../highScores":"src/highScores.ts","../dom":"src/dom.ts","../utils":"src/utils.ts","../animations":"src/animations.ts"}],"src/controls/keyboardControls.ts":[function(require,module,exports) {
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","d3-selection":"node_modules/d3-selection/src/index.js","../highScores":"src/highScores.tsx","preact":"node_modules/preact/dist/preact.module.js","../utils":"src/utils.tsx","../animations":"src/animations.ts"}],"src/controls/keyboardControls.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3357,8 +3485,8 @@ function () {
         }
       } else if (game.gameState === "gameOver") {
         switch (e.code) {
-          case "Space":
-            return game.gameOver.controls.retry();
+          case "Space": // return game.gameOver.controls.retry();
+
         }
       }
     };
@@ -6263,7 +6391,7 @@ function () {
 
 exports.default = Tetris;
 new Tetris();
-},{"./stage":"src/stage.ts","./states/splash":"src/states/splash.ts","./states/gameOver":"src/states/gameOver.ts","./controls/keyboardControls":"src/controls/keyboardControls.ts","./controls/touchControls":"src/controls/touchControls.ts","./controls/gestureControls":"src/controls/gestureControls.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./stage":"src/stage.ts","./states/splash":"src/states/splash.tsx","./states/gameOver":"src/states/gameOver.tsx","./controls/keyboardControls":"src/controls/keyboardControls.ts","./controls/touchControls":"src/controls/touchControls.ts","./controls/gestureControls":"src/controls/gestureControls.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -6291,7 +6419,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52988" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57538" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

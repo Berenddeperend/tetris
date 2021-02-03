@@ -5,6 +5,8 @@
       "es2019",
       "dom"
     ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "downlevelIteration": true,
     "esModuleInterop": true
   }

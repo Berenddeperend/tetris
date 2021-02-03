@@ -28,7 +28,7 @@ export default class KeyboardControls {
       else if (game.gameState === "gameOver") {
         switch (e.code) {
           case "Space":
-            return game.gameOver.controls.retry();
+            // return game.gameOver.controls.retry();
         }
       }
     };

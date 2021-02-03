@@ -23,7 +23,7 @@ export default class TouchControls {
     }
 
     if (this.game.gameState === "gameOver") {
-      this.game.gameOver.controls.retry();
+      // this.game.gameOver.controls.retry();
     }
 
     if (this.game.gameState === "playing") {

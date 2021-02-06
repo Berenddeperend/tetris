@@ -19,10 +19,10 @@ export function explodeText(text: string) {
   ));
 }
 
-export function times(times: number, fn: () => any) {
+export function times(times: number, input:any) {
   const arr = [];
   for (let i = 0; i < times; i++) {
-    arr.push(fn());
+    arr.push(input);
   }
   return arr;
 }

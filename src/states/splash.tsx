@@ -1,14 +1,15 @@
 import Tetris from "../tetris";
-// import { html, render, PreactNode } from "../dom";
 import { render } from "preact";
 import { explodeText } from "../utils";
+import animations, { Animation } from "../animations";
 export default class Splash {
   game: Tetris;
+  html;
 
   constructor(game: Tetris) {
     this.game = game;
 
-    const html = (
+    this.html = (
       <div class="splash">
         <div class="title">Tetris
          {/* <span class="version">{process.env.VERSION}</span> */}
@@ -33,14 +34,19 @@ export default class Splash {
       </div>
     );
 
-    render(html, document.body);
+    render(this.html, document.body);
   }
 
   get controls() {
     return {
       continue: () => {
-        render("", document.body); //this can be better
-        this.game.setGameState("playing");
+
+        const animation = this.html.node().animate(...animations.fadeOut);
+        animation.onfinish = () => {
+          render("", document.body); //this can be better
+          this.game.setGameState("playing");
+        }
+
       },
     };
   }

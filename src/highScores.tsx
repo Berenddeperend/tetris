@@ -1,6 +1,6 @@
 import Stage from "./stage";
-import { html, render, PreactNode } from "./dom";
-import { Component, FunctionComponent } from "preact";
+// import { html, render, PreactNode } from "./dom";
+import { Component, FunctionComponent, render } from "preact";
 import animations, { Animation } from "./animations";
 import InputName from "./inputName";
 import { times } from "./utils";

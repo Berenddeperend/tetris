@@ -9,8 +9,6 @@ Bugs:
 Features:
 - Highscore aanvullen tot 5 wanneer niet genoeg entries.
 - Reset tick after last-minute rotate
-- Submit names with highscore
-- Highlight current score in highscore list
 - UI
   - Responsive position
   - Check gameboy version for inspiration, or this one: https://m.media-amazon.com/images/S/aplus-media/vc/d2044fc9-3049-41ff-8262-6b52fad2794c.__CR0,69,2099,2099_PT0_SX300_V1___.jpg
@@ -48,7 +46,6 @@ Maybe:
 - Swap out Parceljs -> snowpack (https://2020.stateofjs.com/en-US/technologies/build-tools/)
 - In-game keyboard?
 - Implement 8bit style wordart
-- Animation library? (if so, https://animejs.com/)
 
 On release:
 - Post to reddit.com/r/tetris (as video) "I wrote a Tetris clone with co-op mode"

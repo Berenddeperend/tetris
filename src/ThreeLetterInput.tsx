@@ -2,35 +2,33 @@ import { tickIncrement } from "d3";
 import { Component } from "preact";
 import { times } from "./utils";
 
-class LetterInput extends Component<{}, { currCharIndex: number }> {
-  chars = "abcdefghijklmnopqrstuvwxyz";
-
-  state = {
-    currCharIndex: 0,
-  };
-
-  moveLetter(amount: number) {
-    this.setState({ currCharIndex: this.state.currCharIndex + amount });
+function Increment(props) {
+  const value = this.props.mode === 'increment' ? 1 : -1
+    return (
+      <div
+        class={this.props.mode}
+        onClick={() => this.props.moveLetter(this.props.letterIndex, value)}
+      >
+        {this.props.mode === 'increment' ? "↑" : "↓"}
+      </div>
+    );
   }
 
-  getLetter = () => {
-    const mod_floor = (i: number, n: number) => {
-      return ((i % n) + n) % n;
-    };
-
-    return this.chars[mod_floor(this.state.currCharIndex, this.chars.length)];
-  };
-
+class LetterInput extends Component<
+  {
+    char: string;
+    letterIndex: number;
+    active: boolean;
+    moveLetter(index: number, amount: number): void;
+  },
+  {}
+> {
   render() {
     return (
-      <div class="letter-input">
-        <div class="increment" onClick={() => this.moveLetter(1)}>
-          ↑
-        </div>
-        <span>{this.getLetter()}</span>
-        <div class="decrement" onClick={() => this.moveLetter(-1)}>
-          ↓
-        </div>
+      <div class={this.props.active ? "active letter-input" : "letter-input"}>
+        <Increment mode={'increment'} active={this.props.active} moveLetter={this.props.moveLetter} />
+        <span>{this.props.char}</span>
+        <Increment mode={'decrement'} active={this.props.active} moveLetter={this.props.moveLetter} />
       </div>
     );
   }
@@ -52,22 +50,59 @@ export default class ThreeLetterInput extends Component<
     };
   }
 
-  componentDidMount() {
-    window.localStorage.setItem("lastUsedNickname", "berend");
+  moveLetter = (index: number, amount: number) => {
+    const targetElement =
+      amount > 0
+        ? document.querySelector(".increment")
+        : document.querySelector(".decrement"); //doe hier iets mee
+
+    const newName = this.state.nickName
+      .split("")
+      .map((letter, letterIndex) => {
+        if (index !== letterIndex) return letter;
+        const alphabetIndex = this.chars.indexOf(letter);
+        const mod_floor = (i: number, n: number) => {
+          return ((i % n) + n) % n;
+        };
+
+        const output = this.chars[
+          mod_floor(alphabetIndex + amount, this.chars.length)
+        ];
+        return output;
+      })
+      .join("");
+
+    this.setState({
+      nickName: newName,
+      activeLetterIndex: this.state.activeLetterIndex,
+    });
+  };
+
+  componentDidMount = () => {
+    window.localStorage.setItem("lastUsedNickname", "aaa");
     document.addEventListener("keydown", (e) => {
       switch (e.code) {
         case "ArrowDown":
-          // return game.stage.controls.down();
-
+          return this.moveLetter(this.state.activeLetterIndex, 1);
         case "ArrowUp":
-          // return game.stage.controls.instaFall();
+          return this.moveLetter(this.state.activeLetterIndex, -1);
+        case "ArrowLeft":
+          if (this.state.activeLetterIndex < 1) return;
+          return this.setState({
+            activeLetterIndex: this.state.activeLetterIndex - 1,
+          });
+        case "ArrowRight":
+          if (this.state.activeLetterIndex === this.nicknameLength - 1) return;
+          return this.setState({
+            activeLetterIndex: this.state.activeLetterIndex + 1,
+          });
       }
     });
 
     this.setState({
       nickName: window.localStorage.getItem("lastUsedNickname"),
     });
-  }
+  };
 
   render() {
     return (
@@ -75,7 +110,18 @@ export default class ThreeLetterInput extends Component<
         <h2>What's your name?</h2>
         <p>{this.state.nickName}</p>
 
-        {times(this.nicknameLength, <LetterInput />)}
+        {this.state.nickName.split("").map((letter, index) => {
+          return (
+            <LetterInput
+              char={letter}
+              active={index === this.state.activeLetterIndex}
+              letterIndex={index}
+              moveLetter={this.moveLetter}
+            />
+          );
+        })}
+
+        {/* {times(this.nicknameLength, <LetterInput char={this.}/>)} */}
       </div>
     );
   }

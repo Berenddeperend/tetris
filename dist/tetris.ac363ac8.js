@@ -6715,7 +6715,19 @@ var jsx_runtime_1 = require("preact/jsx-runtime");
 
 var preact_1 = require("preact");
 
-var utils_1 = require("./utils");
+function Increment(props) {
+  var _this = this;
+
+  var value = this.props.mode === 'increment' ? 1 : -1;
+  return jsx_runtime_1.jsx("div", __assign({
+    class: this.props.mode,
+    onClick: function onClick() {
+      return _this.props.moveLetter(_this.props.letterIndex, value);
+    }
+  }, {
+    children: this.props.mode === 'increment' ? "↑" : "↓"
+  }), void 0);
+}
 
 var LetterInput =
 /** @class */
@@ -6723,53 +6735,24 @@ function (_super) {
   __extends(LetterInput, _super);
 
   function LetterInput() {
-    var _this = _super !== null && _super.apply(this, arguments) || this;
-
-    _this.chars = "abcdefghijklmnopqrstuvwxyz";
-    _this.state = {
-      currCharIndex: 0
-    };
-
-    _this.getLetter = function () {
-      var mod_floor = function mod_floor(i, n) {
-        return (i % n + n) % n;
-      };
-
-      return _this.chars[mod_floor(_this.state.currCharIndex, _this.chars.length)];
-    };
-
-    return _this;
+    return _super !== null && _super.apply(this, arguments) || this;
   }
 
-  LetterInput.prototype.moveLetter = function (amount) {
-    this.setState({
-      currCharIndex: this.state.currCharIndex + amount
-    });
-  };
-
   LetterInput.prototype.render = function () {
-    var _this = this;
-
     return jsx_runtime_1.jsxs("div", __assign({
-      class: "letter-input"
+      class: this.props.active ? "active letter-input" : "letter-input"
     }, {
-      children: [jsx_runtime_1.jsx("div", __assign({
-        class: "increment",
-        onClick: function onClick() {
-          return _this.moveLetter(1);
-        }
-      }, {
-        children: "\u2191"
-      }), void 0), jsx_runtime_1.jsx("span", {
-        children: this.getLetter()
-      }, void 0), jsx_runtime_1.jsx("div", __assign({
-        class: "decrement",
-        onClick: function onClick() {
-          return _this.moveLetter(-1);
-        }
-      }, {
-        children: "\u2193"
-      }), void 0)]
+      children: [jsx_runtime_1.jsx(Increment, {
+        mode: 'increment',
+        active: this.props.active,
+        moveLetter: this.props.moveLetter
+      }, void 0), jsx_runtime_1.jsx("span", {
+        children: this.props.char
+      }, void 0), jsx_runtime_1.jsx(Increment, {
+        mode: 'decrement',
+        active: this.props.active,
+        moveLetter: this.props.moveLetter
+      }, void 0)]
     }), void 0);
   };
 
@@ -6786,6 +6769,59 @@ function (_super) {
 
     _this.chars = "abcdefghijklmnopqrstuvwxyz";
     _this.nicknameLength = 3;
+
+    _this.moveLetter = function (index, amount) {
+      var targetElement = amount > 0 ? document.querySelector(".increment") : document.querySelector(".decrement"); //doe hier iets mee
+
+      var newName = _this.state.nickName.split("").map(function (letter, letterIndex) {
+        if (index !== letterIndex) return letter;
+
+        var alphabetIndex = _this.chars.indexOf(letter);
+
+        var mod_floor = function mod_floor(i, n) {
+          return (i % n + n) % n;
+        };
+
+        var output = _this.chars[mod_floor(alphabetIndex + amount, _this.chars.length)];
+
+        return output;
+      }).join("");
+
+      _this.setState({
+        nickName: newName,
+        activeLetterIndex: _this.state.activeLetterIndex
+      });
+    };
+
+    _this.componentDidMount = function () {
+      window.localStorage.setItem("lastUsedNickname", "aaa");
+      document.addEventListener("keydown", function (e) {
+        switch (e.code) {
+          case "ArrowDown":
+            return _this.moveLetter(_this.state.activeLetterIndex, 1);
+
+          case "ArrowUp":
+            return _this.moveLetter(_this.state.activeLetterIndex, -1);
+
+          case "ArrowLeft":
+            if (_this.state.activeLetterIndex < 1) return;
+            return _this.setState({
+              activeLetterIndex: _this.state.activeLetterIndex - 1
+            });
+
+          case "ArrowRight":
+            if (_this.state.activeLetterIndex === _this.nicknameLength - 1) return;
+            return _this.setState({
+              activeLetterIndex: _this.state.activeLetterIndex + 1
+            });
+        }
+      });
+
+      _this.setState({
+        nickName: window.localStorage.getItem("lastUsedNickname")
+      });
+    };
+
     _this.state = {
       nickName: "aaa",
       activeLetterIndex: 0
@@ -6793,22 +6829,9 @@ function (_super) {
     return _this;
   }
 
-  ThreeLetterInput.prototype.componentDidMount = function () {
-    window.localStorage.setItem("lastUsedNickname", "berend");
-    document.addEventListener("keydown", function (e) {
-      switch (e.code) {
-        case "ArrowDown": // return game.stage.controls.down();
-
-        case "ArrowUp": // return game.stage.controls.instaFall();
-
-      }
-    });
-    this.setState({
-      nickName: window.localStorage.getItem("lastUsedNickname")
-    });
-  };
-
   ThreeLetterInput.prototype.render = function () {
+    var _this = this;
+
     return jsx_runtime_1.jsxs("div", __assign({
       class: "three-letter-input"
     }, {
@@ -6816,7 +6839,14 @@ function (_super) {
         children: "What's your name?"
       }, void 0), jsx_runtime_1.jsx("p", {
         children: this.state.nickName
-      }, void 0), utils_1.times(this.nicknameLength, jsx_runtime_1.jsx(LetterInput, {}, void 0))]
+      }, void 0), this.state.nickName.split("").map(function (letter, index) {
+        return jsx_runtime_1.jsx(LetterInput, {
+          char: letter,
+          active: index === _this.state.activeLetterIndex,
+          letterIndex: index,
+          moveLetter: _this.moveLetter
+        }, void 0);
+      })]
     }), void 0);
   };
 
@@ -6824,7 +6854,7 @@ function (_super) {
 }(preact_1.Component);
 
 exports.default = ThreeLetterInput;
-},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","preact":"node_modules/preact/dist/preact.module.js","./utils":"src/utils.tsx"}],"src/tetris.tsx":[function(require,module,exports) {
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","preact":"node_modules/preact/dist/preact.module.js"}],"src/tetris.tsx":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -6942,7 +6972,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51241" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55523" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

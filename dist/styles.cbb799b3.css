@@ -159,8 +159,16 @@ body:after {
   margin: 0 1rem;
   font-size: 2rem;
 }
-.three-letter-input .letter-input .increment, .three-letter-input .letter-input .decrement {
+.three-letter-input .letter-input .increment,
+.three-letter-input .letter-input .decrement {
+  color: grey;
   cursor: pointer;
+}
+.three-letter-input .letter-input.active {
+  color: #ff8142;
+}
+.three-letter-input .letter-input.active .increment, .three-letter-input .letter-input.active .decrement {
+  color: inherit;
 }
 
 .input-name {

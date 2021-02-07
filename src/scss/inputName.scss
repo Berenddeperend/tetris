@@ -5,9 +5,14 @@
   text-align: center;
 
   .letter-input {
-    display: inline-block;
+    // display: inline-block;
     margin: 0 1rem;
     font-size: 2rem;
+    text-align: center;
+
+    span {
+      padding-left: 0.2em;
+    }
 
     .increment,
     .decrement {
@@ -22,6 +27,17 @@
         color: inherit;
       }
     }
+  }
+
+  .end {
+    // display: inline-block;
+  }
+  
+  .input-group {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 

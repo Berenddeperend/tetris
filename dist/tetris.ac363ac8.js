@@ -2536,6 +2536,16 @@ exports.default = {
   }], {
     duration: 400,
     easing: "steps(4, end)"
+  }],
+  boop: [[{
+    transform: 'scale(1)'
+  }, {
+    transform: 'scale(1.5)'
+  }, {
+    transform: 'scale(1)'
+  }], {
+    duration: 200,
+    easing: "steps(5, end)"
   }]
 };
 },{}],"src/inputName.tsx":[function(require,module,exports) {
@@ -6707,6 +6717,47 @@ var __assign = this && this.__assign || function () {
   return __assign.apply(this, arguments);
 };
 
+var __read = this && this.__read || function (o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o),
+      r,
+      ar = [],
+      e;
+
+  try {
+    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
+      ar.push(r.value);
+    }
+  } catch (error) {
+    e = {
+      error: error
+    };
+  } finally {
+    try {
+      if (r && !r.done && (m = i["return"])) m.call(i);
+    } finally {
+      if (e) throw e.error;
+    }
+  }
+
+  return ar;
+};
+
+var __spread = this && this.__spread || function () {
+  for (var ar = [], i = 0; i < arguments.length; i++) {
+    ar = ar.concat(__read(arguments[i]));
+  }
+
+  return ar;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -6715,49 +6766,41 @@ var jsx_runtime_1 = require("preact/jsx-runtime");
 
 var preact_1 = require("preact");
 
+var animations_1 = __importDefault(require("./animations"));
+
 function Increment(props) {
   var _this = this;
 
-  var value = this.props.mode === 'increment' ? 1 : -1;
+  var value = this.props.mode === "increment" ? 1 : -1;
   return jsx_runtime_1.jsx("div", __assign({
     class: this.props.mode,
     onClick: function onClick() {
       return _this.props.moveLetter(_this.props.letterIndex, value);
     }
   }, {
-    children: this.props.mode === 'increment' ? "↑" : "↓"
+    children: this.props.mode === "increment" ? "▲" : "▼"
   }), void 0);
 }
 
-var LetterInput =
-/** @class */
-function (_super) {
-  __extends(LetterInput, _super);
-
-  function LetterInput() {
-    return _super !== null && _super.apply(this, arguments) || this;
-  }
-
-  LetterInput.prototype.render = function () {
-    return jsx_runtime_1.jsxs("div", __assign({
-      class: this.props.active ? "active letter-input" : "letter-input"
-    }, {
-      children: [jsx_runtime_1.jsx(Increment, {
-        mode: 'increment',
-        active: this.props.active,
-        moveLetter: this.props.moveLetter
-      }, void 0), jsx_runtime_1.jsx("span", {
-        children: this.props.char
-      }, void 0), jsx_runtime_1.jsx(Increment, {
-        mode: 'decrement',
-        active: this.props.active,
-        moveLetter: this.props.moveLetter
-      }, void 0)]
-    }), void 0);
-  };
-
-  return LetterInput;
-}(preact_1.Component);
+function LetterInput(props) {
+  return jsx_runtime_1.jsxs("div", __assign({
+    class: this.props.active ? "active letter-input" : "letter-input"
+  }, {
+    children: [jsx_runtime_1.jsx(Increment, {
+      mode: "increment",
+      active: this.props.active,
+      moveLetter: this.props.moveLetter,
+      letterIndex: this.props.letterIndex
+    }, void 0), jsx_runtime_1.jsx("span", {
+      children: this.props.char
+    }, void 0), jsx_runtime_1.jsx(Increment, {
+      mode: "decrement",
+      active: this.props.active,
+      moveLetter: this.props.moveLetter,
+      letterIndex: this.props.letterIndex
+    }, void 0)]
+  }), void 0);
+}
 
 var ThreeLetterInput =
 /** @class */
@@ -6796,11 +6839,19 @@ function (_super) {
     _this.componentDidMount = function () {
       window.localStorage.setItem("lastUsedNickname", "aaa");
       document.addEventListener("keydown", function (e) {
+        var _a, _b;
+
         switch (e.code) {
           case "ArrowDown":
+            // @ts-ignore
+            (_a = document.querySelector('.letter-input.active .decrement')).animate.apply(_a, __spread(animations_1.default.boop));
+
             return _this.moveLetter(_this.state.activeLetterIndex, 1);
 
           case "ArrowUp":
+            // @ts-ignore
+            (_b = document.querySelector('.letter-input.active .increment')).animate.apply(_b, __spread(animations_1.default.boop));
+
             return _this.moveLetter(_this.state.activeLetterIndex, -1);
 
           case "ArrowLeft":
@@ -6837,16 +6888,22 @@ function (_super) {
     }, {
       children: [jsx_runtime_1.jsx("h2", {
         children: "What's your name?"
-      }, void 0), jsx_runtime_1.jsx("p", {
-        children: this.state.nickName
-      }, void 0), this.state.nickName.split("").map(function (letter, index) {
-        return jsx_runtime_1.jsx(LetterInput, {
-          char: letter,
-          active: index === _this.state.activeLetterIndex,
-          letterIndex: index,
-          moveLetter: _this.moveLetter
-        }, void 0);
-      })]
+      }, void 0), jsx_runtime_1.jsxs("div", __assign({
+        class: "input-group"
+      }, {
+        children: [this.state.nickName.split("").map(function (letter, index) {
+          return jsx_runtime_1.jsx(LetterInput, {
+            char: letter,
+            active: index === _this.state.activeLetterIndex,
+            letterIndex: index,
+            moveLetter: _this.moveLetter
+          }, void 0);
+        }), jsx_runtime_1.jsx("div", __assign({
+          class: "end"
+        }, {
+          children: "End"
+        }), void 0)]
+      }), void 0)]
     }), void 0);
   };
 
@@ -6854,7 +6911,7 @@ function (_super) {
 }(preact_1.Component);
 
 exports.default = ThreeLetterInput;
-},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","preact":"node_modules/preact/dist/preact.module.js"}],"src/tetris.tsx":[function(require,module,exports) {
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","preact":"node_modules/preact/dist/preact.module.js","./animations":"src/animations.ts"}],"src/tetris.tsx":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {

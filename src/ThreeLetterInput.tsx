@@ -1,38 +1,49 @@
-import { tickIncrement } from "d3";
 import { Component } from "preact";
-import { times } from "./utils";
+import animations, { Animation } from "./animations";
 
-function Increment(props) {
-  const value = this.props.mode === 'increment' ? 1 : -1
-    return (
-      <div
-        class={this.props.mode}
-        onClick={() => this.props.moveLetter(this.props.letterIndex, value)}
-      >
-        {this.props.mode === 'increment' ? "↑" : "↓"}
-      </div>
-    );
-  }
-
-class LetterInput extends Component<
-  {
-    char: string;
-    letterIndex: number;
-    active: boolean;
-    moveLetter(index: number, amount: number): void;
-  },
-  {}
-> {
-  render() {
-    return (
-      <div class={this.props.active ? "active letter-input" : "letter-input"}>
-        <Increment mode={'increment'} active={this.props.active} moveLetter={this.props.moveLetter} />
-        <span>{this.props.char}</span>
-        <Increment mode={'decrement'} active={this.props.active} moveLetter={this.props.moveLetter} />
-      </div>
-    );
-  }
+function Increment(props: {
+  mode: string,
+  active: boolean,
+  moveLetter(index: number, amount: number): void,
+  letterIndex: number;
+}) {
+  const value = this.props.mode === "increment" ? 1 : -1;
+  return (
+    <div
+      class={this.props.mode}
+      onClick={() => this.props.moveLetter(this.props.letterIndex, value)}
+    >
+      {/* {this.props.mode === 'increment' ? "↑" : "↓"} */}
+      {this.props.mode === "increment" ? "▲" : "▼"}
+    </div>
+  );
 }
+
+function LetterInput(props: {
+  char: string;
+  letterIndex: number;
+  active: boolean;
+  moveLetter(index: number, amount: number): void;
+}) {
+  return (
+    <div class={this.props.active ? "active letter-input" : "letter-input"}>
+      <Increment
+        mode={"increment"}
+        active={this.props.active}
+        moveLetter={this.props.moveLetter}
+        letterIndex={this.props.letterIndex}
+      />
+      <span>{this.props.char}</span>
+      <Increment
+        mode={"decrement"}
+        active={this.props.active}
+        moveLetter={this.props.moveLetter}
+        letterIndex={this.props.letterIndex}
+      />
+    </div>
+  );
+}
+
 
 export default class ThreeLetterInput extends Component<
   {},
@@ -83,9 +94,14 @@ export default class ThreeLetterInput extends Component<
     document.addEventListener("keydown", (e) => {
       switch (e.code) {
         case "ArrowDown":
+          // @ts-ignore
+          document.querySelector('.letter-input.active .decrement').animate(...animations.boop);
           return this.moveLetter(this.state.activeLetterIndex, 1);
-        case "ArrowUp":
+          case "ArrowUp":
+          // @ts-ignore
+          document.querySelector('.letter-input.active .increment').animate(...animations.boop);
           return this.moveLetter(this.state.activeLetterIndex, -1);
+
         case "ArrowLeft":
           if (this.state.activeLetterIndex < 1) return;
           return this.setState({
@@ -108,20 +124,21 @@ export default class ThreeLetterInput extends Component<
     return (
       <div class="three-letter-input">
         <h2>What's your name?</h2>
-        <p>{this.state.nickName}</p>
 
-        {this.state.nickName.split("").map((letter, index) => {
-          return (
-            <LetterInput
-              char={letter}
-              active={index === this.state.activeLetterIndex}
-              letterIndex={index}
-              moveLetter={this.moveLetter}
-            />
-          );
-        })}
+        <div class="input-group">
+          {this.state.nickName.split("").map((letter, index) => {
+            return (
+              <LetterInput
+                char={letter}
+                active={index === this.state.activeLetterIndex}
+                letterIndex={index}
+                moveLetter={this.moveLetter}
+              />
+            );
+          })}
 
-        {/* {times(this.nicknameLength, <LetterInput char={this.}/>)} */}
+          <div class="end">End</div>
+        </div>
       </div>
     );
   }

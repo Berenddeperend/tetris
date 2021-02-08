@@ -154,12 +154,20 @@ body:after {
   border: 1px solid #ff8142;
   text-align: center;
 }
+.three-letter-input .title {
+  margin-top: 30px;
+  margin-bottom: 0;
+  text-shadow: 0.1em 0.1em #ab1f65, -0.05em -0.05em #ff4f69;
+}
+.three-letter-input .title:hover {
+  text-shadow: 0.2em 0.2em #ab1f65, -0.15em -0.15em #ff4f69;
+}
 .three-letter-input .letter-input {
   margin: 0 1rem;
   font-size: 2rem;
   text-align: center;
 }
-.three-letter-input .letter-input span {
+.three-letter-input .letter-input .letter {
   padding-left: 0.2em;
 }
 .three-letter-input .letter-input .increment,
@@ -173,8 +181,11 @@ body:after {
 .three-letter-input .letter-input.active .increment, .three-letter-input .letter-input.active .decrement {
   color: inherit;
 }
+.three-letter-input .end.active {
+  color: #ff8142;
+}
 .three-letter-input .input-group {
-  margin-top: 40px;
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;

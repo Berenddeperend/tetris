@@ -1,13 +1,13 @@
 WIP: 
 - Touch/gesture controls -> 70%
-- Highscores -> 40%
+- Highscores -> 80%
 
 Bugs:
 - Can't rotate block sticky to left side
 - SVG 'next' viewbox
 
 Features:
-- Highscore aanvullen tot 5 wanneer niet genoeg entries.
+- Show highscores on introscreen
 - Reset tick after last-minute rotate
 - UI
   - Responsive position
@@ -27,6 +27,7 @@ Maintenance:
 - Move collision logic to block class
 - Gridlines as gutter in grid
 - typing for .animate(...args)
+- Cleanup placeholder highscore entries
 
 Future:
 - 2 player mode (one client)
@@ -44,7 +45,6 @@ Maybe:
 - Snake/Pacman style level overflow
 - "Tetris UI", select mode by dropping block in a column
 - Swap out Parceljs -> snowpack (https://2020.stateofjs.com/en-US/technologies/build-tools/)
-- In-game keyboard?
 - Implement 8bit style wordart
 
 On release:

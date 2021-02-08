@@ -2,9 +2,9 @@ import { Component } from "preact";
 import animations, { Animation } from "./animations";
 
 function Increment(props: {
-  mode: string,
-  active: boolean,
-  moveLetter(index: number, amount: number): void,
+  mode: string;
+  active: boolean;
+  moveLetter(index: number, amount: number): void;
   letterIndex: number;
 }) {
   const value = this.props.mode === "increment" ? 1 : -1;
@@ -33,7 +33,7 @@ function LetterInput(props: {
         moveLetter={this.props.moveLetter}
         letterIndex={this.props.letterIndex}
       />
-      <span>{this.props.char}</span>
+      <div class="letter">{this.props.char}</div>
       <Increment
         mode={"decrement"}
         active={this.props.active}
@@ -43,7 +43,6 @@ function LetterInput(props: {
     </div>
   );
 }
-
 
 export default class ThreeLetterInput extends Component<
   {},
@@ -62,11 +61,6 @@ export default class ThreeLetterInput extends Component<
   }
 
   moveLetter = (index: number, amount: number) => {
-    const targetElement =
-      amount > 0
-        ? document.querySelector(".increment")
-        : document.querySelector(".decrement"); //doe hier iets mee
-
     const newName = this.state.nickName
       .split("")
       .map((letter, letterIndex) => {
@@ -85,33 +79,60 @@ export default class ThreeLetterInput extends Component<
 
     this.setState({
       nickName: newName,
-      activeLetterIndex: this.state.activeLetterIndex,
+      activeLetterIndex: index,
     });
+
+    const targetElement =
+      amount > 0
+        ? document.querySelector(`.letter-input:nth-child(${index +1}) .increment`)
+        : document.querySelector(`.letter-input:nth-child(${index +1}) .decrement`); //doe hier iets mee
+
+        targetElement.animate(...(animations.boop as Animation));
   };
 
   componentDidMount = () => {
     window.localStorage.setItem("lastUsedNickname", "aaa");
     document.addEventListener("keydown", (e) => {
+
+      //this logic aint dry
+      if(e.key >= "a" && e.key <= "z") {
+        if(this.state.activeLetterIndex === this.state.nickName.length) return
+      
+        document
+            .querySelector(".letter-input.active .letter")
+            .animate(...(animations.boop as Animation));
+
+        this.setState({
+          nickName: this.state.nickName.split('').map((letter, index) => {
+            return index === this.state.activeLetterIndex ? e.key : letter;
+          }).join(''),
+          activeLetterIndex: this.state.activeLetterIndex + 1
+
+        })
+        return;
+      }
+
       switch (e.code) {
         case "ArrowDown":
-          // @ts-ignore
-          document.querySelector('.letter-input.active .decrement').animate(...animations.boop);
           return this.moveLetter(this.state.activeLetterIndex, 1);
-          case "ArrowUp":
-          // @ts-ignore
-          document.querySelector('.letter-input.active .increment').animate(...animations.boop);
+        case "ArrowUp":
           return this.moveLetter(this.state.activeLetterIndex, -1);
-
         case "ArrowLeft":
           if (this.state.activeLetterIndex < 1) return;
           return this.setState({
             activeLetterIndex: this.state.activeLetterIndex - 1,
           });
         case "ArrowRight":
-          if (this.state.activeLetterIndex === this.nicknameLength - 1) return;
+          // if (this.state.activeLetterIndex === this.nicknameLength - 1) return;
+          if (this.state.activeLetterIndex === this.nicknameLength) return;
           return this.setState({
             activeLetterIndex: this.state.activeLetterIndex + 1,
           });
+
+        case "Enter":
+          return this.setState({
+            activeLetterIndex: this.nicknameLength
+          })
       }
     });
 
@@ -123,7 +144,7 @@ export default class ThreeLetterInput extends Component<
   render() {
     return (
       <div class="three-letter-input">
-        <h2>What's your name?</h2>
+        <h2 class="title">What's your name?</h2>
 
         <div class="input-group">
           {this.state.nickName.split("").map((letter, index) => {
@@ -137,7 +158,14 @@ export default class ThreeLetterInput extends Component<
             );
           })}
 
-          <div class="end">End</div>
+          <div
+            class={[
+              "end",
+              this.state.activeLetterIndex === 3 ? "active" : null,
+            ].join(" ")}
+          >
+            End
+          </div>
         </div>
       </div>
     );

@@ -37,7 +37,7 @@ export default {
         transform: 'scale(1)'
       },
       {
-        transform: 'scale(1.5)'
+        transform: 'scale(1.3)'
       },
       {
         transform: 'scale(1)'
@@ -45,8 +45,8 @@ export default {
     ],
 
     {
-      duration: 200,
-      easing: "steps(5, end)",
+      duration: 100,
+      easing: "steps(3, end)",
     }
   ]
 };

@@ -85,8 +85,7 @@ export default class HighScores {
     );
 
     render(html, document.querySelector(".highscore-list"));
-    // @ts-ignore
-    document.querySelector(".highscore-list").animate(...animations.fadeIn);
+    document.querySelector(".highscore-list").animate(...animations.fadeIn as Animation);
   }
 
   onNameChanged(e) {

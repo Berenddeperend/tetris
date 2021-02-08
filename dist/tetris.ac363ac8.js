@@ -2540,12 +2540,12 @@ exports.default = {
   boop: [[{
     transform: 'scale(1)'
   }, {
-    transform: 'scale(1.5)'
+    transform: 'scale(1.3)'
   }, {
     transform: 'scale(1)'
   }], {
-    duration: 200,
-    easing: "steps(5, end)"
+    duration: 100,
+    easing: "steps(3, end)"
   }]
 };
 },{}],"src/inputName.tsx":[function(require,module,exports) {
@@ -2833,7 +2833,7 @@ function () {
         }), void 0)
       }), void 0)]
     }, void 0);
-    preact_1.render(html, document.querySelector(".highscore-list")); // @ts-ignore
+    preact_1.render(html, document.querySelector(".highscore-list"));
 
     (_a = document.querySelector(".highscore-list")).animate.apply(_a, __spread(animations_1.default.fadeIn));
   }
@@ -3492,11 +3492,9 @@ function () {
       }, void 0)]
     }, void 0);
     preact_1.render(html, document.querySelector(".stage"));
-    var gameOverContainer = document.querySelector(".game-over-container"); // @ts-ignore
-
+    var gameOverContainer = document.querySelector(".game-over-container");
     gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeIn));
     window.setTimeout(function () {
-      // @ts-ignore
       var animation = gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeOut));
 
       animation.onfinish = function () {
@@ -6791,9 +6789,11 @@ function LetterInput(props) {
       active: this.props.active,
       moveLetter: this.props.moveLetter,
       letterIndex: this.props.letterIndex
-    }, void 0), jsx_runtime_1.jsx("span", {
+    }, void 0), jsx_runtime_1.jsx("div", __assign({
+      class: "letter"
+    }, {
       children: this.props.char
-    }, void 0), jsx_runtime_1.jsx(Increment, {
+    }), void 0), jsx_runtime_1.jsx(Increment, {
       mode: "decrement",
       active: this.props.active,
       moveLetter: this.props.moveLetter,
@@ -6814,8 +6814,6 @@ function (_super) {
     _this.nicknameLength = 3;
 
     _this.moveLetter = function (index, amount) {
-      var targetElement = amount > 0 ? document.querySelector(".increment") : document.querySelector(".decrement"); //doe hier iets mee
-
       var newName = _this.state.nickName.split("").map(function (letter, letterIndex) {
         if (index !== letterIndex) return letter;
 
@@ -6832,26 +6830,41 @@ function (_super) {
 
       _this.setState({
         nickName: newName,
-        activeLetterIndex: _this.state.activeLetterIndex
+        activeLetterIndex: index
       });
+
+      var targetElement = amount > 0 ? document.querySelector(".letter-input:nth-child(" + (index + 1) + ") .increment") : document.querySelector(".letter-input:nth-child(" + (index + 1) + ") .decrement"); //doe hier iets mee
+
+      targetElement.animate.apply( //doe hier iets mee
+      targetElement, __spread(animations_1.default.boop));
     };
 
     _this.componentDidMount = function () {
       window.localStorage.setItem("lastUsedNickname", "aaa");
       document.addEventListener("keydown", function (e) {
-        var _a, _b;
+        var _a; //this logic aint dry
+
+
+        if (e.key >= "a" && e.key <= "z") {
+          if (_this.state.activeLetterIndex === _this.state.nickName.length) return;
+
+          (_a = document.querySelector(".letter-input.active .letter")).animate.apply(_a, __spread(animations_1.default.boop));
+
+          _this.setState({
+            nickName: _this.state.nickName.split('').map(function (letter, index) {
+              return index === _this.state.activeLetterIndex ? e.key : letter;
+            }).join(''),
+            activeLetterIndex: _this.state.activeLetterIndex + 1
+          });
+
+          return;
+        }
 
         switch (e.code) {
           case "ArrowDown":
-            // @ts-ignore
-            (_a = document.querySelector('.letter-input.active .decrement')).animate.apply(_a, __spread(animations_1.default.boop));
-
             return _this.moveLetter(_this.state.activeLetterIndex, 1);
 
           case "ArrowUp":
-            // @ts-ignore
-            (_b = document.querySelector('.letter-input.active .increment')).animate.apply(_b, __spread(animations_1.default.boop));
-
             return _this.moveLetter(_this.state.activeLetterIndex, -1);
 
           case "ArrowLeft":
@@ -6861,9 +6874,15 @@ function (_super) {
             });
 
           case "ArrowRight":
-            if (_this.state.activeLetterIndex === _this.nicknameLength - 1) return;
+            // if (this.state.activeLetterIndex === this.nicknameLength - 1) return;
+            if (_this.state.activeLetterIndex === _this.nicknameLength) return;
             return _this.setState({
               activeLetterIndex: _this.state.activeLetterIndex + 1
+            });
+
+          case "Enter":
+            return _this.setState({
+              activeLetterIndex: _this.nicknameLength
             });
         }
       });
@@ -6886,9 +6905,11 @@ function (_super) {
     return jsx_runtime_1.jsxs("div", __assign({
       class: "three-letter-input"
     }, {
-      children: [jsx_runtime_1.jsx("h2", {
+      children: [jsx_runtime_1.jsx("h2", __assign({
+        class: "title"
+      }, {
         children: "What's your name?"
-      }, void 0), jsx_runtime_1.jsxs("div", __assign({
+      }), void 0), jsx_runtime_1.jsxs("div", __assign({
         class: "input-group"
       }, {
         children: [this.state.nickName.split("").map(function (letter, index) {
@@ -6899,7 +6920,7 @@ function (_super) {
             moveLetter: _this.moveLetter
           }, void 0);
         }), jsx_runtime_1.jsx("div", __assign({
-          class: "end"
+          class: ["end", this.state.activeLetterIndex === 3 ? "active" : null].join(" ")
         }, {
           children: "End"
         }), void 0)]

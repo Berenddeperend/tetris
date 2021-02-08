@@ -24,12 +24,10 @@ export default class GameOver {
 
     const gameOverContainer = document.querySelector(".game-over-container");
 
-    // @ts-ignore
-    gameOverContainer.animate(...animations.fadeIn);
+    gameOverContainer.animate(...animations.fadeIn as Animation);
 
     window.setTimeout(() => {
-      // @ts-ignore
-      const animation = gameOverContainer.animate(...animations.fadeOut);
+      const animation = gameOverContainer.animate(...animations.fadeOut as Animation);
       animation.onfinish = () => {
         gameOverContainer.remove();
         new HighScores({

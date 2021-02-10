@@ -117,43 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/possibleForms.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.possibleForms = void 0;
-exports.possibleForms = [{
-  id: 0,
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  id: 1,
-  color: "purple",
-  shape: [[0, 1, 0], [1, 1, 1]]
-}, {
-  id: 2,
-  color: "green",
-  shape: [[0, 1, 1], [1, 1, 0]]
-}, {
-  id: 3,
-  color: "red",
-  shape: [[1, 1, 0], [0, 1, 1]]
-}, {
-  id: 4,
-  color: "yellow",
-  shape: [[1, 1], [1, 1]]
-}, {
-  id: 5,
-  color: "dark-blue",
-  shape: [[1, 0, 0], [1, 1, 1]]
-}, {
-  id: 6,
-  color: "orange",
-  shape: [[0, 0, 1], [1, 1, 1]]
-}];
-},{}],"node_modules/preact/dist/preact.module.js":[function(require,module,exports) {
+})({"node_modules/preact/dist/preact.module.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -583,7 +547,43 @@ function o(_, o, e, n, t) {
   if ("function" == typeof _ && (s = _.defaultProps)) for (u in s) void 0 === f[u] && (f[u] = s[u]);
   return _preact.options.vnode && _preact.options.vnode(a), a;
 }
-},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/utils.tsx":[function(require,module,exports) {
+},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/possibleForms.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.possibleForms = void 0;
+exports.possibleForms = [{
+  id: 0,
+  color: "light-blue",
+  shape: [[1, 1, 1, 1]]
+}, {
+  id: 1,
+  color: "purple",
+  shape: [[0, 1, 0], [1, 1, 1]]
+}, {
+  id: 2,
+  color: "green",
+  shape: [[0, 1, 1], [1, 1, 0]]
+}, {
+  id: 3,
+  color: "red",
+  shape: [[1, 1, 0], [0, 1, 1]]
+}, {
+  id: 4,
+  color: "yellow",
+  shape: [[1, 1], [1, 1]]
+}, {
+  id: 5,
+  color: "dark-blue",
+  shape: [[1, 0, 0], [1, 1, 1]]
+}, {
+  id: 6,
+  color: "orange",
+  shape: [[0, 0, 1], [1, 1, 1]]
+}];
+},{}],"src/utils.tsx":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -3267,6 +3267,32 @@ var templateObject_1, templateObject_2, templateObject_3;
 },{"./block":"src/block.tsx","d3-selection":"node_modules/d3-selection/src/index.js","./utils":"src/utils.tsx","./highScores":"src/highScores.tsx","./dom":"src/dom.ts"}],"src/states/splash.tsx":[function(require,module,exports) {
 "use strict";
 
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
 var __assign = this && this.__assign || function () {
   __assign = Object.assign || function (t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -3338,11 +3364,18 @@ var animations_1 = __importDefault(require("../animations"));
 
 var Splash =
 /** @class */
-function () {
+function (_super) {
+  __extends(Splash, _super);
+
   function Splash(game) {
-    this.ref = preact_1.createRef();
-    this.game = game;
-    this.html = jsx_runtime_1.jsxs("div", __assign({
+    var _this = _super.call(this) || this;
+
+    _this.game = game;
+    return _this;
+  }
+
+  Splash.prototype.render = function () {
+    return jsx_runtime_1.jsxs("div", __assign({
       class: "splash"
     }, {
       children: [jsx_runtime_1.jsx("div", __assign({
@@ -3356,7 +3389,7 @@ function () {
       }), void 0), jsx_runtime_1.jsx("div", __assign({
         class: "begin"
       }, {
-        children: game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Touch here to start")
+        children: this.game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Touch here to start")
       }), void 0), jsx_runtime_1.jsxs("div", __assign({
         class: "social-container"
       }, {
@@ -3370,8 +3403,7 @@ function () {
         }, void 0)]
       }), void 0)]
     }), void 0);
-    preact_1.render(this.html, document.body);
-  }
+  };
 
   Object.defineProperty(Splash.prototype, "controls", {
     get: function get() {
@@ -3381,12 +3413,11 @@ function () {
         continue: function _continue() {
           var _a;
 
-          console.log(_this.html);
-
-          var animation = (_a = _this.html.node()).animate.apply(_a, __spread(animations_1.default.fadeOut));
+          var animation = (_a = document.querySelector(".splash")). //todo: use ref instead
+          animate.apply(_a, __spread(animations_1.default.fadeOut));
 
           animation.onfinish = function () {
-            preact_1.render("", document.body); //this can be better
+            document.querySelector(".splash").remove(); //can be better
 
             _this.game.setGameState("playing");
           };
@@ -3397,7 +3428,7 @@ function () {
     configurable: true
   });
   return Splash;
-}();
+}(preact_1.Component);
 
 exports.default = Splash;
 },{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","preact":"node_modules/preact/dist/preact.module.js","../utils":"src/utils.tsx","../animations":"src/animations.ts"}],"src/states/gameOver.tsx":[function(require,module,exports) {
@@ -3511,10 +3542,7 @@ function () {
           v: "0.1"
         });
       };
-    }, 300); // window.setTimeout(() => {
-    //   // prevent user from closing gameover screen instantly while still trying to rotate
-    //   window.addEventListener("keydown", onKeyDown);
-    // }, 500);
+    }, 300);
   }
 
   Object.defineProperty(GameOver.prototype, "controls", {
@@ -6676,6 +6704,32 @@ _preact.Component.prototype.forceUpdate = function (n) {
 },{"preact":"node_modules/preact/dist/preact.module.js","preact/devtools":"node_modules/preact/devtools/dist/devtools.module.js"}],"src/tetris.tsx":[function(require,module,exports) {
 "use strict";
 
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -6685,6 +6739,11 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var jsx_runtime_1 = require("preact/jsx-runtime"); // if(process.env.DEBUG === 'true') {
+//   import("preact/debug");
+// }
+
 
 var stage_1 = __importDefault(require("./stage"));
 
@@ -6698,17 +6757,25 @@ var touchControls_1 = __importDefault(require("./controls/touchControls"));
 
 var gestureControls_1 = __importDefault(require("./controls/gestureControls"));
 
+var preact_1 = require("preact");
+
 require("preact/debug");
 
 var Tetris =
 /** @class */
-function () {
+function (_super) {
+  __extends(Tetris, _super);
+
   function Tetris() {
-    this.gameMode = "default";
-    this.setGameState("splash");
-    new keyboardControls_1.default(this);
-    new touchControls_1.default(this);
-    new gestureControls_1.default(this);
+    var _this = _super.call(this) || this;
+
+    _this.gameMode = "default";
+
+    _this.setGameState("splash");
+
+    new keyboardControls_1.default(_this);
+    new touchControls_1.default(_this);
+    new gestureControls_1.default(_this);
 
     function setVH() {
       document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + "px"); //https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
@@ -6716,6 +6783,7 @@ function () {
 
     window.addEventListener('resize', setVH);
     setVH();
+    return _this;
   }
 
   Tetris.prototype.setGameState = function (gameState) {
@@ -6750,12 +6818,17 @@ function () {
     enumerable: false,
     configurable: true
   });
+
+  Tetris.prototype.render = function () {
+    return jsx_runtime_1.jsx(splash_1.default, {}, void 0);
+  };
+
   return Tetris;
-}();
+}(preact_1.Component);
 
 exports.default = Tetris;
-new Tetris(); // render(<ThreeLetterInput /> , document.body);
-},{"./stage":"src/stage.tsx","./states/splash":"src/states/splash.tsx","./states/gameOver":"src/states/gameOver.tsx","./controls/keyboardControls":"src/controls/keyboardControls.ts","./controls/touchControls":"src/controls/touchControls.ts","./controls/gestureControls":"src/controls/gestureControls.ts","preact/debug":"node_modules/preact/debug/dist/debug.module.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+preact_1.render(jsx_runtime_1.jsx(Tetris, {}, void 0), document.body);
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","./stage":"src/stage.tsx","./states/splash":"src/states/splash.tsx","./states/gameOver":"src/states/gameOver.tsx","./controls/keyboardControls":"src/controls/keyboardControls.ts","./controls/touchControls":"src/controls/touchControls.ts","./controls/gestureControls":"src/controls/gestureControls.ts","preact":"node_modules/preact/dist/preact.module.js","preact/debug":"node_modules/preact/debug/dist/debug.module.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -6783,7 +6856,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59544" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55360" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

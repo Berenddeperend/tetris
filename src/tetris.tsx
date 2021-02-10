@@ -1,6 +1,6 @@
 // if(process.env.DEBUG === 'true') {
 //   import("preact/debug");
-}
+// }
 
 import Stage from "./stage";
 import Splash from "./states/splash";
@@ -8,7 +8,7 @@ import GameOver from "./states/gameOver";
 import KeyboardControls from "./controls/keyboardControls";
 import TouchControls from "./controls/touchControls";
 import GestureControls from "./controls/gestureControls";
-import { h, Component, render } from 'preact';
+import { Component, render } from 'preact';
 
 import "preact/debug";
 
@@ -18,7 +18,7 @@ import ThreeLetterInput from './ThreeLetterInput'
 export type GameState = "splash" | "playing" | "gameOver";
 export type GameMode = "default";
 
-export default class Tetris {
+export default class Tetris extends Component {
   gameState: GameState;
   gameMode: GameMode = "default";
   stage: Stage;
@@ -26,6 +26,7 @@ export default class Tetris {
   gameOver: GameOver;
 
   constructor() {
+    super();
     this.setGameState("splash");
     new KeyboardControls(this);
     new TouchControls(this);
@@ -62,7 +63,10 @@ export default class Tetris {
   get isDesktop() {
     return !this.isMobile;
   }
+
+  render() {
+    return <Splash /> 
+   }
 }
 
-new Tetris();
-// render(<ThreeLetterInput /> , document.body);
+render(<Tetris /> , document.body);

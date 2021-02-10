@@ -1,33 +1,30 @@
 import Tetris from "../tetris";
-import { render, createRef } from "preact";
+import { createRef, Component, render } from "preact";
 import { explodeText } from "../utils";
 import animations, { Animation } from "../animations";
-export default class Splash {
+export default class Splash extends Component {
   game: Tetris;
-  html;
-  ref = createRef();
-
 
   constructor(game: Tetris) {
+    super();
     this.game = game;
+  }
 
-    this.html = (
+  render() {
+    return (
       <div class="splash">
-        <div class="title">Tetris
-         {/* <span class="version">{process.env.VERSION}</span> */}
+        <div class="title">
+          Tetris
         </div>
         <div class="subtitle">By Berend</div>
         <div class="begin">
-          {game.isDesktop
+          {this.game.isDesktop
             ? explodeText("Press space to start")
             : explodeText("Touch here to start")}
         </div>
 
         <div class="social-container">
-          <a
-            href="https://github.com/Berenddeperend/tetris"
-            target="_blank"
-          >
+          <a href="https://github.com/Berenddeperend/tetris" target="_blank">
             Github
           </a>
 
@@ -35,21 +32,18 @@ export default class Splash {
         </div>
       </div>
     );
-
-    render(this.html, document.body);
   }
 
   get controls() {
     return {
       continue: () => {
-
-        console.log(this.html)
-        const animation = this.html.node().animate(...animations.fadeOut);
+        const animation = document
+          .querySelector(".splash") //todo: use ref instead
+          .animate(...(animations.fadeOut as Animation));
         animation.onfinish = () => {
-          render("", document.body); //this can be better
+          document.querySelector(".splash").remove(); //can be better
           this.game.setGameState("playing");
-        }
-
+        };
       },
     };
   }

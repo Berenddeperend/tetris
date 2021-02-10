@@ -30,6 +30,7 @@ Maintenance:
 - typing for .animate(...args)
 - Cleanup placeholder highscore entries
 - No arrow functions as class methods
+- Use Ref instead of queryselector.
 
 Future:
 - 2 player mode (one client)

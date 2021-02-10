@@ -38,12 +38,6 @@ export default class GameOver {
         });
       };
     }, 300);
-
-
-    // window.setTimeout(() => {
-    //   // prevent user from closing gameover screen instantly while still trying to rotate
-    //   window.addEventListener("keydown", onKeyDown);
-    // }, 500);
   }
 
   get controls() {

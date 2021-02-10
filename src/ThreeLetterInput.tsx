@@ -58,9 +58,11 @@ export default class ThreeLetterInput extends Component<
       nickName: "aaa",
       activeLetterIndex: 0,
     };
+
+    this.moveLetter = this.moveLetter.bind(this);
   }
 
-  moveLetter = (index: number, amount: number) => {
+  moveLetter(index: number, amount: number) {
     const newName = this.state.nickName
       .split("")
       .map((letter, letterIndex) => {
@@ -114,9 +116,9 @@ export default class ThreeLetterInput extends Component<
 
       switch (e.code) {
         case "ArrowDown":
-          return this.moveLetter(this.state.activeLetterIndex, 1);
-        case "ArrowUp":
           return this.moveLetter(this.state.activeLetterIndex, -1);
+          case "ArrowUp":
+          return this.moveLetter(this.state.activeLetterIndex, 1);
         case "ArrowLeft":
           if (this.state.activeLetterIndex < 1) return;
           return this.setState({

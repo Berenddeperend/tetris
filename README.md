@@ -7,6 +7,7 @@ Bugs:
 - SVG 'next' viewbox
 
 Features:
+- Starry background
 - Show highscores on introscreen
 - Reset tick after last-minute rotate
 - UI
@@ -28,6 +29,7 @@ Maintenance:
 - Gridlines as gutter in grid
 - typing for .animate(...args)
 - Cleanup placeholder highscore entries
+- No arrow functions as class methods
 
 Future:
 - 2 player mode (one client)

@@ -117,7 +117,43 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/preact/dist/preact.module.js":[function(require,module,exports) {
+})({"src/possibleForms.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.possibleForms = void 0;
+exports.possibleForms = [{
+  id: 0,
+  color: "light-blue",
+  shape: [[1, 1, 1, 1]]
+}, {
+  id: 1,
+  color: "purple",
+  shape: [[0, 1, 0], [1, 1, 1]]
+}, {
+  id: 2,
+  color: "green",
+  shape: [[0, 1, 1], [1, 1, 0]]
+}, {
+  id: 3,
+  color: "red",
+  shape: [[1, 1, 0], [0, 1, 1]]
+}, {
+  id: 4,
+  color: "yellow",
+  shape: [[1, 1], [1, 1]]
+}, {
+  id: 5,
+  color: "dark-blue",
+  shape: [[1, 0, 0], [1, 1, 1]]
+}, {
+  id: 6,
+  color: "orange",
+  shape: [[0, 0, 1], [1, 1, 1]]
+}];
+},{}],"node_modules/preact/dist/preact.module.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -547,43 +583,7 @@ function o(_, o, e, n, t) {
   if ("function" == typeof _ && (s = _.defaultProps)) for (u in s) void 0 === f[u] && (f[u] = s[u]);
   return _preact.options.vnode && _preact.options.vnode(a), a;
 }
-},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/possibleForms.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.possibleForms = void 0;
-exports.possibleForms = [{
-  id: 0,
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  id: 1,
-  color: "purple",
-  shape: [[0, 1, 0], [1, 1, 1]]
-}, {
-  id: 2,
-  color: "green",
-  shape: [[0, 1, 1], [1, 1, 0]]
-}, {
-  id: 3,
-  color: "red",
-  shape: [[1, 1, 0], [0, 1, 1]]
-}, {
-  id: 4,
-  color: "yellow",
-  shape: [[1, 1], [1, 1]]
-}, {
-  id: 5,
-  color: "dark-blue",
-  shape: [[1, 0, 0], [1, 1, 1]]
-}, {
-  id: 6,
-  color: "orange",
-  shape: [[0, 0, 1], [1, 1, 1]]
-}];
-},{}],"src/utils.tsx":[function(require,module,exports) {
+},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/utils.tsx":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -3340,6 +3340,7 @@ var Splash =
 /** @class */
 function () {
   function Splash(game) {
+    this.ref = preact_1.createRef();
     this.game = game;
     this.html = jsx_runtime_1.jsxs("div", __assign({
       class: "splash"
@@ -3379,6 +3380,8 @@ function () {
       return {
         continue: function _continue() {
           var _a;
+
+          console.log(_this.html);
 
           var animation = (_a = _this.html.node()).animate.apply(_a, __spread(animations_1.default.fadeOut));
 
@@ -6670,269 +6673,7 @@ _preact.Component.prototype.forceUpdate = function (n) {
     }
   };
 }();
-},{"preact":"node_modules/preact/dist/preact.module.js","preact/devtools":"node_modules/preact/devtools/dist/devtools.module.js"}],"src/ThreeLetterInput.tsx":[function(require,module,exports) {
-"use strict";
-
-var __extends = this && this.__extends || function () {
-  var _extendStatics = function extendStatics(d, b) {
-    _extendStatics = Object.setPrototypeOf || {
-      __proto__: []
-    } instanceof Array && function (d, b) {
-      d.__proto__ = b;
-    } || function (d, b) {
-      for (var p in b) {
-        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
-      }
-    };
-
-    return _extendStatics(d, b);
-  };
-
-  return function (d, b) {
-    _extendStatics(d, b);
-
-    function __() {
-      this.constructor = d;
-    }
-
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-  };
-}();
-
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
-var __read = this && this.__read || function (o, n) {
-  var m = typeof Symbol === "function" && o[Symbol.iterator];
-  if (!m) return o;
-  var i = m.call(o),
-      r,
-      ar = [],
-      e;
-
-  try {
-    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
-      ar.push(r.value);
-    }
-  } catch (error) {
-    e = {
-      error: error
-    };
-  } finally {
-    try {
-      if (r && !r.done && (m = i["return"])) m.call(i);
-    } finally {
-      if (e) throw e.error;
-    }
-  }
-
-  return ar;
-};
-
-var __spread = this && this.__spread || function () {
-  for (var ar = [], i = 0; i < arguments.length; i++) {
-    ar = ar.concat(__read(arguments[i]));
-  }
-
-  return ar;
-};
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var jsx_runtime_1 = require("preact/jsx-runtime");
-
-var preact_1 = require("preact");
-
-var animations_1 = __importDefault(require("./animations"));
-
-function Increment(props) {
-  var _this = this;
-
-  var value = this.props.mode === "increment" ? 1 : -1;
-  return jsx_runtime_1.jsx("div", __assign({
-    class: this.props.mode,
-    onClick: function onClick() {
-      return _this.props.moveLetter(_this.props.letterIndex, value);
-    }
-  }, {
-    children: this.props.mode === "increment" ? "▲" : "▼"
-  }), void 0);
-}
-
-function LetterInput(props) {
-  return jsx_runtime_1.jsxs("div", __assign({
-    class: this.props.active ? "active letter-input" : "letter-input"
-  }, {
-    children: [jsx_runtime_1.jsx(Increment, {
-      mode: "increment",
-      active: this.props.active,
-      moveLetter: this.props.moveLetter,
-      letterIndex: this.props.letterIndex
-    }, void 0), jsx_runtime_1.jsx("div", __assign({
-      class: "letter"
-    }, {
-      children: this.props.char
-    }), void 0), jsx_runtime_1.jsx(Increment, {
-      mode: "decrement",
-      active: this.props.active,
-      moveLetter: this.props.moveLetter,
-      letterIndex: this.props.letterIndex
-    }, void 0)]
-  }), void 0);
-}
-
-var ThreeLetterInput =
-/** @class */
-function (_super) {
-  __extends(ThreeLetterInput, _super);
-
-  function ThreeLetterInput() {
-    var _this = _super.call(this) || this;
-
-    _this.chars = "abcdefghijklmnopqrstuvwxyz";
-    _this.nicknameLength = 3;
-
-    _this.moveLetter = function (index, amount) {
-      var newName = _this.state.nickName.split("").map(function (letter, letterIndex) {
-        if (index !== letterIndex) return letter;
-
-        var alphabetIndex = _this.chars.indexOf(letter);
-
-        var mod_floor = function mod_floor(i, n) {
-          return (i % n + n) % n;
-        };
-
-        var output = _this.chars[mod_floor(alphabetIndex + amount, _this.chars.length)];
-
-        return output;
-      }).join("");
-
-      _this.setState({
-        nickName: newName,
-        activeLetterIndex: index
-      });
-
-      var targetElement = amount > 0 ? document.querySelector(".letter-input:nth-child(" + (index + 1) + ") .increment") : document.querySelector(".letter-input:nth-child(" + (index + 1) + ") .decrement"); //doe hier iets mee
-
-      targetElement.animate.apply( //doe hier iets mee
-      targetElement, __spread(animations_1.default.boop));
-    };
-
-    _this.componentDidMount = function () {
-      window.localStorage.setItem("lastUsedNickname", "aaa");
-      document.addEventListener("keydown", function (e) {
-        var _a; //this logic aint dry
-
-
-        if (e.key >= "a" && e.key <= "z") {
-          if (_this.state.activeLetterIndex === _this.state.nickName.length) return;
-
-          (_a = document.querySelector(".letter-input.active .letter")).animate.apply(_a, __spread(animations_1.default.boop));
-
-          _this.setState({
-            nickName: _this.state.nickName.split('').map(function (letter, index) {
-              return index === _this.state.activeLetterIndex ? e.key : letter;
-            }).join(''),
-            activeLetterIndex: _this.state.activeLetterIndex + 1
-          });
-
-          return;
-        }
-
-        switch (e.code) {
-          case "ArrowDown":
-            return _this.moveLetter(_this.state.activeLetterIndex, 1);
-
-          case "ArrowUp":
-            return _this.moveLetter(_this.state.activeLetterIndex, -1);
-
-          case "ArrowLeft":
-            if (_this.state.activeLetterIndex < 1) return;
-            return _this.setState({
-              activeLetterIndex: _this.state.activeLetterIndex - 1
-            });
-
-          case "ArrowRight":
-            // if (this.state.activeLetterIndex === this.nicknameLength - 1) return;
-            if (_this.state.activeLetterIndex === _this.nicknameLength) return;
-            return _this.setState({
-              activeLetterIndex: _this.state.activeLetterIndex + 1
-            });
-
-          case "Enter":
-            return _this.setState({
-              activeLetterIndex: _this.nicknameLength
-            });
-        }
-      });
-
-      _this.setState({
-        nickName: window.localStorage.getItem("lastUsedNickname")
-      });
-    };
-
-    _this.state = {
-      nickName: "aaa",
-      activeLetterIndex: 0
-    };
-    return _this;
-  }
-
-  ThreeLetterInput.prototype.render = function () {
-    var _this = this;
-
-    return jsx_runtime_1.jsxs("div", __assign({
-      class: "three-letter-input"
-    }, {
-      children: [jsx_runtime_1.jsx("h2", __assign({
-        class: "title"
-      }, {
-        children: "What's your name?"
-      }), void 0), jsx_runtime_1.jsxs("div", __assign({
-        class: "input-group"
-      }, {
-        children: [this.state.nickName.split("").map(function (letter, index) {
-          return jsx_runtime_1.jsx(LetterInput, {
-            char: letter,
-            active: index === _this.state.activeLetterIndex,
-            letterIndex: index,
-            moveLetter: _this.moveLetter
-          }, void 0);
-        }), jsx_runtime_1.jsx("div", __assign({
-          class: ["end", this.state.activeLetterIndex === 3 ? "active" : null].join(" ")
-        }, {
-          children: "End"
-        }), void 0)]
-      }), void 0)]
-    }), void 0);
-  };
-
-  return ThreeLetterInput;
-}(preact_1.Component);
-
-exports.default = ThreeLetterInput;
-},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","preact":"node_modules/preact/dist/preact.module.js","./animations":"src/animations.ts"}],"src/tetris.tsx":[function(require,module,exports) {
+},{"preact":"node_modules/preact/dist/preact.module.js","preact/devtools":"node_modules/preact/devtools/dist/devtools.module.js"}],"src/tetris.tsx":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -6944,8 +6685,6 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var jsx_runtime_1 = require("preact/jsx-runtime");
 
 var stage_1 = __importDefault(require("./stage"));
 
@@ -6959,19 +6698,14 @@ var touchControls_1 = __importDefault(require("./controls/touchControls"));
 
 var gestureControls_1 = __importDefault(require("./controls/gestureControls"));
 
-var preact_1 = require("preact");
-
-require("preact/debug"); // import AlphabetKeyboard from './AlphabetKeyboard';
-
-
-var ThreeLetterInput_1 = __importDefault(require("./ThreeLetterInput"));
+require("preact/debug");
 
 var Tetris =
 /** @class */
 function () {
   function Tetris() {
     this.gameMode = "default";
-    this.setGameState("gameOver");
+    this.setGameState("splash");
     new keyboardControls_1.default(this);
     new touchControls_1.default(this);
     new gestureControls_1.default(this);
@@ -7019,10 +6753,9 @@ function () {
   return Tetris;
 }();
 
-exports.default = Tetris; // new Tetris();
-
-preact_1.render(jsx_runtime_1.jsx(ThreeLetterInput_1.default, {}, void 0), document.body);
-},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","./stage":"src/stage.tsx","./states/splash":"src/states/splash.tsx","./states/gameOver":"src/states/gameOver.tsx","./controls/keyboardControls":"src/controls/keyboardControls.ts","./controls/touchControls":"src/controls/touchControls.ts","./controls/gestureControls":"src/controls/gestureControls.ts","preact":"node_modules/preact/dist/preact.module.js","preact/debug":"node_modules/preact/debug/dist/debug.module.js","./ThreeLetterInput":"src/ThreeLetterInput.tsx"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+exports.default = Tetris;
+new Tetris(); // render(<ThreeLetterInput /> , document.body);
+},{"./stage":"src/stage.tsx","./states/splash":"src/states/splash.tsx","./states/gameOver":"src/states/gameOver.tsx","./controls/keyboardControls":"src/controls/keyboardControls.ts","./controls/touchControls":"src/controls/touchControls.ts","./controls/gestureControls":"src/controls/gestureControls.ts","preact/debug":"node_modules/preact/debug/dist/debug.module.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -7050,7 +6783,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55523" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59544" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

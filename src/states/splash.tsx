@@ -1,10 +1,12 @@
 import Tetris from "../tetris";
-import { render } from "preact";
+import { render, createRef } from "preact";
 import { explodeText } from "../utils";
 import animations, { Animation } from "../animations";
 export default class Splash {
   game: Tetris;
   html;
+  ref = createRef();
+
 
   constructor(game: Tetris) {
     this.game = game;
@@ -41,6 +43,7 @@ export default class Splash {
     return {
       continue: () => {
 
+        console.log(this.html)
         const animation = this.html.node().animate(...animations.fadeOut);
         animation.onfinish = () => {
           render("", document.body); //this can be better

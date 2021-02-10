@@ -115,29 +115,6 @@ body {
   align-items: center;
   justify-content: center;
 }
-body:after {
-  content: "";
-  pointer-events: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  z-index: 100;
-  background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.25) 0);
-  background-size: 100% 4px;
-  opacity: 0.3;
-  animation: scanlines 1s infinite linear;
-}
-@keyframes scanlines {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-4px);
-  }
-}
 @media (min-width: 500px) {
   body {
     flex-direction: row;
@@ -153,6 +130,9 @@ body:after {
   height: 200px;
   border: 1px solid #ff8142;
   text-align: center;
+  z-index: 3;
+  background: #2b0f54;
+  box-shadow: 0 0 0.5rem #ff8142;
 }
 .three-letter-input .title {
   margin-top: 30px;
@@ -166,6 +146,7 @@ body:after {
   margin: 0 1rem;
   font-size: 2rem;
   text-align: center;
+  user-select: none;
 }
 .three-letter-input .letter-input .letter {
   padding-left: 0.2em;
@@ -173,6 +154,8 @@ body:after {
 .three-letter-input .letter-input .increment,
 .three-letter-input .letter-input .decrement {
   color: grey;
+  font-size: 0.6em;
+  margin: 0.8em 0;
   cursor: pointer;
 }
 .three-letter-input .letter-input.active {
@@ -180,6 +163,10 @@ body:after {
 }
 .three-letter-input .letter-input.active .increment, .three-letter-input .letter-input.active .decrement {
   color: inherit;
+}
+.three-letter-input .end {
+  user-select: none;
+  margin-left: 1em;
 }
 .three-letter-input .end.active {
   color: #ff8142;
@@ -393,7 +380,7 @@ svg {
   border: 0.1rem solid #ff8142;
   padding: 1rem;
   position: relative;
-  box-shadow: 0 0 0.2rem #ff8142;
+  box-shadow: 0 0 0.5rem #ff8142;
   user-select: none;
   display: flex;
   align-items: center;

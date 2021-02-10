@@ -26,27 +26,27 @@ body {
 
   &:after {
     //scanlines
-    @keyframes scanlines {
-      from {
-        transform: translateY(0);
-      }
-      to {
-        transform: translateY(-4px);
-      }
-    }
-    content: "";
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    z-index: 100;
-    background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.25) 0);
-    background-size: 100% 4px;
-    opacity: 0.3;
-    animation: scanlines 1s infinite linear;
+    // @keyframes scanlines {
+    //   from {
+    //     transform: translateY(0);
+    //   }
+    //   to {
+    //     transform: translateY(-4px);
+    //   }
+    // }
+    // content: "";
+    // pointer-events: none;
+    // position: fixed;
+    // top: 0;
+    // left: 0;
+    // height: 100%;
+    // width: 100%;
+    // overflow: hidden;
+    // z-index: 100;
+    // background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.25) 0);
+    // background-size: 100% 4px;
+    // opacity: 0.3;
+    // animation: scanlines 1s infinite linear;
   }
 
   @media(min-width: $breakpoint) {

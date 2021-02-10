@@ -18,16 +18,23 @@ import ThreeLetterInput from './ThreeLetterInput'
 export type GameState = "splash" | "playing" | "gameOver";
 export type GameMode = "default";
 
-export default class Tetris extends Component {
+export default class Tetris extends Component<{}, {gameState: GameState}> {
   gameState: GameState;
   gameMode: GameMode = "default";
   stage: Stage;
   splash: Splash;
   gameOver: GameOver;
 
+
+
   constructor() {
     super();
-    this.setGameState("splash");
+
+    this.state = {
+      gameState: "splash"
+    }
+
+    // this.setGameState("splash");
     new KeyboardControls(this);
     new TouchControls(this);
     new GestureControls(this);
@@ -40,15 +47,21 @@ export default class Tetris extends Component {
   }
 
   setGameState(gameState: GameState) {
+    this.setState({
+      gameState: gameState
+    })
     this.gameState = gameState;
-    switch (gameState) {
-      case "splash":
-        return this.splash = new Splash(this);
-      case "playing":
-        return (this.stage = new Stage({ width: 10 }, this));
-      case "gameOver":
-        return this.gameOver = new GameOver(this);
-    }
+    // switch (gameState) {
+    //   case "splash":
+    //     return this.splash = new Splash(this);
+    //   case "playing":
+    //     return (this.stage = new Stage({ width: 10 }, this));
+    //   case "gameOver":
+    //     return this.gameOver = new GameOver(this);
+    // }
+
+
+    
   }
 
   get isMobile() {
@@ -65,8 +78,16 @@ export default class Tetris extends Component {
   }
 
   render() {
-    return <Splash /> 
+    // return <div>ja</div>
+    switch (this.state.gameState) {
+        case "splash":
+          return <Splash game={this}/>;
+        case "playing":
+          return (this.stage = new Stage({ width: 10 }, this));
+        case "gameOver":
+          return this.gameOver = new GameOver(this);
    }
+  }
 }
 
 render(<Tetris /> , document.body);

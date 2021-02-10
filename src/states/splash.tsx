@@ -2,15 +2,14 @@ import Tetris from "../tetris";
 import { createRef, Component, render } from "preact";
 import { explodeText } from "../utils";
 import animations, { Animation } from "../animations";
-export default class Splash extends Component {
-  game: Tetris;
+export default class Splash extends Component<{game:Tetris}, {}> {
 
-  constructor(game: Tetris) {
+  constructor() {
     super();
-    this.game = game;
   }
 
-  render() {
+
+  render(props, state) {
     return (
       <div class="splash">
         <div class="title">
@@ -18,7 +17,7 @@ export default class Splash extends Component {
         </div>
         <div class="subtitle">By Berend</div>
         <div class="begin">
-          {this.game.isDesktop
+          {this.props.game.isDesktop
             ? explodeText("Press space to start")
             : explodeText("Touch here to start")}
         </div>
@@ -42,7 +41,7 @@ export default class Splash extends Component {
           .animate(...(animations.fadeOut as Animation));
         animation.onfinish = () => {
           document.querySelector(".splash").remove(); //can be better
-          this.game.setGameState("playing");
+          this.props.game.setGameState("playing");
         };
       },
     };

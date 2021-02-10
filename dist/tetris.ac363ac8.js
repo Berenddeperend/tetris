@@ -3367,14 +3367,11 @@ var Splash =
 function (_super) {
   __extends(Splash, _super);
 
-  function Splash(game) {
-    var _this = _super.call(this) || this;
-
-    _this.game = game;
-    return _this;
+  function Splash() {
+    return _super.call(this) || this;
   }
 
-  Splash.prototype.render = function () {
+  Splash.prototype.render = function (props, state) {
     return jsx_runtime_1.jsxs("div", __assign({
       class: "splash"
     }, {
@@ -3389,7 +3386,7 @@ function (_super) {
       }), void 0), jsx_runtime_1.jsx("div", __assign({
         class: "begin"
       }, {
-        children: this.game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Touch here to start")
+        children: this.props.game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Touch here to start")
       }), void 0), jsx_runtime_1.jsxs("div", __assign({
         class: "social-container"
       }, {
@@ -3419,7 +3416,7 @@ function (_super) {
           animation.onfinish = function () {
             document.querySelector(".splash").remove(); //can be better
 
-            _this.game.setGameState("playing");
+            _this.props.game.setGameState("playing");
           };
         }
       };
@@ -3433,6 +3430,32 @@ function (_super) {
 exports.default = Splash;
 },{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","preact":"node_modules/preact/dist/preact.module.js","../utils":"src/utils.tsx","../animations":"src/animations.ts"}],"src/states/gameOver.tsx":[function(require,module,exports) {
 "use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
 
 var __assign = this && this.__assign || function () {
   __assign = Object.assign || function (t) {
@@ -3507,12 +3530,40 @@ var animations_1 = __importDefault(require("../animations"));
 
 var GameOver =
 /** @class */
-function () {
+function (_super) {
+  __extends(GameOver, _super);
+
   function GameOver(game) {
+    var _this = _super.call(this) || this;
+
+    _this.game = game;
+    return _this;
+  }
+
+  GameOver.prototype.componentDidMount = function () {
     var _this = this;
 
-    this.game = game;
-    var html = jsx_runtime_1.jsxs(jsx_runtime_1.Fragment, {
+    var gameOverContainer = document.querySelector(".game-over-container");
+    gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeIn));
+    window.setTimeout(function () {
+      var animation = gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeOut));
+
+      animation.onfinish = function () {
+        var _a, _b;
+
+        gameOverContainer.remove();
+        new highScores_1.default({
+          score: (_b = (_a = _this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
+          name: window.localStorage.getItem("lastUsedNickname"),
+          date: new Date(),
+          v: "0.1"
+        });
+      };
+    }, 2000);
+  };
+
+  GameOver.prototype.render = function () {
+    return jsx_runtime_1.jsxs(jsx_runtime_1.Fragment, {
       children: [jsx_runtime_1.jsx("div", __assign({
         class: "game-over-container"
       }, {
@@ -3525,25 +3576,7 @@ function () {
         class: "highscore-list"
       }, void 0)]
     }, void 0);
-    preact_1.render(html, document.querySelector(".stage"));
-    var gameOverContainer = document.querySelector(".game-over-container");
-    gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeIn));
-    window.setTimeout(function () {
-      var animation = gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeOut));
-
-      animation.onfinish = function () {
-        var _a, _b;
-
-        gameOverContainer.remove();
-        new highScores_1.default({
-          score: (_b = (_a = _this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
-          name: window.localStorage.getItem('lastUsedNickname'),
-          date: new Date(),
-          v: "0.1"
-        });
-      };
-    }, 300);
-  }
+  };
 
   Object.defineProperty(GameOver.prototype, "controls", {
     get: function get() {
@@ -3565,7 +3598,7 @@ function () {
     configurable: true
   });
   return GameOver;
-}();
+}(preact_1.Component);
 
 exports.default = GameOver;
 },{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","../highScores":"src/highScores.tsx","preact":"node_modules/preact/dist/preact.module.js","../utils":"src/utils.tsx","../animations":"src/animations.ts"}],"src/controls/keyboardControls.ts":[function(require,module,exports) {
@@ -6770,8 +6803,9 @@ function (_super) {
     var _this = _super.call(this) || this;
 
     _this.gameMode = "default";
-
-    _this.setGameState("splash");
+    _this.state = {
+      gameState: "splash"
+    }; // this.setGameState("splash");
 
     new keyboardControls_1.default(_this);
     new touchControls_1.default(_this);
@@ -6787,20 +6821,17 @@ function (_super) {
   }
 
   Tetris.prototype.setGameState = function (gameState) {
-    this.gameState = gameState;
-
-    switch (gameState) {
-      case "splash":
-        return this.splash = new splash_1.default(this);
-
-      case "playing":
-        return this.stage = new stage_1.default({
-          width: 10
-        }, this);
-
-      case "gameOver":
-        return this.gameOver = new gameOver_1.default(this);
-    }
+    this.setState({
+      gameState: gameState
+    });
+    this.gameState = gameState; // switch (gameState) {
+    //   case "splash":
+    //     return this.splash = new Splash(this);
+    //   case "playing":
+    //     return (this.stage = new Stage({ width: 10 }, this));
+    //   case "gameOver":
+    //     return this.gameOver = new GameOver(this);
+    // }
   };
 
   Object.defineProperty(Tetris.prototype, "isMobile", {
@@ -6820,7 +6851,21 @@ function (_super) {
   });
 
   Tetris.prototype.render = function () {
-    return jsx_runtime_1.jsx(splash_1.default, {}, void 0);
+    // return <div>ja</div>
+    switch (this.state.gameState) {
+      case "splash":
+        return jsx_runtime_1.jsx(splash_1.default, {
+          game: this
+        }, void 0);
+
+      case "playing":
+        return this.stage = new stage_1.default({
+          width: 10
+        }, this);
+
+      case "gameOver":
+        return this.gameOver = new gameOver_1.default(this);
+    }
   };
 
   return Tetris;

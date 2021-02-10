@@ -1,17 +1,39 @@
 import Tetris from "../tetris";
 import HighScores from "../highScores";
 
-import { render } from "preact";
+import { Component } from "preact";
 import { explodeText } from "../utils";
 import animations, { Animation } from "../animations";
 
-export default class GameOver {
+export default class GameOver extends Component {
   game: Tetris;
 
   constructor(game: Tetris) {
+    super();
     this.game = game;
+  }
 
-    const html = (
+  componentDidMount() {
+    const gameOverContainer = document.querySelector(".game-over-container");
+    gameOverContainer.animate(...(animations.fadeIn as Animation));
+    window.setTimeout(() => {
+      const animation = gameOverContainer.animate(
+        ...(animations.fadeOut as Animation)
+      );
+      animation.onfinish = () => {
+        gameOverContainer.remove();
+        new HighScores({
+          score: this.game?.stage?.score,
+          name: window.localStorage.getItem("lastUsedNickname"), //localstorage as store? lol sure
+          date: new Date(),
+          v: process.env.VERSION,
+        });
+      };
+    }, 2000);
+  }
+
+  render() {
+    return (
       <>
         <div class="game-over-container">
           <div class="game-over">{explodeText("game over")}</div>
@@ -19,25 +41,6 @@ export default class GameOver {
         <div class="highscore-list"></div>
       </>
     );
-
-    render(html, document.querySelector(".stage"));
-
-    const gameOverContainer = document.querySelector(".game-over-container");
-
-    gameOverContainer.animate(...animations.fadeIn as Animation);
-
-    window.setTimeout(() => {
-      const animation = gameOverContainer.animate(...animations.fadeOut as Animation);
-      animation.onfinish = () => {
-        gameOverContainer.remove();
-        new HighScores({
-          score: this.game?.stage?.score,
-          name: window.localStorage.getItem('lastUsedNickname'), //localstorage as store? lol sure
-          date: new Date(),
-          v: process.env.VERSION
-        });
-      };
-    }, 300);
   }
 
   get controls() {

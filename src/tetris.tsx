@@ -22,10 +22,8 @@ export default class Tetris extends Component<{}, {gameState: GameState}> {
   gameState: GameState;
   gameMode: GameMode = "default";
   stage: Stage;
-  splash: Splash;
+  splash: any;
   gameOver: GameOver;
-
-
 
   constructor() {
     super();
@@ -51,6 +49,7 @@ export default class Tetris extends Component<{}, {gameState: GameState}> {
       gameState: gameState
     })
     this.gameState = gameState;
+
     // switch (gameState) {
     //   case "splash":
     //     return this.splash = new Splash(this);
@@ -81,9 +80,10 @@ export default class Tetris extends Component<{}, {gameState: GameState}> {
     // return <div>ja</div>
     switch (this.state.gameState) {
         case "splash":
-          return <Splash game={this}/>;
+          return this.splash = <Splash game={this}/>;
         case "playing":
-          return (this.stage = new Stage({ width: 10 }, this));
+          // return (this.stage = new Stage({ width: 10 }, this));
+          return;
         case "gameOver":
           return this.gameOver = new GameOver(this);
    }

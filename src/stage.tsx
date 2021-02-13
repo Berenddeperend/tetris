@@ -3,6 +3,7 @@ import { select, selectAll } from "d3-selection";
 import { uniq } from "./utils";
 import Tetris from "./tetris";
 import HighScores from "./highScores";
+import setControls from './controls/controls';
 
 import { html, render, PreactNode } from "./dom";
 
@@ -50,6 +51,13 @@ export default class Stage {
     this.queueScaleFactor = queueScaleFactor;
     this.initUI();
     this.initializeInternalGrid();
+    setControls('playing', {
+      right: this.controls.right,
+      left: this.controls.left,
+      down: this.controls.down,
+      instaFall: this.controls.instaFall,
+      rotate: this.controls.rotate
+    })
 
     this.activeBlock = new Block(this.blockIndex, this, "stage");
     this.queue.push(new Block(++this.blockIndex, this, "queue"));

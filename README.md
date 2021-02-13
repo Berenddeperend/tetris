@@ -1,3 +1,8 @@
+Now:
+- have 'state' components call a reusable 'initControls' function
+    tetris.ts heeft een initcontrols method welke hij aan zijn children meegeeft
+    
+
 WIP: 
 - Touch/gesture controls -> 70%
 - Highscores -> 80%
@@ -49,6 +54,7 @@ Maybe:
 - "Tetris UI", select mode by dropping block in a column
 - Swap out Parceljs -> snowpack (https://2020.stateofjs.com/en-US/technologies/build-tools/)
 - Implement 8bit style wordart
+- 3d rotating tetris block
 
 On release:
 - Post to reddit.com/r/tetris (as video) "I wrote a Tetris clone with co-op mode"

@@ -1,20 +1,45 @@
 import Tetris from "../tetris";
-import { createRef, Component, render } from "preact";
+import { Component } from "preact";
 import { explodeText } from "../utils";
 import animations, { Animation } from "../animations";
-export default class Splash extends Component<{game:Tetris}, {}> {
-
+import setControls from "./../controls/controls";
+export default class Splash extends Component<{ game: Tetris }, {}> {
   constructor() {
     super();
+    // initControls({
+    //   continue: ()=> {
+    //     const animation = document
+    //       .querySelector(".splash") //todo: use ref instead
+    //       .animate(...(animations.fadeOut as Animation));
+    //     animation.onfinish = () => {
+    //       document.querySelector(".splash").remove(); //can be better
+    //       this.props.game.setGameState("playing");
+    //     };
+    //   }
+    // });
+
+    setControls('splash', {
+        continue: this.continue.bind(this)
+    });
   }
 
+  continue() {
+    const animation = document
+      .querySelector(".splash") //todo: use ref instead
+      .animate(...(animations.fadeOut as Animation));
+    
+    
+    animation.onfinish = () => {
+      document.querySelector(".splash").remove(); //can be better
+      this.props.game.setGameState("playing");
+    };
+
+  }
 
   render(props, state) {
     return (
       <div class="splash">
-        <div class="title">
-          Tetris
-        </div>
+        <div class="title">Tetris</div>
         <div class="subtitle">By Berend</div>
         <div class="begin">
           {this.props.game.isDesktop
@@ -33,17 +58,19 @@ export default class Splash extends Component<{game:Tetris}, {}> {
     );
   }
 
-  get controls() {
-    return {
-      continue: () => {
-        const animation = document
-          .querySelector(".splash") //todo: use ref instead
-          .animate(...(animations.fadeOut as Animation));
-        animation.onfinish = () => {
-          document.querySelector(".splash").remove(); //can be better
-          this.props.game.setGameState("playing");
-        };
-      },
-    };
-  }
+  //controls zijn eigenlijk gewoon methods he?
+  // get controls() {
+  //   console.log('gettin')
+  //   return {
+  //     continue: () => {
+  //       const animation = document
+  //         .querySelector(".splash") //todo: use ref instead
+  //         .animate(...(animations.fadeOut as Animation));
+  //       animation.onfinish = () => {
+  //         document.querySelector(".splash").remove(); //can be better
+  //         this.props.game.setGameState("playing");
+  //       };
+  //     },
+  //   };
+  // }
 }

@@ -1,13 +1,21 @@
 import Block from "./block";
 import { select, selectAll } from "d3-selection";
 import { uniq } from "./utils";
-import Tetris from "./tetris";
+import Tetris, { GameSettings } from "./tetris";
 import HighScores from "./highScores";
 import setControls from './controls/controls';
+import { defaultGameSettings } from "./Defaults";
 
-import { html, render, PreactNode } from "./dom";
+import { Component } from 'preact'
+import GridLines from "./GridLines";
 
-export default class Stage {
+// import { html, render, PreactNode } from "./dom";
+
+type StageProps = {
+  game: Tetris,
+  settings: GameSettings
+}
+export default class Stage extends Component<{},{}> {
   game: Tetris;
 
   gridWidth: number;
@@ -30,17 +38,8 @@ export default class Stage {
   d3UI: any; //todo: better typing
   d3Queue: any; //todo: better typing
 
-  constructor(
-    {
-      width = 10,
-      height = 20,
-      blockSize = 24,
-      gridGutterSize = 1,
-      gridOverBlocks = true,
-      queueScaleFactor = 0.75,
-    } = {},
-    game: Tetris
-  ) {
+  constructor(props: StageProps) {
+    super();
     this.game = game;
     this.gridWidth = width;
     this.gridHeight = height;
@@ -49,8 +48,8 @@ export default class Stage {
     this.gridGutterSize = gridGutterSize;
     this.gridOverBlocks = gridOverBlocks;
     this.queueScaleFactor = queueScaleFactor;
-    this.initUI();
-    this.initializeInternalGrid();
+    // this.initUI();
+    // this.initializeInternalGrid();
     setControls('playing', {
       right: this.controls.right,
       left: this.controls.left,
@@ -280,48 +279,19 @@ export default class Stage {
       .attr("class", "value")
       .text(HighScores.getLocalHighScore()?.score || 0);
 
-    this.drawGridLines();
     this.updateScoreUI();
   }
 
-  drawGridLines() {
-    const grid = html`
-      <g
-        class="gridlines"
-        width="${this.gridWidth * this.blockSize}"
-        height="${this.gridHeight * this.blockSize}"
-        style="stroke-width: ${this.gridGutterSize / 10}rem;"
-        viewBox="0 0 ${this.gridWidth * this.blockSize} ${this.gridHeight *
-        this.blockSize}"
-      >
-        <g class="rows"
-          >${new Array(this.gridHeight + 1).fill("").map((d, i) => {
-            return html`
-              <line
-                x1="0"
-                x2="${this.gridWidth * this.blockSize}"
-                y1="${i * this.blockSize}"
-                y2="${i * this.blockSize}"
-              ></line>
-            `;
-          })}</g
-        >
 
-        <g class="columns"
-          >${new Array(this.gridWidth + 1).fill("").map((d, i) => {
-            return html`
-              <line
-                y1="0"
-                y2="${this.gridHeight * this.blockSize}"
-                x1="${i * this.blockSize}"
-                x2="${i * this.blockSize}"
-              ></line>
-            `;
-          })}</g
-        >
-      </g>
-    `;
-    render(grid, document.querySelector(".stage svg"));
+  render() {
+    return (
+      <>
+        <div class="stage"></div>
+        <div class="ui">
+          <GridLines />
+        </div>
+      </>
+    )
   }
 
   beforeDestroy() {

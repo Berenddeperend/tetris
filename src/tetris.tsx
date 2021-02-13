@@ -10,6 +10,8 @@ import TouchControls from "./controls/touchControls";
 import GestureControls from "./controls/gestureControls";
 import { Component, render } from 'preact';
 
+import GridLines from './GridLines';
+
 import "preact/debug";
 
 // import AlphabetKeyboard from './AlphabetKeyboard';
@@ -17,6 +19,14 @@ import ThreeLetterInput from './ThreeLetterInput'
 
 export type GameState = "splash" | "playing" | "gameOver";
 export type GameMode = "default";
+export type GameSettings = {
+  width?: number,
+  height?: number,
+  blockSize?: number,
+  gridGutterSize?: number,
+  gridOverBlocks?: boolean,
+  queueScaleFactor?: number,
+}
 
 export default class Tetris extends Component<{}, {gameState: GameState}> {
   gameState: GameState;
@@ -82,7 +92,8 @@ export default class Tetris extends Component<{}, {gameState: GameState}> {
         case "splash":
           return this.splash = <Splash game={this}/>;
         case "playing":
-          // return (this.stage = new Stage({ width: 10 }, this));
+          // return this.stage = <Stage />
+          return  <Stage />
           return;
         case "gameOver":
           return this.gameOver = new GameOver(this);

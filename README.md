@@ -36,6 +36,7 @@ Maintenance:
 - Cleanup placeholder highscore entries
 - No arrow functions as class methods
 - Use Ref instead of queryselector.
+- use 'times' method instead of new Array(4).fill('')
 
 Future:
 - 2 player mode (one client)

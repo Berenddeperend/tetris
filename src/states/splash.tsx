@@ -6,18 +6,6 @@ import setControls from "./../controls/controls";
 export default class Splash extends Component<{ game: Tetris }, {}> {
   constructor() {
     super();
-    // initControls({
-    //   continue: ()=> {
-    //     const animation = document
-    //       .querySelector(".splash") //todo: use ref instead
-    //       .animate(...(animations.fadeOut as Animation));
-    //     animation.onfinish = () => {
-    //       document.querySelector(".splash").remove(); //can be better
-    //       this.props.game.setGameState("playing");
-    //     };
-    //   }
-    // });
-
     setControls('splash', {
         continue: this.continue.bind(this)
     });
@@ -42,7 +30,7 @@ export default class Splash extends Component<{ game: Tetris }, {}> {
         <div class="title">Tetris</div>
         <div class="subtitle">By Berend</div>
         <div class="begin">
-          {this.props.game.isDesktop
+          {props.game.isDesktop
             ? explodeText("Press space to start")
             : explodeText("Touch here to start")}
         </div>

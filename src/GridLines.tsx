@@ -1,17 +1,29 @@
-import { defaultGameSettings } from "./Defaults";
+import { Component } from "preact";
 import { GameSettings } from "./tetris";
 import { times } from "./utils";
 
-export default function GridLines(settings: GameSettings) {
+type GridLinesProps = {
+  settings: GameSettings;
+};
+
+export default class GridLines extends Component<GridLinesProps> {
+  constructor() {
+    super();
+  }
+
   // const argumentedSettings = { ...defaultGameSettings, settings };
   // const { width, blockSize, height } = { augumentedSettings };
-  const { width, blockSize, height, gridGutterSize } = {
-    ...defaultGameSettings,
-    ...settings,
-  };
+  // const { width, blockSize, height, gridGutterSize } = {
+  //   ...defaultGameSettings,
+  //   ...settings,
+  // };
 
-  return (
-    <svg class="yebuddy">
+  render(props: GridLinesProps) {
+    const { width, blockSize, height, gridGutterSize } = {
+      ...props.settings,
+    };
+
+    return (
       <g
         class="gridlines"
         width={width * blockSize}
@@ -30,9 +42,8 @@ export default function GridLines(settings: GameSettings) {
                 y1={i * blockSize}
                 y2={i * blockSize}
               ></line>
-            )
-          })
-        }
+            );
+          })}
         </g>
 
         <g class="columns">
@@ -44,11 +55,10 @@ export default function GridLines(settings: GameSettings) {
                 x1={i * blockSize}
                 x2={i * blockSize}
               ></line>
-            )
-          })
-        }
+            );
+          })}
         </g>
       </g>
-    </svg>
-  );
+    );
+  }
 }

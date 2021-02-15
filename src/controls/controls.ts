@@ -15,10 +15,7 @@ export const controls = {
 };
 
 export default function setControls(state: GameState, stateControls: any) {
-  console.log('state: ', state);
-
   controls[state] = stateControls;
-  console.log(controls)
 
   // setTimeout(() => {
   //   controls.splash.continue();

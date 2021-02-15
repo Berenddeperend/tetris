@@ -1,3 +1,6 @@
+afspraak: Als ik voor maandag 22 februari de preact-rewrite niet voor elkaar heb, reverten.
+
+
 Now:
 - have 'state' components call a reusable 'initControls' function
     tetris.ts heeft een initcontrols method welke hij aan zijn children meegeeft

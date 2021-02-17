@@ -11,12 +11,14 @@ $purple: #ab1f65;
 $red: #ff4f69;
 
 $breakpoint: 500px;
+$box-shadow: 0 0 0.5rem $orange;
 
 :root {
   --stage-height: 0px;
   --stage-width: 0px;
   --breakpoint: 500px;
 }
+
 
 
 @keyframes wiggle {

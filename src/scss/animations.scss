@@ -1,4 +1,4 @@
-@keyframes fadein {
+@keyframes fade-in {
   from {
     opacity: 0;
   }
@@ -20,5 +20,18 @@
   
   to {
     color: $red;
+  }
+}
+
+@keyframes slide-fade-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 10px));
+    // transform: translate(49%, 50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
   }
 }

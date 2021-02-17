@@ -53,7 +53,7 @@
   
   &.is-game-over {
     &::after {
-      animation: fadein .4s steps(4, end);
+      animation: fade-in .4s steps(4, end);
       opacity: 0.7;
     }
   }

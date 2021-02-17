@@ -8,7 +8,9 @@
   width: 15em;
   font-size: 1.3rem;
   transform: translate(-50%, -50%);
-
+  animation: 0.2s fade-in 3s;
+   
+  // animation-delay: 2s;
 }
 
 .highscore-table-container {

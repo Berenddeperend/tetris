@@ -1,5 +1,6 @@
 import Tetris from "../tetris";
 import HighScores from "../highScores";
+import ThreeLetterInput from './../ThreeLetterInput'
 
 import { render } from "preact";
 import { explodeText } from "../utils";
@@ -16,6 +17,8 @@ export default class GameOver {
         <div class="game-over-container">
           <div class="game-over">{explodeText("game over")}</div>
         </div>
+        <div className="three-letter-input-container"></div>
+        {/* <ThreeLetterInput /> */}
         <div class="highscore-list"></div>
       </>
     );
@@ -24,22 +27,25 @@ export default class GameOver {
 
     const gameOverContainer = document.querySelector(".game-over-container");
 
-    // @ts-ignore
-    gameOverContainer.animate(...animations.fadeIn);
+    gameOverContainer.animate(...animations.fadeIn as Animation);
 
     window.setTimeout(() => {
-      // @ts-ignore
-      const animation = gameOverContainer.animate(...animations.fadeOut);
+      const animation = gameOverContainer.animate(...animations.fadeOut as Animation);
       animation.onfinish = () => {
         gameOverContainer.remove();
-        new HighScores({
-          score: this.game?.stage?.score,
-          name: window.localStorage.getItem('lastUsedNickname'), //localstorage as store? lol sure
-          date: new Date(),
-          v: process.env.VERSION
-        });
+        render(<ThreeLetterInput />, document.querySelector('.three-letter-input-container'));
+
+        setTimeout(() => {
+          new HighScores({
+            score: this.game?.stage?.score,
+            name: window.localStorage.getItem('lastUsedNickname'), //localstorage as store? lol sure
+            date: new Date(),
+            v: process.env.VERSION
+          });
+          
+        }, 2000);
       };
-    }, 300);
+    }, 200);
 
 
     // window.setTimeout(() => {

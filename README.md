@@ -1,16 +1,16 @@
 WIP: 
 - Touch/gesture controls -> 70%
-- Highscores -> 40%
+- Highscores -> 70%
 
 Bugs:
 - Can't rotate block sticky to left side
 - SVG 'next' viewbox
 
 Features:
-- Highscore aanvullen tot 5 wanneer niet genoeg entries.
+
+- input name niet in modal maar in stage. gameover -> nameinput -> highscore is swipeleft zoals die video
+
 - Reset tick after last-minute rotate
-- Submit names with highscore
-- Highlight current score in highscore list
 - UI
   - Responsive position
   - Check gameboy version for inspiration, or this one: https://m.media-amazon.com/images/S/aplus-media/vc/d2044fc9-3049-41ff-8262-6b52fad2794c.__CR0,69,2099,2099_PT0_SX300_V1___.jpg
@@ -28,7 +28,6 @@ Features:
 Maintenance:
 - Move collision logic to block class
 - Gridlines as gutter in grid
-- typing for .animate(...args)
 
 Future:
 - 2 player mode (one client)
@@ -46,9 +45,6 @@ Maybe:
 - Snake/Pacman style level overflow
 - "Tetris UI", select mode by dropping block in a column
 - Swap out Parceljs -> snowpack (https://2020.stateofjs.com/en-US/technologies/build-tools/)
-- In-game keyboard?
-- Implement 8bit style wordart
-- Animation library? (if so, https://animejs.com/)
 
 On release:
 - Post to reddit.com/r/tetris (as video) "I wrote a Tetris clone with co-op mode"

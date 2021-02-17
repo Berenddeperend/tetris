@@ -2,7 +2,6 @@ import Stage from "./stage";
 import { html, render, PreactNode } from "./dom";
 import { Component, FunctionComponent } from "preact";
 import animations, { Animation } from "./animations";
-import InputName from "./inputName";
 import { times } from "./utils";
 
 export type HighScore = {
@@ -28,7 +27,7 @@ export default class HighScores {
       constructor() {
         super();
         this.state = {
-          limit: 5,
+          limit: 5
         };
       }
 
@@ -42,7 +41,8 @@ export default class HighScores {
                 <td class="rank">{index + 1}</td>
                 <td class="name">
                   {highScore.id === newScoreId ? (
-                    <InputName onNameChange={self.onNameChanged.bind(self)} />
+                    // <InputName onNameChange={self.onNameChanged.bind(self)} />
+                    'hello'
                   ) : (
                     highScore?.name
                   )}
@@ -85,8 +85,7 @@ export default class HighScores {
     );
 
     render(html, document.querySelector(".highscore-list"));
-    // @ts-ignore
-    document.querySelector(".highscore-list").animate(...animations.fadeIn);
+    document.querySelector(".highscore-list").animate(...animations.fadeIn as Animation);
   }
 
   onNameChanged(e) {

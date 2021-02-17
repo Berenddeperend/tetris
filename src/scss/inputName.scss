@@ -1,3 +1,76 @@
+.three-letter-input-container {
+  z-index: 5 !important;
+  // animation: fadein 1s steps(4, start);
+}
+
+.three-letter-input {
+  width: 380px;
+  height: 200px;
+  border: 1px solid $orange;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 3;
+  background: $black;
+  box-shadow: $box-shadow;
+  animation: slide-fade-in 0.4s;// steps(4, start);
+
+  .title {
+    margin-top: 30px;
+    margin-bottom: 0;
+    @include text-shadow(0.1em, true);
+  }
+
+  .letter-input {
+    // display: inline-block; 
+    margin: 0 1rem;
+    font-size: 2rem;
+    text-align: center;
+    user-select: none;
+    
+    .letter {
+      padding-left: 0.2em;
+    }
+    
+    .increment,
+    .decrement {
+      color: grey;
+      font-size: 0.6em;
+      margin: 0.8em 0;
+      cursor: pointer;
+    }
+    
+    &.active {
+      // color: $orange;
+      animation: color-blink 0.4s steps(2, start) infinite;
+      
+      .increment, .decrement {
+        color: inherit;
+      }
+    }
+  }
+  
+  .end {
+    user-select: none;
+    margin-left: 1em;
+
+    &.active {
+      // color: $orange;
+      animation: color-blink 0.4s steps(2, start) infinite;
+    }
+  }
+  
+  .input-group {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 3em;
+  }
+}
+
 .input-name {
   background: none;
   outline: none;
@@ -6,33 +79,23 @@
   width: 100%;
   padding: 0;
 
-  animation: color-blink 0.4s steps(2,start) infinite;
+  animation: color-blink 0.4s steps(2, start) infinite;
 }
 
-// .input-name {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
+.input-name-standalone {
+  max-width: 18em;
+  font-size: 2rem;
 
-//   .title {
-//     @include text-shadow(0.2rem, false);
-//   }
-// }
+  .letter {
+    display: inline-block;
+    border: 1px solid transparent;
+    padding: 0.5em;
+    cursor: pointer;
+    text-align: center;
+    padding-left: 0.7em;
 
-// .name-group {
-//   display: flex;
-
-//   .name {
-//     font-family: gameboy;
-//     background: none;
-//     color: white;
-//     border: none;
-//     width: 3rem;
-//     margin: 0.3rem;
-
-//     &:focus {
-//       outline: none;
-//     }
-//   }
-// }
-
+    &:hover {
+      border-color: $orange;
+    }
+  }
+}

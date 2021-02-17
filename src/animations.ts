@@ -27,7 +27,26 @@ export default {
     ],
     {
       duration: 400,
-      easing: "steps(4, end)",
+      easing: "steps(4, end)"
     },
   ],
+  
+  boop: [
+    [
+      {
+        transform: 'scale(1)'
+      },
+      {
+        transform: 'scale(1.3)'
+      },
+      {
+        transform: 'scale(1)'
+      }
+    ],
+
+    {
+      duration: 100,
+      easing: "steps(3, end)",
+    }
+  ]
 };

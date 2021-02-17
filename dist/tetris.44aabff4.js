@@ -2734,9 +2734,8 @@ function () {
         var _this = _super.call(this) || this;
 
         _this.render = function () {
-          return self.getAllLocalHighScores().filter(function (highScore, index) {
-            return index < _this.state.limit;
-          }).map(function (highScore, index) {
+          return self.getAllLocalHighScores() // .filter((highScore, index) => index < this )
+          .map(function (highScore, index) {
             return jsx_runtime_1.jsxs("tr", __assign({
               class: highScore.id === newScoreId ? "current" : null
             }, {
@@ -2747,8 +2746,7 @@ function () {
               }), void 0), jsx_runtime_1.jsx("td", __assign({
                 class: "name"
               }, {
-                children: highScore.id === newScoreId ? // <InputName onNameChange={self.onNameChanged.bind(self)} />
-                'hello' : highScore === null || highScore === void 0 ? void 0 : highScore.name
+                children: highScore.name
               }), void 0), jsx_runtime_1.jsx("td", __assign({
                 class: "score"
               }, {
@@ -2811,13 +2809,19 @@ function () {
     dom_1.render(html, document.querySelector(".highscore-list"));
 
     (_a = document.querySelector(".highscore-list")).animate.apply(_a, __spread(animations_1.default.fadeIn));
-  }
 
-  HighScores.prototype.onNameChanged = function (e) {
-    this.newHighScore.name = e.target.value;
-    this.removeHighScoreById(this.newHighScore.id);
-    this.setScore(this.newHighScore);
-  };
+    setTimeout(function () {
+      var rowHeight = 20;
+      var rank = self.getAllLocalHighScores().findIndex(function (score) {
+        return score.id === newScore.id;
+      });
+      var targetScrollDistance = Math.max(0, (rank - 4) * rowHeight);
+
+      if (targetScrollDistance) {
+        document.querySelector('.highscore-table').style.transform = "translateY(-" + targetScrollDistance + "px)";
+      }
+    }, 1000);
+  }
 
   HighScores.prototype.removeDeprecatedHighScores = function () {
     var newHighScores = this.getAllLocalHighScores().filter(function (score) {
@@ -2913,7 +2917,7 @@ function () {
     this.settledBlocks = [];
     this.queue = [];
     this.blockIndex = 1;
-    this.isGameOver = true;
+    this.isGameOver = false;
     this.clearedLines = 0;
     this.game = game;
     this.gridWidth = width;
@@ -3462,8 +3466,9 @@ function (_super) {
 
           fadeOutAnimation.onfinish = function () {
             self_1.remove();
+            window.localStorage.setItem("lastUsedNickname", _this.state.nickName);
 
-            _this.props.parent.showHighScores();
+            _this.props.parent.showHighScores(_this.state.nickName);
           };
 
           document.removeEventListener("keydown", _this.keydownListener); // render(null ,document.querySelector('.three-letter-input'), null ) //unmount werkt niet goed :(
@@ -3687,12 +3692,12 @@ function () {
     configurable: true
   });
 
-  GameOver.prototype.showHighScores = function () {
+  GameOver.prototype.showHighScores = function (nickName) {
     var _a, _b;
 
     new highScores_1.default({
       score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
-      name: window.localStorage.getItem('lastUsedNickname'),
+      name: nickName,
       date: new Date(),
       v: "0.1"
     });
@@ -6593,7 +6598,7 @@ var Tetris =
 function () {
   function Tetris() {
     this.gameMode = "default";
-    this.setGameState("playing");
+    this.setGameState("splash");
     new keyboardControls_1.default(this);
     new touchControls_1.default(this);
     new gestureControls_1.default(this);

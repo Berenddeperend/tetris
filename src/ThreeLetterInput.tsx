@@ -153,7 +153,8 @@ export default class ThreeLetterInput extends Component<
         
         fadeOutAnimation.onfinish = () => {
           self.remove();
-          this.props.parent.showHighScores();
+          window.localStorage.setItem("lastUsedNickname", this.state.nickName);
+          this.props.parent.showHighScores(this.state.nickName);
         }
 
         document.removeEventListener("keydown", this.keydownListener);

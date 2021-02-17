@@ -21,7 +21,7 @@ export default class Stage {
   settledBlocks: Block[] = [];
   queue: Block[] = [];
   blockIndex: number = 1;
-  isGameOver: boolean = true;
+  isGameOver: boolean = false;
   tickInterval: number;
   clearedLines: number = 0;
 

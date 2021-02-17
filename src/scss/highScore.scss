@@ -16,6 +16,7 @@
 .highscore-table-container {
   max-height: 100px;
   overflow-y: hidden;
+  // transform: translateY(100px)
 }
 
 
@@ -28,7 +29,7 @@
 
 .highscore-table {
   width: 100%;
-  transition: transform 3s ease-out;
+  transition: transform 2s ease-out;
 
   // transform: translateY(-1000px); //todo: calculate and dynamically set this this in js
 

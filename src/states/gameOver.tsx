@@ -56,10 +56,10 @@ export default class GameOver {
     };
   }
 
-  showHighScores() {
+  showHighScores(nickName: string) {
     new HighScores({
       score: this.game?.stage?.score,
-      name: window.localStorage.getItem('lastUsedNickname'), //localstorage as store? lol sure
+      name: nickName,
       date: new Date(),
       v: process.env.VERSION
     });

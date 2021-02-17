@@ -34,19 +34,12 @@ export default class HighScores {
       render = () => {
         return self
           .getAllLocalHighScores()
-          .filter((highScore, index) => index < this.state.limit)
+          // .filter((highScore, index) => index < this )
           .map((highScore, index) => {
             return (
               <tr class={highScore.id === newScoreId ? "current" : null}>
                 <td class="rank">{index + 1}</td>
-                <td class="name">
-                  {highScore.id === newScoreId ? (
-                    // <InputName onNameChange={self.onNameChanged.bind(self)} />
-                    'hello'
-                  ) : (
-                    highScore?.name
-                  )}
-                </td>
+                <td class="name">{highScore.name}</td>
                 <td class="score">{highScore.score}</td>
               </tr>
             );
@@ -86,12 +79,18 @@ export default class HighScores {
 
     render(html, document.querySelector(".highscore-list"));
     document.querySelector(".highscore-list").animate(...animations.fadeIn as Animation);
-  }
 
-  onNameChanged(e) {
-    this.newHighScore.name = e.target.value;
-    this.removeHighScoreById(this.newHighScore.id);
-    this.setScore(this.newHighScore);
+    setTimeout(() => {
+      const rowHeight = 20;
+      const rank = self.getAllLocalHighScores().findIndex(score => score.id === newScore.id);
+
+      const targetScrollDistance = Math.max(0, (rank - 4) * rowHeight);
+
+      if(targetScrollDistance)  {
+        (document.querySelector('.highscore-table') as HTMLElement).style.transform = `translateY(-${targetScrollDistance}px)`;
+      }
+
+    }, 1000);
   }
 
   removeDeprecatedHighScores() {

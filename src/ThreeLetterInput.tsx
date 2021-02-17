@@ -1,6 +1,7 @@
 import { Component, render } from "preact";
 import animations, { Animation } from "./animations";
 import { cloneDeep } from "./utils";
+import GameOver from './states/gameOver';
 
 function Increment(props: {
   mode: string;
@@ -48,7 +49,7 @@ function LetterInput(props: {
 let clonedThreeLetterInputState;
 
 export default class ThreeLetterInput extends Component<
-  {},
+  { parent: GameOver},
   { nickName: string; activeLetterIndex: number }
 > {
   chars = "abcdefghijklmnopqrstuvwxyz";
@@ -100,7 +101,7 @@ export default class ThreeLetterInput extends Component<
   }
 
   componentWillUnmount = () => {
-    console.log("unmounted that hoe");
+    console.log("unmounted threeletterinput");
   };
 
   keydownListener = (e: KeyboardEvent) => {
@@ -135,7 +136,6 @@ export default class ThreeLetterInput extends Component<
           activeLetterIndex: this.state.activeLetterIndex - 1,
         });
       case "ArrowRight":
-        // if (this.state.activeLetterIndex === this.nicknameLength - 1) return;
         if (this.state.activeLetterIndex === this.nicknameLength) return;
         return this.setState({
           activeLetterIndex: this.state.activeLetterIndex + 1,
@@ -153,6 +153,7 @@ export default class ThreeLetterInput extends Component<
         
         fadeOutAnimation.onfinish = () => {
           self.remove();
+          this.props.parent.showHighScores();
         }
 
         document.removeEventListener("keydown", this.keydownListener);
@@ -163,12 +164,14 @@ export default class ThreeLetterInput extends Component<
   };
 
   componentDidMount = () => {
-    window.localStorage.setItem("lastUsedNickname", "aaa");
     document.addEventListener("keydown", this.keydownListener);
 
-    this.setState({
-      nickName: window.localStorage.getItem("lastUsedNickname"),
-    });
+    const localStorageNickname = window.localStorage.getItem("lastUsedNickname");
+    if( localStorageNickname ) {
+      this.setState({
+        nickName: localStorageNickname
+      });
+    }
   };
 
   render() {

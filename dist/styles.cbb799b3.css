@@ -106,6 +106,7 @@ html {
   font-size: 62.5%;
   color: white;
   touch-action: none;
+  background: radial-gradient(ellipse at bottom, #41177f, #2b0f54);
 }
 
 a {
@@ -160,21 +161,21 @@ body:after {
 
 .three-letter-input-container {
   z-index: 5 !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .three-letter-input {
-  width: 380px;
-  height: 200px;
-  border: 1px solid #ff8142;
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
   z-index: 3;
-  background: #2b0f54;
-  box-shadow: 0 0 0.5rem #ff8142;
-  animation: slide-fade-in 0.4s;
+  animation: fade-in 0.4s;
 }
 .three-letter-input .title {
   margin-top: 30px;

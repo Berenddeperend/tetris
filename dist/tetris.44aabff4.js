@@ -2913,7 +2913,7 @@ function () {
     this.settledBlocks = [];
     this.queue = [];
     this.blockIndex = 1;
-    this.isGameOver = false;
+    this.isGameOver = true;
     this.clearedLines = 0;
     this.game = game;
     this.gridWidth = width;
@@ -3410,7 +3410,7 @@ function (_super) {
     _this.nicknameLength = 3;
 
     _this.componentWillUnmount = function () {
-      console.log("unmounted that hoe");
+      console.log("unmounted threeletterinput");
     };
 
     _this.keydownListener = function (e) {
@@ -3446,7 +3446,6 @@ function (_super) {
           });
 
         case "ArrowRight":
-          // if (this.state.activeLetterIndex === this.nicknameLength - 1) return;
           if (_this.state.activeLetterIndex === _this.nicknameLength) return;
           return _this.setState({
             activeLetterIndex: _this.state.activeLetterIndex + 1
@@ -3463,6 +3462,8 @@ function (_super) {
 
           fadeOutAnimation.onfinish = function () {
             self_1.remove();
+
+            _this.props.parent.showHighScores();
           };
 
           document.removeEventListener("keydown", _this.keydownListener); // render(null ,document.querySelector('.three-letter-input'), null ) //unmount werkt niet goed :(
@@ -3472,12 +3473,14 @@ function (_super) {
     };
 
     _this.componentDidMount = function () {
-      window.localStorage.setItem("lastUsedNickname", "aaa");
       document.addEventListener("keydown", _this.keydownListener);
+      var localStorageNickname = window.localStorage.getItem("lastUsedNickname");
 
-      _this.setState({
-        nickName: window.localStorage.getItem("lastUsedNickname")
-      });
+      if (localStorageNickname) {
+        _this.setState({
+          nickName: localStorageNickname
+        });
+      }
     };
 
     _this.state = {
@@ -3645,7 +3648,8 @@ function () {
         class: "highscore-list"
       }, void 0)]
     }, void 0);
-    preact_1.render(html, document.querySelector(".stage"));
+    preact_1.render(html, document.querySelector(".stage")); // render(<ThreeLetterInput />, document.querySelector('.three-letter-input-container'));
+
     var gameOverContainer = document.querySelector(".game-over-container");
     gameOverContainer.animate.apply(gameOverContainer, __spread(animations_1.default.fadeIn));
     window.setTimeout(function () {
@@ -3653,19 +3657,11 @@ function () {
 
       animation.onfinish = function () {
         gameOverContainer.remove();
-        preact_1.render(jsx_runtime_1.jsx(ThreeLetterInput_1.default, {}, void 0), document.querySelector('.three-letter-input-container'));
-        setTimeout(function () {
-          var _a, _b;
-
-          new highScores_1.default({
-            score: (_b = (_a = _this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
-            name: window.localStorage.getItem('lastUsedNickname'),
-            date: new Date(),
-            v: "0.1"
-          });
-        }, 2000);
+        preact_1.render(jsx_runtime_1.jsx(ThreeLetterInput_1.default, {
+          parent: _this
+        }, void 0), document.querySelector('.three-letter-input-container'));
       };
-    }, 200); // window.setTimeout(() => {
+    }, 2000); // window.setTimeout(() => {
     //   // prevent user from closing gameover screen instantly while still trying to rotate
     //   window.addEventListener("keydown", onKeyDown);
     // }, 500);
@@ -3690,6 +3686,18 @@ function () {
     enumerable: false,
     configurable: true
   });
+
+  GameOver.prototype.showHighScores = function () {
+    var _a, _b;
+
+    new highScores_1.default({
+      score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
+      name: window.localStorage.getItem('lastUsedNickname'),
+      date: new Date(),
+      v: "0.1"
+    });
+  };
+
   return GameOver;
 }();
 
@@ -6585,7 +6593,7 @@ var Tetris =
 function () {
   function Tetris() {
     this.gameMode = "default";
-    this.setGameState("splash");
+    this.setGameState("playing");
     new keyboardControls_1.default(this);
     new touchControls_1.default(this);
     new gestureControls_1.default(this);

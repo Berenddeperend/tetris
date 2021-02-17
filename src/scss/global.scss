@@ -4,6 +4,8 @@ html {
   font-size: 62.5%;
   color: white;
   touch-action: none;
+
+  background: radial-gradient(ellipse at bottom, lighten($black, 10%), $black);
 }
 
 a {

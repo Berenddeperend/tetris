@@ -25,27 +25,18 @@ export default class GameOver {
 
     render(html, document.querySelector(".stage"));
 
-    const gameOverContainer = document.querySelector(".game-over-container");
+    // render(<ThreeLetterInput />, document.querySelector('.three-letter-input-container'));
 
+    const gameOverContainer = document.querySelector(".game-over-container");
     gameOverContainer.animate(...animations.fadeIn as Animation);
 
     window.setTimeout(() => {
       const animation = gameOverContainer.animate(...animations.fadeOut as Animation);
       animation.onfinish = () => {
         gameOverContainer.remove();
-        render(<ThreeLetterInput />, document.querySelector('.three-letter-input-container'));
-
-        setTimeout(() => {
-          new HighScores({
-            score: this.game?.stage?.score,
-            name: window.localStorage.getItem('lastUsedNickname'), //localstorage as store? lol sure
-            date: new Date(),
-            v: process.env.VERSION
-          });
-          
-        }, 2000);
+        render(<ThreeLetterInput parent={this} />, document.querySelector('.three-letter-input-container'));
       };
-    }, 200);
+    }, 2000);
 
 
     // window.setTimeout(() => {
@@ -63,5 +54,14 @@ export default class GameOver {
         this.game.setGameState("playing");
       },
     };
+  }
+
+  showHighScores() {
+    new HighScores({
+      score: this.game?.stage?.score,
+      name: window.localStorage.getItem('lastUsedNickname'), //localstorage as store? lol sure
+      date: new Date(),
+      v: process.env.VERSION
+    });
   }
 }

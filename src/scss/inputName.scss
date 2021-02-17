@@ -1,21 +1,23 @@
 .three-letter-input-container {
   z-index: 5 !important;
-  // animation: fadein 1s steps(4, start);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .three-letter-input {
-  width: 380px;
-  height: 200px;
-  border: 1px solid $orange;
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
   z-index: 3;
-  background: $black;
-  box-shadow: $box-shadow;
-  animation: slide-fade-in 0.4s;// steps(4, start);
+  // background: $black;
+  // box-shadow: $box-shadow;
+  // animation: slide-fade-in 0.4s;// steps(4, start);
+  animation: fade-in 0.4s;// steps(4, start);
 
   .title {
     margin-top: 30px;

@@ -9,6 +9,7 @@ import { html, render, PreactNode } from "./dom";
 
 export default class Stage {
   game: Tetris;
+  pause: Pause;
 
   gridWidth: number;
   gridHeight: number;
@@ -124,7 +125,7 @@ export default class Stage {
           Pause.removePause()
         } else {
           this.isPaused = true;
-          new Pause();
+          this.pause = new Pause();
         }
       }
     };
@@ -308,6 +309,7 @@ export default class Stage {
           >${new Array(this.gridHeight + 1).fill("").map((d, i) => {
             return html`
               <line
+                shape-rendering="crispEdges"
                 x1="0"
                 x2="${this.gridWidth * this.blockSize}"
                 y1="${i * this.blockSize}"
@@ -322,6 +324,7 @@ export default class Stage {
             return html`
               <line
                 y1="0"
+                shape-rendering="crispEdges" 
                 y2="${this.gridHeight * this.blockSize}"
                 x1="${i * this.blockSize}"
                 x2="${i * this.blockSize}"

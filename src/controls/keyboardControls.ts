@@ -29,7 +29,7 @@ export default class KeyboardControls {
         }
       }
 
-      else if (game.gameState === "gameOver") {
+      else if (game.gameState === "highScore") {
         switch (e.code) {
           case "Space":
             // return game.gameOver.controls.retry();

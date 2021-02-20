@@ -5,7 +5,7 @@ import KeyboardControls from "./controls/keyboardControls";
 import TouchControls from "./controls/touchControls";
 import GestureControls from "./controls/gestureControls";
 
-export type GameState = "splash" | "playing" | "gameOver";
+export type GameState = "splash" | "playing" | "gameOver" | "highScore";
 export type GameMode = "default";
 
 export default class Tetris {

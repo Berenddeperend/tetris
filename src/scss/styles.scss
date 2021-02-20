@@ -215,14 +215,7 @@ svg {
     position: absolute;
     top: -0.7rem;
     left: 0.5rem;
-    background: $black;
-    // color: gray
-    padding: 0 0.4rem 0 0.8rem;
-  }
-}
-
-.queue svg {
-  g {
-    // transform: scale(0.75);
+    background: mix(lighten($black, 10%), $black);
+    padding: 0 0.1rem 0 0.5rem;
   }
 }

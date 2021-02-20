@@ -50,10 +50,10 @@ export default class HighScores {
     const Placeholders = () => {
       return (
         <>
-          {new Array(15).fill("").map(() => {
+          {new Array(20).fill("").map((d, i) => {
             return (
               <tr class="placeholder">
-                <td class="rank">-</td>
+                <td class="rank">{i + this.getAllLocalHighScores().length + 1}</td>
                 <td class="name">-</td>
                 <td class="score">-</td>
               </tr>

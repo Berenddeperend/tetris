@@ -50,7 +50,7 @@ export default class HighScores {
     const Placeholders = () => {
       return (
         <>
-          {new Array(4).fill("").map(() => {
+          {new Array(15).fill("").map(() => {
             return (
               <tr class="placeholder">
                 <td class="rank">-</td>
@@ -84,13 +84,13 @@ export default class HighScores {
       const rowHeight = 20;
       const rank = self.getAllLocalHighScores().findIndex(score => score.id === newScore.id);
 
-      const targetScrollDistance = Math.max(0, (rank - 4) * rowHeight);
+      const targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
       if(targetScrollDistance)  {
         (document.querySelector('.highscore-table') as HTMLElement).style.transform = `translateY(-${targetScrollDistance}px)`;
       }
 
-    }, 1000);
+    }, 3000);
   }
 
   removeDeprecatedHighScores() {

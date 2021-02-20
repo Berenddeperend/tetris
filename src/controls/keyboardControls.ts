@@ -16,7 +16,7 @@ export default class KeyboardControls {
             return game.stage.controls.instaFall();
           case "Space":
             return game.stage.controls.rotate();
-          case "KeyP": {}
+          case "KeyP": {} //deliberate fallthrough
           case "Escape": {
             return game.stage.controls.pause();
           }
@@ -29,10 +29,11 @@ export default class KeyboardControls {
         }
       }
 
-      else if (game.gameState === "highScore") {
+      else if (game.gameState === "highScore") { 
         switch (e.code) {
+          case "Enter": {}
           case "Space":
-            // return game.gameOver.controls.retry();
+            return game.gameOver.controls.retry();
         }
       }
     };

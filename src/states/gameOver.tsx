@@ -49,7 +49,7 @@ export default class GameOver {
     return {
       retry: () => {
         document.querySelector(".stage").remove(); //not sure if this works yet.
-        document.querySelector(".game-over").remove(); //not sure if this works yet.
+        // document.querySelector(".game-over").remove(); //not sure if this works yet.
         document.querySelector(".ui").remove(); //not sure if this works yet.
         this.game.setGameState("playing");
       },
@@ -57,11 +57,12 @@ export default class GameOver {
   }
 
   showHighScores(nickName: string) {
+    this.game.setGameState('highScore');
     new HighScores({
       score: this.game?.stage?.score,
       name: nickName,
       date: new Date(),
       v: process.env.VERSION
-    });
+    }, this.game);
   }
 }

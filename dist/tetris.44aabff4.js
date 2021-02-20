@@ -2711,7 +2711,7 @@ var animations_1 = __importDefault(require("./animations"));
 var HighScores =
 /** @class */
 function () {
-  function HighScores(newScore) {
+  function HighScores(newScore, game) {
     var _a;
 
     var _this = this;
@@ -2720,6 +2720,7 @@ function () {
     this.newHighScore = newScore;
     var self = this; //blegh
 
+    this.game = game;
     var newScoreId = this.getAllLocalHighScores().length + 1;
     this.newHighScore.id = newScoreId;
     this.setScore(__assign(__assign({}, newScore), {
@@ -2819,10 +2820,10 @@ function () {
       });
       var targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
-      if (targetScrollDistance) {
+      if (_this.game.gameState === 'gameOver' && targetScrollDistance) {
         document.querySelector('.highscore-table').style.transform = "translateY(-" + targetScrollDistance + "px)";
       }
-    }, 3000);
+    }, 2000);
   }
 
   HighScores.prototype.removeDeprecatedHighScores = function () {
@@ -3224,7 +3225,7 @@ function () {
     var _a;
 
     this.d3Stage = d3_selection_1.selectAll("body").append("div").attr("class", "stage");
-    this.d3Stage.append("svg").attr("style", "width: " + this.gridWidth * this.blockSize / 10 + "rem; height: " + this.gridHeight * this.blockSize / 10 + "rem");
+    this.d3Stage.append("svg").attr("style", "width: " + this.gridWidth * this.blockSize / 10 + "rem; height: " + this.gridHeight * this.blockSize / 10 + "rem").append("rect").attr("class", "berend").attr("width", "" + this.gridWidth * this.blockSize).attr("height", "" + this.gridHeight * this.blockSize);
     this.d3UI = d3_selection_1.select("body").append("div").attr("class", "ui");
     var queue = this.d3UI.append("div").attr("class", "queue ui-block");
     queue.append("div").attr("class", "label").text("Next");
@@ -3248,7 +3249,7 @@ function () {
     var grid = dom_1.html(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n      <g\n        class=\"gridlines\"\n        width=\"", "\"\n        height=\"", "\"\n        style=\"stroke-width: ", "rem;\"\n        viewBox=\"0 0 ", " ", "\"\n      >\n        <g class=\"rows\"\n          >", "</g\n        >\n\n        <g class=\"columns\"\n          >", "</g\n        >\n      </g>\n    "], ["\n      <g\n        class=\"gridlines\"\n        width=\"", "\"\n        height=\"", "\"\n        style=\"stroke-width: ", "rem;\"\n        viewBox=\"0 0 ", " ", "\"\n      >\n        <g class=\"rows\"\n          >", "</g\n        >\n\n        <g class=\"columns\"\n          >", "</g\n        >\n      </g>\n    "])), this.gridWidth * this.blockSize, this.gridHeight * this.blockSize, this.gridGutterSize / 10, this.gridWidth * this.blockSize, this.gridHeight * this.blockSize, new Array(this.gridHeight + 1).fill("").map(function (d, i) {
       return dom_1.html(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n              <line\n                shape-rendering=\"crispEdges\"\n                x1=\"0\"\n                x2=\"", "\"\n                y1=\"", "\"\n                y2=\"", "\"\n              ></line>\n            "], ["\n              <line\n                shape-rendering=\"crispEdges\"\n                x1=\"0\"\n                x2=\"", "\"\n                y1=\"", "\"\n                y2=\"", "\"\n              ></line>\n            "])), _this.gridWidth * _this.blockSize, i * _this.blockSize, i * _this.blockSize);
     }), new Array(this.gridWidth + 1).fill("").map(function (d, i) {
-      return dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n              <line\n                y1=\"0\"\n                shape-rendering=\"crispEdges\" \n                y2=\"", "\"\n                x1=\"", "\"\n                x2=\"", "\"\n              ></line>\n            "], ["\n              <line\n                y1=\"0\"\n                shape-rendering=\"crispEdges\" \n                y2=\"", "\"\n                x1=\"", "\"\n                x2=\"", "\"\n              ></line>\n            "])), _this.gridHeight * _this.blockSize, i * _this.blockSize, i * _this.blockSize);
+      return dom_1.html(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n              <line\n                y1=\"0\"\n                shape-rendering=\"crispEdges\"\n                y2=\"", "\"\n                x1=\"", "\"\n                x2=\"", "\"\n              ></line>\n            "], ["\n              <line\n                y1=\"0\"\n                shape-rendering=\"crispEdges\"\n                y2=\"", "\"\n                x1=\"", "\"\n                x2=\"", "\"\n              ></line>\n            "])), _this.gridHeight * _this.blockSize, i * _this.blockSize, i * _this.blockSize);
     }));
     dom_1.render(grid, document.querySelector(".stage svg"));
   };
@@ -3761,8 +3762,7 @@ function () {
       return {
         retry: function retry() {
           document.querySelector(".stage").remove(); //not sure if this works yet.
-
-          document.querySelector(".game-over").remove(); //not sure if this works yet.
+          // document.querySelector(".game-over").remove(); //not sure if this works yet.
 
           document.querySelector(".ui").remove(); //not sure if this works yet.
 
@@ -3777,12 +3777,13 @@ function () {
   GameOver.prototype.showHighScores = function (nickName) {
     var _a, _b;
 
+    this.game.setGameState('highScore');
     new highScores_1.default({
       score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
       name: nickName,
       date: new Date(),
       v: "0.2"
-    });
+    }, this.game);
   };
 
   return GameOver;
@@ -3820,6 +3821,7 @@ function () {
 
           case "KeyP":
             {}
+          //deliberate fallthrough
 
           case "Escape":
             {
@@ -3833,8 +3835,11 @@ function () {
         }
       } else if (game.gameState === "highScore") {
         switch (e.code) {
-          case "Space": // return game.gameOver.controls.retry();
+          case "Enter":
+            {}
 
+          case "Space":
+            return game.gameOver.controls.retry();
         }
       }
     };
@@ -6766,7 +6771,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62344" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55514" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

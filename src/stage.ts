@@ -3,7 +3,7 @@ import { select, selectAll } from "d3-selection";
 import { uniq } from "./utils";
 import Tetris from "./tetris";
 import HighScores from "./highScores";
-import Pause from './states/pause';
+import Pause from "./states/pause";
 
 import { html, render, PreactNode } from "./dom";
 
@@ -84,26 +84,26 @@ export default class Stage {
   get controls() {
     return {
       left: () => {
-        if(this.isPaused) return;
+        if (this.isPaused) return;
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
           this.activeBlock.moveX(-1);
           return "left";
         }
       },
       right: () => {
-        if(this.isPaused) return;
+        if (this.isPaused) return;
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
           this.activeBlock.moveX(1);
           return "right";
         }
       },
       down: () => {
-        if(this.isPaused) return;
+        if (this.isPaused) return;
         this.tick();
         return "down";
       },
       instaFall: () => {
-        if(this.isPaused) return;
+        if (this.isPaused) return;
         while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
           this.activeBlock.moveDown();
         }
@@ -115,19 +115,19 @@ export default class Stage {
         return "instaFall";
       },
       rotate: () => {
-        if(this.isPaused) return;
+        if (this.isPaused) return;
         this.activeBlock.rotate();
         return "rotate";
       },
       pause: () => {
-        if(this.isPaused) {
+        if (this.isPaused) {
           this.isPaused = false;
-          Pause.removePause()
+          Pause.removePause();
         } else {
           this.isPaused = true;
           this.pause = new Pause();
         }
-      }
+      },
     };
   }
 
@@ -138,7 +138,7 @@ export default class Stage {
       return;
     }
 
-    if(this.isPaused) return;
+    if (this.isPaused) return;
 
     if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
       this.finishBlock(this.activeBlock);
@@ -261,7 +261,19 @@ export default class Stage {
 
   initUI() {
     this.d3Stage = selectAll("body").append("div").attr("class", "stage");
-    this.d3Stage.append("svg").attr("style", `width: ${this.gridWidth * this.blockSize / 10}rem; height: ${this.gridHeight * this.blockSize / 10}rem`);
+    this.d3Stage
+      .append("svg")
+      .attr(
+        "style",
+        `width: ${(this.gridWidth * this.blockSize) / 10}rem; height: ${
+          (this.gridHeight * this.blockSize) / 10
+        }rem`
+      )
+      .append("rect")
+      .attr("class", "berend")
+      .attr("width", `${(this.gridWidth * this.blockSize)}`)
+      .attr("height", `${(this.gridHeight * this.blockSize)}`)
+
 
     this.d3UI = select("body").append("div").attr("class", "ui");
 
@@ -324,7 +336,7 @@ export default class Stage {
             return html`
               <line
                 y1="0"
-                shape-rendering="crispEdges" 
+                shape-rendering="crispEdges"
                 y2="${this.gridHeight * this.blockSize}"
                 x1="${i * this.blockSize}"
                 x2="${i * this.blockSize}"

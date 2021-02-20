@@ -3,6 +3,7 @@ import { html, render, PreactNode } from "./dom";
 import { Component, FunctionComponent } from "preact";
 import animations, { Animation } from "./animations";
 import { times } from "./utils";
+import Tetris from "./tetris";
 
 export type HighScore = {
   name: string;
@@ -15,10 +16,12 @@ export type HighScore = {
 export default class HighScores {
   highScores: HighScore[] = this.getAllLocalHighScores();
   newHighScore: HighScore;
+  game: Tetris;
 
-  constructor(newScore: HighScore) {
+  constructor(newScore: HighScore, game: Tetris) {
     this.newHighScore = newScore;
     const self = this; //blegh
+    this.game = game;
     const newScoreId = this.getAllLocalHighScores().length + 1;
     this.newHighScore.id = newScoreId;
     this.setScore({ ...newScore, id: newScoreId });
@@ -86,13 +89,12 @@ export default class HighScores {
 
       const targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
-      if(targetScrollDistance)  {
+      if(this.game.gameState === 'gameOver'  && targetScrollDistance) {
         (document.querySelector('.highscore-table') as HTMLElement).style.transform = `translateY(-${targetScrollDistance}px)`;
       }
 
-    }, 3000);
+    }, 2000);
   }
-
   removeDeprecatedHighScores() {
     const newHighScores = this.getAllLocalHighScores().filter(
       (score) => score.hasOwnProperty('v')

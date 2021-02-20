@@ -7,9 +7,7 @@ Bugs:
 - SVG 'next' viewbox
 
 Features:
-
 - input name niet in modal maar in stage. gameover -> nameinput -> highscore is swipeleft zoals die video
-
 - Reset tick after last-minute rotate
 - UI
   - Responsive position

@@ -19,22 +19,6 @@ $box-shadow: 0 0 0.5rem $orange;
   --breakpoint: 500px;
 }
 
-
-
-@keyframes wiggle {
-  $intensity: 0.3rem;
-  0% {
-    transform: translateY($intensity);
-  }
-  50% {
-    // transform: translateY($intensity * -1);
-    transform: translateY($intensity * -1) translateX($intensity * -0.5);
-  }
-  100% {
-    transform: translateY($intensity);
-  }
-}
-
 @font-face {
   font-family: "pixel";
   src: url("./../fonts/04B_30__.TTF") format("truetype");

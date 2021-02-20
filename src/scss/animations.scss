@@ -1,3 +1,17 @@
+
+@keyframes wiggle {
+  $intensity: 0.3rem;
+  0% {
+    transform: translateY($intensity);
+  }
+  50% {
+    transform: translateY($intensity * -1) translateX($intensity * -0.5);
+  }
+  100% {
+    transform: translateY($intensity);
+  }
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

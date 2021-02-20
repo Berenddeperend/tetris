@@ -3,6 +3,7 @@ import { select, selectAll } from "d3-selection";
 import { uniq } from "./utils";
 import Tetris from "./tetris";
 import HighScores from "./highScores";
+import Pause from './states/pause';
 
 import { html, render, PreactNode } from "./dom";
 
@@ -22,6 +23,7 @@ export default class Stage {
   queue: Block[] = [];
   blockIndex: number = 1;
   isGameOver: boolean = false;
+  isPaused: boolean = false;
   tickInterval: number;
   clearedLines: number = 0;
 
@@ -81,22 +83,26 @@ export default class Stage {
   get controls() {
     return {
       left: () => {
+        if(this.isPaused) return;
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
           this.activeBlock.moveX(-1);
           return "left";
         }
       },
       right: () => {
+        if(this.isPaused) return;
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
           this.activeBlock.moveX(1);
           return "right";
         }
       },
       down: () => {
+        if(this.isPaused) return;
         this.tick();
         return "down";
       },
       instaFall: () => {
+        if(this.isPaused) return;
         while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
           this.activeBlock.moveDown();
         }
@@ -108,9 +114,19 @@ export default class Stage {
         return "instaFall";
       },
       rotate: () => {
+        if(this.isPaused) return;
         this.activeBlock.rotate();
         return "rotate";
       },
+      pause: () => {
+        if(this.isPaused) {
+          this.isPaused = false;
+          Pause.removePause()
+        } else {
+          this.isPaused = true;
+          new Pause();
+        }
+      }
     };
   }
 
@@ -120,6 +136,8 @@ export default class Stage {
       this.game.setGameState("gameOver");
       return;
     }
+
+    if(this.isPaused) return;
 
     if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
       this.finishBlock(this.activeBlock);

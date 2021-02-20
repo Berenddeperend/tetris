@@ -5,6 +5,7 @@ export default class KeyboardControls {
   constructor(game: Tetris) {
     this.onKeyDown = (e: any) => {
       if (game.gameState === "playing") {
+        console.log(e.code)
         switch (e.code) {
           case "ArrowRight":
             return game.stage.controls.right();
@@ -16,6 +17,9 @@ export default class KeyboardControls {
             return game.stage.controls.instaFall();
           case "Space":
             return game.stage.controls.rotate();
+          case "KeyP": {
+            return game.stage.controls.pause();
+          }
         }
       }
       else if (game.gameState === "splash") {

@@ -28,34 +28,28 @@
   position: relative;
   transition: opacity 2s;
   order: 2;
-
-  // width: var(--stage-width);
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
+  border: 1px solid $orange;
+  width: var(--stage-width);
+  height: var(--stage-height);
+  overflow: hidden;
+  // filter: drop-shadow(0 0 0.2rem $orange);
+  box-shadow: $box-shadow;
 
   @media(min-width: $breakpoint) { 
     order: 1;
   }
 
-  // &:after {
-  //   content: "";
-  //   position: absolute;
-  //   // width: 100%;
-  //   // height: var(--stage-height); //why cant i do 100%?
-  //   // top: 0;
-  //   // left: 0;
-
-  //   width: calc(100% - 1px);
-  //   height: calc(var(--stage-height) - 1px); //why cant i do 100%?
-  //   top: 1px;
-  //   left: 0;
-
-
-  //   pointer-events: none;
-  //   opacity: 0;
-  //   background: $black;
-  // }
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: var(--stage-height); //why cant i do 100%?
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: $black;
+  }
   
   
   &.is-game-over {
@@ -65,6 +59,11 @@
       opacity: 0.7;
     }
   }
+}
+
+.stage-svg {
+  position: relative;
+  // top: 1px;
 }
 
 .game-over-container {

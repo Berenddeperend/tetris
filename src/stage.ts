@@ -263,16 +263,17 @@ export default class Stage {
     this.d3Stage = selectAll("body").append("div").attr("class", "stage");
     this.d3Stage
       .append("svg")
+      .attr('class', 'stage-svg')
       .attr(
         "style",
         `width: ${(this.gridWidth * this.blockSize) / 10}rem; height: ${
           (this.gridHeight * this.blockSize) / 10
         }rem`
       )
-      .append("rect")
-      .attr("class", "berend")
-      .attr("width", `${(this.gridWidth * this.blockSize)}`)
-      .attr("height", `${(this.gridHeight * this.blockSize)}`)
+      // .append("rect")
+      // .attr("class", "berend")
+      // .attr("width", `${(this.gridWidth * this.blockSize)}`)
+      // .attr("height", `${(this.gridHeight * this.blockSize)}`)
 
 
     this.d3UI = select("body").append("div").attr("class", "ui");
@@ -318,28 +319,28 @@ export default class Stage {
         this.blockSize}"
       >
         <g class="rows"
-          >${new Array(this.gridHeight + 1).fill("").map((d, i) => {
+          >${new Array(this.gridHeight - 1).fill("").map((d, i) => {
             return html`
               <line
                 shape-rendering="crispEdges"
                 x1="0"
                 x2="${this.gridWidth * this.blockSize}"
-                y1="${i * this.blockSize}"
-                y2="${i * this.blockSize}"
+                y1="${(i + 1) * this.blockSize}"
+                y2="${(i + 1) * this.blockSize}"
               ></line>
             `;
           })}</g
         >
 
         <g class="columns"
-          >${new Array(this.gridWidth + 1).fill("").map((d, i) => {
+          >${new Array(this.gridWidth - 1).fill("").map((d, i) => {
             return html`
               <line
                 y1="0"
                 shape-rendering="crispEdges"
                 y2="${this.gridHeight * this.blockSize}"
-                x1="${i * this.blockSize}"
-                x2="${i * this.blockSize}"
+                x1="${(i + 1) * this.blockSize}"
+                x2="${(i + 1) * this.blockSize}"
               ></line>
             `;
           })}</g

@@ -308,11 +308,27 @@ body:after {
   position: relative;
   transition: opacity 2s;
   order: 2;
+  border: 1px solid #ff8142;
+  width: var(--stage-width);
+  height: var(--stage-height);
+  overflow: hidden;
+  box-shadow: 0 0 0.2rem #ff8142;
 }
 @media (min-width: 500px) {
   .stage {
     order: 1;
   }
+}
+.stage:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: var(--stage-height);
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: #2b0f54;
 }
 .stage.is-game-over {
   transition: opacity 2s;
@@ -320,6 +336,10 @@ body:after {
 .stage.is-game-over::after {
   animation: fade-in 0.4s steps(4, end);
   opacity: 0.7;
+}
+
+.stage-svg {
+  position: relative;
 }
 
 .game-over-container {

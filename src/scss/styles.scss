@@ -33,7 +33,7 @@
   height: var(--stage-height);
   overflow: hidden;
   // filter: drop-shadow(0 0 0.2rem $orange);
-  box-shadow: $box-shadow;
+  // box-shadow: $box-shadow;
 
   @media(min-width: $breakpoint) { 
     order: 1;
@@ -157,13 +157,14 @@
 
 svg {
   overflow: visible;
-  filter: drop-shadow(0 0 0.2rem $orange);
+  // filter: drop-shadow(0 0 0.5rem rgba($orange, 0.4));
 }
 
 .gridlines {
   z-index: 2;
   user-select: none;
   opacity: 0.3;
+  // filter: drop-shadow(0 0 0.5rem $orange); 
 
   .rows,
   .columns {

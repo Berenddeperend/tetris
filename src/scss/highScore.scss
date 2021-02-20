@@ -16,13 +16,31 @@
   overflow-y: hidden;
 }
 
-
-.highscore-title {
+.highscore-title-container {
   text-align: center;
   background: $red;
+  overflow: hidden;
   margin-top: 0;
-  padding: 0.2em 0;
   margin-bottom: 0.5em;
+
+}
+
+.highscore-title {
+  margin: 0;
+  padding: 0.2em 2.5rem;
+  position: relative;
+  white-space: nowrap;
+  @include text-shadow(0.2rem, false);
+  
+
+  
+
+
+  &.scroll {
+    // animation: marquee 5s linear infinite;
+    // transition: transform 5s linear;
+    // transform: translateX(-560px);
+  }
 }
 
 .highscore-table {

@@ -22,7 +22,7 @@
   .title {
     margin-top: 30px;
     margin-bottom: 0;
-    @include text-shadow(0.1em, true);
+    @include text-shadow(0.1em, false);
   }
 
   .letter-input {
@@ -38,7 +38,7 @@
     
     .increment,
     .decrement {
-      color: grey;
+      color: #ab8f82; //colorpicked without much thought
       font-size: 0.6em;
       margin: 0.8em 0;
       cursor: pointer;

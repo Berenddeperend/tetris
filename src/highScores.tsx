@@ -68,7 +68,11 @@ export default class HighScores {
 
     const html = (
       <>
-        <h3 class="highscore-title">Highscores</h3>
+        <div class="highscore-title-container">
+          <h3 className="highscore-title">
+          Highscores
+          </h3>
+        </div>
         <div class="highscore-table-container">
           <table class="highscore-table">
             <tbody>
@@ -84,12 +88,13 @@ export default class HighScores {
     document.querySelector(".highscore-list").animate(...animations.fadeIn as Animation);
 
     setTimeout(() => {
+      document.querySelector('.highscore-title').classList.add('scroll')
+
       const rowHeight = 20;
       const rank = self.getAllLocalHighScores().findIndex(score => score.id === newScore.id);
-
       const targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
-      if(this.game.gameState === 'gameOver'  && targetScrollDistance) {
+      if(this.game.gameState === 'highScore' && targetScrollDistance) {
         (document.querySelector('.highscore-table') as HTMLElement).style.transform = `translateY(-${targetScrollDistance}px)`;
       }
 

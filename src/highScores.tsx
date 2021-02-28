@@ -117,6 +117,18 @@ export default class HighScores {
   }
 
   setScore(highScore: HighScore) {
+    console.log(process.env.API_URL)
+    fetch(`${process.env.API_URL}/score`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(highScore)
+    }).then(response => {
+      console.log(response)
+    })
+
+
     const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
     const newScores = prevScores
       ? [...(prevScores as HighScore[]), highScore].sort(

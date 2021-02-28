@@ -284,6 +284,29 @@ body:after {
   display: inline-block;
 }
 
+@keyframes rolling-text {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+.rolling-text-container {
+  margin-top: 20px;
+  background: #ff4f69;
+  height: 30px;
+  overflow: hidden;
+}
+.rolling-text-container .rolling-text-item {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 1s;
+  text-shadow: 2px 2px #ab1f65, -1px -1px #ff4f69;
+}
+
 .block.black {
   fill: #2b0f54;
 }

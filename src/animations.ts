@@ -48,5 +48,10 @@ export default {
       duration: 100,
       easing: "steps(3, end)",
     }
-  ]
+  ],
+  // rollingText: [
+  //   [
+      
+  //   ]
+  // ]
 };

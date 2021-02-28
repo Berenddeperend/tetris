@@ -1,7 +1,7 @@
 import Tetris from "../tetris";
 // import { html, render, PreactNode } from "../dom";
 import { render } from "preact";
-import { explodeText } from "../utils";
+import { explodeText, rollingText } from "../utils";
 export default class Splash {
   game: Tetris;
 
@@ -19,6 +19,8 @@ export default class Splash {
             ? explodeText("Press space to start")
             : explodeText("Touch here to start")}
         </div>
+
+        {/* {rollingText(['1', '2'])} */}
 
         <div class="social-container">
           <a

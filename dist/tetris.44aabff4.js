@@ -640,9 +640,10 @@ var __spread = this && this.__spread || function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.times = exports.explodeText = exports.cloneDeep = exports.uniq = void 0;
+exports.rollingText = exports.times = exports.explodeText = exports.cloneDeep = exports.uniq = void 0;
 
-var jsx_runtime_1 = require("preact/jsx-runtime");
+var jsx_runtime_1 = require("preact/jsx-runtime"); // import {rollingText, Animation} from './animations'
+
 
 function uniq(arr) {
   return __spread(new Set(arr));
@@ -686,6 +687,49 @@ function times(times, fn) {
 }
 
 exports.times = times;
+
+function rollingText(texts) {
+  var elementHeight = 30;
+  var items = texts.map(function (item) {
+    return jsx_runtime_1.jsx("div", __assign({
+      class: "rolling-text-item"
+    }, {
+      children: item
+    }), void 0);
+  });
+  var i = 0; // Array.from(document.querySelectorAll('.rolling-text-item')).map((item, index, array) => {
+  //   item.animate([
+  //     {transform: 'translateY(0)'},
+  //     {transform: `translateY(-${(array.length - 1) * 100}%)`},
+  //   ], {
+  //     duration: texts.length * 1000,
+  //     fill: 'both',
+  //     iterations: Infinity
+  //   })
+  // }, 400)
+
+  setTimeout(function () {
+    var domItems = Array.from(document.querySelectorAll(".rolling-text-item"));
+    setInterval(function () {
+      i++;
+      if (i > texts.length) i = 0;
+      domItems.map(function (item) {
+        item.style.transform = "translateY(-" + i * elementHeight + "px)"; // (item as HTMLElement).style.transition = "transform 1s";
+      });
+    }, 1000);
+  }, 1000);
+  return jsx_runtime_1.jsxs("div", __assign({
+    className: "rolling-text-container"
+  }, {
+    children: [items, jsx_runtime_1.jsx("div", __assign({
+      class: "rolling-text-item"
+    }, {
+      children: texts[0]
+    }), void 0), ";"]
+  }), void 0);
+}
+
+exports.rollingText = rollingText;
 },{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js"}],"src/block.ts":[function(require,module,exports) {
 "use strict";
 
@@ -2846,6 +2890,16 @@ function () {
   };
 
   HighScores.prototype.setScore = function (highScore) {
+    console.log("http://www.berendswennenhuis.nl");
+    fetch("http://www.berendswennenhuis.nl" + "/score", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(highScore)
+    }).then(function (response) {
+      console.log(response);
+    });
     var prevScores = JSON.parse(window.localStorage.getItem("highScore"));
     var newScores = prevScores ? __spread(prevScores, [highScore]).sort(function (a, b) {
       return b.score - a.score;
@@ -6780,7 +6834,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56160" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53004" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

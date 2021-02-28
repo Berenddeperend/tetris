@@ -1,0 +1,27 @@
+@keyframes rolling-text {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.rolling-text-container {
+  margin-top: 20px;
+  background: $red;
+  height: 30px;
+  overflow: hidden;
+
+  .rolling-text-item {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 1s;
+
+    @include text-shadow(2px);
+
+    // animation: rolling-text 1s alternate infinite linear;
+  }
+}

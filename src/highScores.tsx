@@ -3,50 +3,62 @@ import { html, render, PreactNode } from "./dom";
 import { Component, FunctionComponent } from "preact";
 import animations, { Animation } from "./animations";
 import { times } from "./utils";
-import Tetris from "./tetris";
+import Tetris, { GameMode } from "./tetris";
 
-export type HighScore = {
+export type ClientHighScore = {
+  name: string;
+  score: number;
+  date: Date;
+  v: string;
+  mode: GameMode;
+}
+
+export type ServerHighScore = {
   name: string;
   score: number;
   date: Date;
   id?: number;
   v: string;
-};
-
+  mode: GameMode;
+}
 export default class HighScores {
-  highScores: HighScore[] = this.getAllLocalHighScores();
-  newHighScore: HighScore;
+  highScores = this.getAllHighScores();
+  newClientScore: ClientHighScore;
+  newServerScore: ServerHighScore;
   game: Tetris;
 
-  constructor(newScore: HighScore, game: Tetris) {
-    this.newHighScore = newScore;
+  constructor(newClientScore: ClientHighScore, game: Tetris) {
+    this.newClientScore = newClientScore;
     const self = this; //blegh
     this.game = game;
-    const newScoreId = this.getAllLocalHighScores().length + 1;
-    this.newHighScore.id = newScoreId;
-    this.setScore({ ...newScore, id: newScoreId });
+    const newClientScoreId = null; //todo: remove
+    this.newServerScore = this.setScore(newClientScore);
     this.removeDeprecatedHighScores();
+
+
     class Entries extends Component<{}, { limit: number }> {
       constructor() {
         super();
         this.state = {
-          limit: 5
+          limit: 5,
         };
       }
 
       render = () => {
-        return self
-          .getAllLocalHighScores()
-          // .filter((highScore, index) => index < this )
-          .map((highScore, index) => {
-            return (
-              <tr class={highScore.id === newScoreId ? "current" : null}>
-                <td class="rank">{index + 1}</td>
-                <td class="name">{highScore.name}</td>
-                <td class="score">{highScore.score}</td>
-              </tr>
-            );
-          });
+        return (
+          self
+            .getAllHighScores()
+            // .filter((highScore, index) => index < this )
+            .map((highScore, index) => {
+              return (
+                <tr class={highScore.id === newClientScoreId ? "current" : null}>
+                  <td class="rank">{index + 1}</td>
+                  <td class="name">{highScore.name}</td>
+                  <td class="score">{highScore.score}</td>
+                </tr>
+              );
+            })
+        );
       };
     }
 
@@ -56,7 +68,9 @@ export default class HighScores {
           {new Array(20).fill("").map((d, i) => {
             return (
               <tr class="placeholder">
-                <td class="rank">{i + this.getAllLocalHighScores().length + 1}</td>
+                <td class="rank">
+                  {i + this.getAllHighScores().length + 1}
+                </td>
                 <td class="name">-</td>
                 <td class="score">-</td>
               </tr>
@@ -69,9 +83,7 @@ export default class HighScores {
     const html = (
       <>
         <div class="highscore-title-container">
-          <h3 className="highscore-title">
-          Highscores
-          </h3>
+          <h3 className="highscore-title">Highscores</h3>
         </div>
         <div class="highscore-table-container">
           <table class="highscore-table">
@@ -85,73 +97,83 @@ export default class HighScores {
     );
 
     render(html, document.querySelector(".highscore-list"));
-    document.querySelector(".highscore-list").animate(...animations.fadeIn as Animation);
+    document
+      .querySelector(".highscore-list")
+      .animate(...(animations.fadeIn as Animation));
 
     setTimeout(() => {
-      document.querySelector('.highscore-title').classList.add('scroll')
+      document.querySelector(".highscore-title").classList.add("scroll");
 
       const rowHeight = 20;
-      const rank = self.getAllLocalHighScores().findIndex(score => score.id === newScore.id);
+      const rank = self
+        .getAllHighScores()
+        .findIndex((score) => score.id === newClientScore.id);
       const targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
-      if(this.game.gameState === 'highScore' && targetScrollDistance) {
-        (document.querySelector('.highscore-table') as HTMLElement).style.transform = `translateY(-${targetScrollDistance}px)`;
+      if (this.game.gameState === "highScore" && targetScrollDistance) {
+        (document.querySelector(
+          ".highscore-table"
+        ) as HTMLElement).style.transform = `translateY(-${targetScrollDistance}px)`;
       }
-
     }, 2000);
   }
+
   removeDeprecatedHighScores() {
-    const newHighScores = this.getAllLocalHighScores().filter(
-      (score) => score.hasOwnProperty('v')
+    const newHighScores = this.getAllHighScores().filter((score) =>
+      score.hasOwnProperty("v")
     );
 
     window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   }
 
-  removeHighScoreById(id:number) {
-    const newHighScores = this.getAllLocalHighScores().filter(
+  removeHighScoreById(id: number) {
+    const newHighScores = this.getAllHighScores().filter(
       (score) => score.id !== id
     );
 
     window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   }
 
-  setScore(highScore: HighScore) {
-    console.log(process.env.API_URL)
+  setScore(highScore: ClientHighScore): ServerHighScore {
+    console.log("setscore called");
     fetch(`${process.env.API_URL}/score`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(highScore)
-    }).then(response => {
-      console.log(response)
-    })
+      body: JSON.stringify(highScore),
+    }).then((response) => {
+      console.log("response from post score:", response);
+      return response.json();
+    }).then(score => {
+      return score as ServerHighScore
+    });
 
+    // const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
+    // const newClientScores = prevScores
+    //   ? [...(prevScores as ClientHighScore[]), highScore].sort(
+    //       (a, b) => b.score - a.score
+    //     )
+    //   : [highScore];
 
-    const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
-    const newScores = prevScores
-      ? [...(prevScores as HighScore[]), highScore].sort(
-          (a, b) => b.score - a.score
-        )
-      : [highScore];
+    // window.localStorage.setItem("highScore", JSON.stringify(newClientScores));
 
-    window.localStorage.setItem("highScore", JSON.stringify(newScores));
+    return;
   }
 
-  getAllLocalHighScores(): HighScore[] {
+  getAllHighScores(): ServerHighScore[] {
     const scores = JSON.parse(window.localStorage.getItem("highScore"));
 
     return scores
-      ? (JSON.parse(window.localStorage.getItem("highScore")) as HighScore[])
+      ? (JSON.parse(window.localStorage.getItem("highScore")) as ServerHighScore[])
       : [];
   }
 
-  static getLocalHighScore(): HighScore | null {
+  static getLocalHighScore(): ServerHighScore | null {
     const scores = JSON.parse(window.localStorage.getItem("highScore"));
 
     return scores
-      ? (JSON.parse(window.localStorage.getItem("highScore")) as HighScore[])[0]
+      ? (JSON.parse(window.localStorage.getItem("highScore")) as ServerHighScore[])[0]
       : null;
   }
 }

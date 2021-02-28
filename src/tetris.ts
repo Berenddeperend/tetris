@@ -6,11 +6,11 @@ import TouchControls from "./controls/touchControls";
 import GestureControls from "./controls/gestureControls";
 
 export type GameState = "splash" | "playing" | "gameOver" | "highScore";
-export type GameMode = "default";
+export type GameMode = "singlePlayer";
 
 export default class Tetris {
   gameState: GameState;
-  gameMode: GameMode = "default";
+  gameMode: GameMode = "singlePlayer";
   stage: Stage;
   splash: Splash;
   gameOver: GameOver;

@@ -62,7 +62,8 @@ export default class GameOver {
       score: this.game?.stage?.score,
       name: nickName,
       date: new Date(),
-      v: process.env.VERSION
+      v: process.env.VERSION,
+      mode: 'singlePlayer'
     }, this.game);
   }
 }

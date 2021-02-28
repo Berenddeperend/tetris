@@ -2765,11 +2765,9 @@ function () {
     var self = this; //blegh
 
     this.game = game;
-    var newScoreId = this.getAllLocalHighScores().length + 1;
-    this.newHighScore.id = newScoreId;
-    this.setScore(__assign(__assign({}, newScore), {
-      id: newScoreId
-    }));
+    var newScoreId = null; //todo: remove
+
+    this.setScore(__assign({}, newScore));
     this.removeDeprecatedHighScores();
 
     var Entries =
@@ -2890,7 +2888,7 @@ function () {
   };
 
   HighScores.prototype.setScore = function (highScore) {
-    console.log("http://www.berendswennenhuis.nl");
+    console.log('setscore called');
     fetch("http://www.berendswennenhuis.nl" + "/score", {
       method: 'POST',
       headers: {
@@ -2898,7 +2896,7 @@ function () {
       },
       body: JSON.stringify(highScore)
     }).then(function (response) {
-      console.log(response);
+      console.log('response from post score:', response);
     });
     var prevScores = JSON.parse(window.localStorage.getItem("highScore"));
     var newScores = prevScores ? __spread(prevScores, [highScore]).sort(function (a, b) {
@@ -6834,7 +6832,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53004" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58163" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

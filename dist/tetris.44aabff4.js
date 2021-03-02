@@ -117,14 +117,14 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/possibleForms.ts":[function(require,module,exports) {
+})({"src/possibleBlocks.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.possibleForms = void 0;
-exports.possibleForms = [{
+exports.possibleBlocks = void 0;
+exports.possibleBlocks = [{
   id: 0,
   color: "light-blue",
   shape: [[1, 1, 1, 1]]
@@ -737,7 +737,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var possibleForms_1 = require("./possibleForms");
+var possibleBlocks_1 = require("./possibleBlocks");
 
 var utils_1 = require("./utils");
 
@@ -753,7 +753,7 @@ function () {
     this.y = 0;
     this.renderTo = renderTo;
     this.stage = stage;
-    var randomBlock = possibleForms_1.possibleForms[Math.floor(Math.random() * possibleForms_1.possibleForms.length)];
+    var randomBlock = possibleBlocks_1.possibleBlocks[Math.floor(Math.random() * possibleBlocks_1.possibleBlocks.length)];
     this.shape = utils_1.cloneDeep(randomBlock.shape);
     this.color = randomBlock.color;
     this.id = id;
@@ -904,7 +904,7 @@ function () {
 }();
 
 exports.default = Block;
-},{"./possibleForms":"src/possibleForms.ts","./utils":"src/utils.tsx"}],"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
+},{"./possibleBlocks":"src/possibleBlocks.ts","./utils":"src/utils.tsx"}],"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2755,19 +2755,19 @@ var animations_1 = __importDefault(require("./animations"));
 var HighScores =
 /** @class */
 function () {
-  function HighScores(newScore, game) {
+  function HighScores(newClientScore, game) {
     var _a;
 
     var _this = this;
 
-    this.highScores = this.getAllLocalHighScores();
-    this.newHighScore = newScore;
+    this.highScores = this.getAllHighScores();
+    this.newClientScore = newClientScore;
     var self = this; //blegh
 
     this.game = game;
-    var newScoreId = null; //todo: remove
+    var newClientScoreId = null; //todo: remove
 
-    this.setScore(__assign({}, newScore));
+    this.newServerScore = this.setScore(newClientScore);
     this.removeDeprecatedHighScores();
 
     var Entries =
@@ -2779,10 +2779,10 @@ function () {
         var _this = _super.call(this) || this;
 
         _this.render = function () {
-          return self.getAllLocalHighScores() // .filter((highScore, index) => index < this )
+          return self.getAllHighScores() // .filter((highScore, index) => index < this )
           .map(function (highScore, index) {
             return jsx_runtime_1.jsxs("tr", __assign({
-              class: highScore.id === newScoreId ? "current" : null
+              class: highScore.id === newClientScoreId ? "current" : null
             }, {
               children: [jsx_runtime_1.jsx("td", __assign({
                 class: "rank"
@@ -2819,7 +2819,7 @@ function () {
             children: [jsx_runtime_1.jsx("td", __assign({
               class: "rank"
             }, {
-              children: i + _this.getAllLocalHighScores().length + 1
+              children: i + _this.getAllHighScores().length + 1
             }), void 0), jsx_runtime_1.jsx("td", __assign({
               class: "name"
             }, {
@@ -2860,52 +2860,58 @@ function () {
     (_a = document.querySelector(".highscore-list")).animate.apply(_a, __spread(animations_1.default.fadeIn));
 
     setTimeout(function () {
-      document.querySelector('.highscore-title').classList.add('scroll');
+      document.querySelector(".highscore-title").classList.add("scroll");
       var rowHeight = 20;
-      var rank = self.getAllLocalHighScores().findIndex(function (score) {
-        return score.id === newScore.id;
+      var rank = self.getAllHighScores().findIndex(function (score) {
+        return score.id === _this.newServerScore.id;
       });
       var targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
-      if (_this.game.gameState === 'highScore' && targetScrollDistance) {
-        document.querySelector('.highscore-table').style.transform = "translateY(-" + targetScrollDistance + "px)";
+      if (_this.game.gameState === "highScore" && targetScrollDistance) {
+        document.querySelector(".highscore-table").style.transform = "translateY(-" + targetScrollDistance + "px)";
       }
     }, 2000);
   }
 
   HighScores.prototype.removeDeprecatedHighScores = function () {
-    var newHighScores = this.getAllLocalHighScores().filter(function (score) {
-      return score.hasOwnProperty('v');
+    var newHighScores = this.getAllHighScores().filter(function (score) {
+      return score.hasOwnProperty("v");
     });
     window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   };
 
   HighScores.prototype.removeHighScoreById = function (id) {
-    var newHighScores = this.getAllLocalHighScores().filter(function (score) {
+    var newHighScores = this.getAllHighScores().filter(function (score) {
       return score.id !== id;
     });
     window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   };
 
   HighScores.prototype.setScore = function (highScore) {
-    console.log('setscore called');
+    console.log("setscore called");
     fetch("http://www.berendswennenhuis.nl" + "/score", {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(highScore)
     }).then(function (response) {
-      console.log('response from post score:', response);
-    });
-    var prevScores = JSON.parse(window.localStorage.getItem("highScore"));
-    var newScores = prevScores ? __spread(prevScores, [highScore]).sort(function (a, b) {
-      return b.score - a.score;
-    }) : [highScore];
-    window.localStorage.setItem("highScore", JSON.stringify(newScores));
+      console.log("response from post score:", response);
+      return response.json();
+    }).then(function (score) {
+      return score;
+    }); // const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
+    // const newClientScores = prevScores
+    //   ? [...(prevScores as ClientHighScore[]), highScore].sort(
+    //       (a, b) => b.score - a.score
+    //     )
+    //   : [highScore];
+    // window.localStorage.setItem("highScore", JSON.stringify(newClientScores));
+
+    return;
   };
 
-  HighScores.prototype.getAllLocalHighScores = function () {
+  HighScores.prototype.getAllHighScores = function () {
     var scores = JSON.parse(window.localStorage.getItem("highScore"));
     return scores ? JSON.parse(window.localStorage.getItem("highScore")) : [];
   };
@@ -3843,7 +3849,8 @@ function () {
       score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
       name: nickName,
       date: new Date(),
-      v: "0.2"
+      v: "0.2",
+      mode: 'singlePlayer'
     }, this.game);
   };
 
@@ -6753,7 +6760,7 @@ var Tetris =
 /** @class */
 function () {
   function Tetris() {
-    this.gameMode = "default";
+    this.gameMode = "singlePlayer";
     this.setGameState("splash");
     new keyboardControls_1.default(this);
     new touchControls_1.default(this);
@@ -6832,7 +6839,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58163" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49598" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

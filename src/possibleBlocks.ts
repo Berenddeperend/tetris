@@ -1,5 +1,5 @@
 import { Shape } from "./block";
-export const possibleForms: { shape: Shape; color: string, id: number }[] = [
+export const possibleBlocks: { shape: Shape; color: string, id: number }[] = [
   { id: 0, color: "light-blue", shape: [[1, 1, 1, 1]] },
   {
     id: 1,

@@ -5,7 +5,7 @@ html {
   color: white;
   touch-action: none;
 
-  background: radial-gradient(ellipse at bottom, lighten($black, 10%), $black);
+  background: radial-gradient(ellipse at bottom, lighten($black, 15%), darken($black, 2%));
 }
 
 a {

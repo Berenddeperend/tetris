@@ -107,7 +107,7 @@ export default class HighScores {
       const rowHeight = 20;
       const rank = self
         .getAllHighScores()
-        .findIndex((score) => score.id === newClientScore.id);
+        .findIndex((score) => score.id === this.newServerScore.id);
       const targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
       if (this.game.gameState === "highScore" && targetScrollDistance) {

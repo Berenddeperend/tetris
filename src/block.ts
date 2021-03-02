@@ -1,5 +1,5 @@
 import { selectAll } from "d3-selection";
-import { possibleForms } from "./possibleForms";
+import { possibleBlocks } from "./possibleBlocks";
 import { cloneDeep } from "./utils";
 import Stage from "./stage";
 
@@ -19,7 +19,7 @@ export default class Block {
     this.renderTo = renderTo;
     this.stage = stage;
     const randomBlock =
-      possibleForms[Math.floor(Math.random() * possibleForms.length)];
+      possibleBlocks[Math.floor(Math.random() * possibleBlocks.length)];
     this.shape = cloneDeep(randomBlock.shape);
     this.color = randomBlock.color;
     this.id = id;

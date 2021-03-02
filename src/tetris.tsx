@@ -4,6 +4,8 @@ import GameOver from "./states/gameOver";
 import KeyboardControls from "./controls/keyboardControls";
 import TouchControls from "./controls/touchControls";
 import GestureControls from "./controls/gestureControls";
+import StarryBackground from './StarryBackground';
+import { render } from "preact";
 
 export type GameState = "splash" | "playing" | "gameOver" | "highScore";
 export type GameMode = "singlePlayer";
@@ -16,6 +18,12 @@ export default class Tetris {
   gameOver: GameOver;
 
   constructor() {
+    render(
+    <div class="tetris-container">
+      <StarryBackground />
+      <div class="tetris"></div>
+    </div>
+    , document.body);
     this.setGameState("splash");
     new KeyboardControls(this);
     new TouchControls(this);
@@ -26,7 +34,10 @@ export default class Tetris {
     }
     window.addEventListener('resize', setVH);
     setVH();
+
   }
+
+
 
   setGameState(gameState: GameState) {
     this.gameState = gameState;

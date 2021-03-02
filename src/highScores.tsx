@@ -135,7 +135,6 @@ export default class HighScores {
   }
 
   setScore(highScore: ClientHighScore): ServerHighScore {
-    console.log("setscore called");
     fetch(`${process.env.API_URL}/score`, {
       method: "POST",
       headers: {
@@ -143,9 +142,9 @@ export default class HighScores {
       },
       body: JSON.stringify(highScore),
     }).then((response) => {
-      console.log("response from post score:", response);
       return response.json();
     }).then(score => {
+      console.log('score from backend: ', score);
       return score as ServerHighScore
     });
 

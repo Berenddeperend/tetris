@@ -547,14 +547,14 @@ function o(_, o, e, n, t) {
   if ("function" == typeof _ && (s = _.defaultProps)) for (u in s) void 0 === f[u] && (f[u] = s[u]);
   return _preact.options.vnode && _preact.options.vnode(a), a;
 }
-},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/possibleForms.ts":[function(require,module,exports) {
+},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/possibleBlocks.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.possibleForms = void 0;
-exports.possibleForms = [{
+exports.possibleBlocks = void 0;
+exports.possibleBlocks = [{
   id: 0,
   color: "light-blue",
   shape: [[1, 1, 1, 1]]
@@ -640,9 +640,10 @@ var __spread = this && this.__spread || function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.times = exports.explodeText = exports.cloneDeep = exports.uniq = void 0;
+exports.rollingText = exports.times = exports.explodeText = exports.cloneDeep = exports.uniq = void 0;
 
-var jsx_runtime_1 = require("preact/jsx-runtime");
+var jsx_runtime_1 = require("preact/jsx-runtime"); // import {rollingText, Animation} from './animations'
+
 
 function uniq(arr) {
   return __spread(new Set(arr));
@@ -686,6 +687,49 @@ function times(times, fn) {
 }
 
 exports.times = times;
+
+function rollingText(texts) {
+  var elementHeight = 30;
+  var items = texts.map(function (item) {
+    return jsx_runtime_1.jsx("div", __assign({
+      class: "rolling-text-item"
+    }, {
+      children: item
+    }), void 0);
+  });
+  var i = 0; // Array.from(document.querySelectorAll('.rolling-text-item')).map((item, index, array) => {
+  //   item.animate([
+  //     {transform: 'translateY(0)'},
+  //     {transform: `translateY(-${(array.length - 1) * 100}%)`},
+  //   ], {
+  //     duration: texts.length * 1000,
+  //     fill: 'both',
+  //     iterations: Infinity
+  //   })
+  // }, 400)
+
+  setTimeout(function () {
+    var domItems = Array.from(document.querySelectorAll(".rolling-text-item"));
+    setInterval(function () {
+      i++;
+      if (i > texts.length) i = 0;
+      domItems.map(function (item) {
+        item.style.transform = "translateY(-" + i * elementHeight + "px)"; // (item as HTMLElement).style.transition = "transform 1s";
+      });
+    }, 1000);
+  }, 1000);
+  return jsx_runtime_1.jsxs("div", __assign({
+    className: "rolling-text-container"
+  }, {
+    children: [items, jsx_runtime_1.jsx("div", __assign({
+      class: "rolling-text-item"
+    }, {
+      children: texts[0]
+    }), void 0), ";"]
+  }), void 0);
+}
+
+exports.rollingText = rollingText;
 },{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js"}],"src/block.ts":[function(require,module,exports) {
 "use strict";
 
@@ -693,7 +737,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var possibleForms_1 = require("./possibleForms");
+var possibleBlocks_1 = require("./possibleBlocks");
 
 var utils_1 = require("./utils");
 
@@ -709,7 +753,7 @@ function () {
     this.y = 0;
     this.renderTo = renderTo;
     this.stage = stage;
-    var randomBlock = possibleForms_1.possibleForms[Math.floor(Math.random() * possibleForms_1.possibleForms.length)];
+    var randomBlock = possibleBlocks_1.possibleBlocks[Math.floor(Math.random() * possibleBlocks_1.possibleBlocks.length)];
     this.shape = utils_1.cloneDeep(randomBlock.shape);
     this.color = randomBlock.color;
     this.id = id;
@@ -860,7 +904,7 @@ function () {
 }();
 
 exports.default = Block;
-},{"./possibleForms":"src/possibleForms.ts","./utils":"src/utils.tsx"}],"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
+},{"./possibleBlocks":"src/possibleBlocks.ts","./utils":"src/utils.tsx"}],"node_modules/d3-selection/src/namespaces.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2711,21 +2755,19 @@ var animations_1 = __importDefault(require("./animations"));
 var HighScores =
 /** @class */
 function () {
-  function HighScores(newScore, game) {
+  function HighScores(newClientScore, game) {
     var _a;
 
     var _this = this;
 
-    this.highScores = this.getAllLocalHighScores();
-    this.newHighScore = newScore;
+    this.highScores = this.getAllHighScores();
+    this.newClientScore = newClientScore;
     var self = this; //blegh
 
     this.game = game;
-    var newScoreId = this.getAllLocalHighScores().length + 1;
-    this.newHighScore.id = newScoreId;
-    this.setScore(__assign(__assign({}, newScore), {
-      id: newScoreId
-    }));
+    var newClientScoreId = null; //todo: remove
+
+    this.newServerScore = this.setScore(newClientScore);
     this.removeDeprecatedHighScores();
 
     var Entries =
@@ -2737,10 +2779,10 @@ function () {
         var _this = _super.call(this) || this;
 
         _this.render = function () {
-          return self.getAllLocalHighScores() // .filter((highScore, index) => index < this )
+          return self.getAllHighScores() // .filter((highScore, index) => index < this )
           .map(function (highScore, index) {
             return jsx_runtime_1.jsxs("tr", __assign({
-              class: highScore.id === newScoreId ? "current" : null
+              class: highScore.id === newClientScoreId ? "current" : null
             }, {
               children: [jsx_runtime_1.jsx("td", __assign({
                 class: "rank"
@@ -2777,7 +2819,7 @@ function () {
             children: [jsx_runtime_1.jsx("td", __assign({
               class: "rank"
             }, {
-              children: i + _this.getAllLocalHighScores().length + 1
+              children: i + _this.getAllHighScores().length + 1
             }), void 0), jsx_runtime_1.jsx("td", __assign({
               class: "name"
             }, {
@@ -2818,42 +2860,57 @@ function () {
     (_a = document.querySelector(".highscore-list")).animate.apply(_a, __spread(animations_1.default.fadeIn));
 
     setTimeout(function () {
-      document.querySelector('.highscore-title').classList.add('scroll');
+      document.querySelector(".highscore-title").classList.add("scroll");
       var rowHeight = 20;
-      var rank = self.getAllLocalHighScores().findIndex(function (score) {
-        return score.id === newScore.id;
+      var rank = self.getAllHighScores().findIndex(function (score) {
+        return score.id === _this.newServerScore.id;
       });
       var targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
-      if (_this.game.gameState === 'highScore' && targetScrollDistance) {
-        document.querySelector('.highscore-table').style.transform = "translateY(-" + targetScrollDistance + "px)";
+      if (_this.game.gameState === "highScore" && targetScrollDistance) {
+        document.querySelector(".highscore-table").style.transform = "translateY(-" + targetScrollDistance + "px)";
       }
     }, 2000);
   }
 
   HighScores.prototype.removeDeprecatedHighScores = function () {
-    var newHighScores = this.getAllLocalHighScores().filter(function (score) {
-      return score.hasOwnProperty('v');
+    var newHighScores = this.getAllHighScores().filter(function (score) {
+      return score.hasOwnProperty("v");
     });
     window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   };
 
   HighScores.prototype.removeHighScoreById = function (id) {
-    var newHighScores = this.getAllLocalHighScores().filter(function (score) {
+    var newHighScores = this.getAllHighScores().filter(function (score) {
       return score.id !== id;
     });
     window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   };
 
   HighScores.prototype.setScore = function (highScore) {
-    var prevScores = JSON.parse(window.localStorage.getItem("highScore"));
-    var newScores = prevScores ? __spread(prevScores, [highScore]).sort(function (a, b) {
-      return b.score - a.score;
-    }) : [highScore];
-    window.localStorage.setItem("highScore", JSON.stringify(newScores));
+    fetch("http://www.berendswennenhuis.nl" + "/score", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(highScore)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (score) {
+      console.log('score from backend: ', score);
+      return score;
+    }); // const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
+    // const newClientScores = prevScores
+    //   ? [...(prevScores as ClientHighScore[]), highScore].sort(
+    //       (a, b) => b.score - a.score
+    //     )
+    //   : [highScore];
+    // window.localStorage.setItem("highScore", JSON.stringify(newClientScores));
+
+    return;
   };
 
-  HighScores.prototype.getAllLocalHighScores = function () {
+  HighScores.prototype.getAllHighScores = function () {
     var scores = JSON.parse(window.localStorage.getItem("highScore"));
     return scores ? JSON.parse(window.localStorage.getItem("highScore")) : [];
   };
@@ -3791,7 +3848,8 @@ function () {
       score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
       name: nickName,
       date: new Date(),
-      v: "0.2"
+      v: "0.2",
+      mode: 'singlePlayer'
     }, this.game);
   };
 
@@ -6786,7 +6844,7 @@ var Tetris =
 /** @class */
 function () {
   function Tetris() {
-    this.gameMode = "default";
+    this.gameMode = "singlePlayer";
     preact_1.render(jsx_runtime_1.jsxs("div", __assign({
       class: "tetris-container"
     }, {
@@ -6872,7 +6930,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65418" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63308" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

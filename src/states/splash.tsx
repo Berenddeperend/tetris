@@ -33,13 +33,13 @@ export default class Splash {
       </div>
     );
 
-    render(html, document.body);
+    render(html, document.querySelector('.tetris'));
   }
 
   get controls() {
     return {
       continue: () => {
-        render("", document.body); //this can be better
+        render("", document.querySelector('.tetris')); //this can be better
         this.game.setGameState("playing");
       },
     };

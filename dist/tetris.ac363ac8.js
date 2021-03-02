@@ -117,43 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/possibleForms.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.possibleForms = void 0;
-exports.possibleForms = [{
-  id: 0,
-  color: "light-blue",
-  shape: [[1, 1, 1, 1]]
-}, {
-  id: 1,
-  color: "purple",
-  shape: [[0, 1, 0], [1, 1, 1]]
-}, {
-  id: 2,
-  color: "green",
-  shape: [[0, 1, 1], [1, 1, 0]]
-}, {
-  id: 3,
-  color: "red",
-  shape: [[1, 1, 0], [0, 1, 1]]
-}, {
-  id: 4,
-  color: "yellow",
-  shape: [[1, 1], [1, 1]]
-}, {
-  id: 5,
-  color: "dark-blue",
-  shape: [[1, 0, 0], [1, 1, 1]]
-}, {
-  id: 6,
-  color: "orange",
-  shape: [[0, 0, 1], [1, 1, 1]]
-}];
-},{}],"node_modules/preact/dist/preact.module.js":[function(require,module,exports) {
+})({"node_modules/preact/dist/preact.module.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -583,7 +547,43 @@ function o(_, o, e, n, t) {
   if ("function" == typeof _ && (s = _.defaultProps)) for (u in s) void 0 === f[u] && (f[u] = s[u]);
   return _preact.options.vnode && _preact.options.vnode(a), a;
 }
-},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/utils.tsx":[function(require,module,exports) {
+},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/possibleForms.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.possibleForms = void 0;
+exports.possibleForms = [{
+  id: 0,
+  color: "light-blue",
+  shape: [[1, 1, 1, 1]]
+}, {
+  id: 1,
+  color: "purple",
+  shape: [[0, 1, 0], [1, 1, 1]]
+}, {
+  id: 2,
+  color: "green",
+  shape: [[0, 1, 1], [1, 1, 0]]
+}, {
+  id: 3,
+  color: "red",
+  shape: [[1, 1, 0], [0, 1, 1]]
+}, {
+  id: 4,
+  color: "yellow",
+  shape: [[1, 1], [1, 1]]
+}, {
+  id: 5,
+  color: "dark-blue",
+  shape: [[1, 0, 0], [1, 1, 1]]
+}, {
+  id: 6,
+  color: "orange",
+  shape: [[0, 0, 1], [1, 1, 1]]
+}];
+},{}],"src/utils.tsx":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -673,7 +673,7 @@ function explodeText(text) {
   });
 }
 
-exports.explodeText = explodeText;
+exports.explodeText = explodeText; // export function times(times: number, fn:<T>() => T) {
 
 function times(times, fn) {
   var arr = [];
@@ -3336,7 +3336,7 @@ function () {
         }, void 0)]
       }), void 0)]
     }), void 0);
-    preact_1.render(html, document.body);
+    preact_1.render(html, document.querySelector('.tetris'));
   }
 
   Object.defineProperty(Splash.prototype, "controls", {
@@ -3345,7 +3345,7 @@ function () {
 
       return {
         continue: function _continue() {
-          preact_1.render("", document.body); //this can be better
+          preact_1.render("", document.querySelector('.tetris')); //this can be better
 
           _this.game.setGameState("playing");
         }
@@ -6672,8 +6672,87 @@ function () {
 }();
 
 exports.default = GestureControls;
-},{"hammerjs":"node_modules/hammerjs/hammer.js"}],"src/tetris.ts":[function(require,module,exports) {
+},{"hammerjs":"node_modules/hammerjs/hammer.js"}],"src/StarryBackground.tsx":[function(require,module,exports) {
 "use strict";
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var jsx_runtime_1 = require("preact/jsx-runtime");
+
+var utils_1 = require("./utils");
+
+function StarryBackground() {
+  return jsx_runtime_1.jsx("div", __assign({
+    class: "starry-background-container"
+  }, {
+    children: utils_1.times(100, function () {
+      return jsx_runtime_1.jsx("div", {
+        class: "star",
+        style: {
+          left: randomXPos(),
+          top: randomYPos(),
+          animationDelay: randomAnimationDelay(),
+          transform: randomScale()
+        }
+      }, void 0);
+    })
+  }), void 0);
+}
+
+exports.default = StarryBackground;
+var starSize = 2;
+
+function randomXPos() {
+  return Math.floor(Math.random() * window.innerWidth - starSize);
+}
+
+function randomYPos() {
+  return Math.floor(Math.random() * window.innerHeight - starSize);
+}
+
+function randomScale() {
+  return "scale(" + Math.floor(Math.random() * 10) / 10 + ")";
+}
+
+function randomAnimationDelay() {
+  return Math.floor(Math.random() * 10) / 10 + "s";
+}
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","./utils":"src/utils.tsx"}],"src/tetris.tsx":[function(require,module,exports) {
+"use strict";
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
 
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
@@ -6684,6 +6763,8 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var jsx_runtime_1 = require("preact/jsx-runtime");
 
 var stage_1 = __importDefault(require("./stage"));
 
@@ -6697,11 +6778,22 @@ var touchControls_1 = __importDefault(require("./controls/touchControls"));
 
 var gestureControls_1 = __importDefault(require("./controls/gestureControls"));
 
+var StarryBackground_1 = __importDefault(require("./StarryBackground"));
+
+var preact_1 = require("preact");
+
 var Tetris =
 /** @class */
 function () {
   function Tetris() {
     this.gameMode = "default";
+    preact_1.render(jsx_runtime_1.jsxs("div", __assign({
+      class: "tetris-container"
+    }, {
+      children: [jsx_runtime_1.jsx(StarryBackground_1.default, {}, void 0), jsx_runtime_1.jsx("div", {
+        class: "tetris"
+      }, void 0)]
+    }), void 0), document.body);
     this.setGameState("splash");
     new keyboardControls_1.default(this);
     new touchControls_1.default(this);
@@ -6752,7 +6844,7 @@ function () {
 
 exports.default = Tetris;
 new Tetris();
-},{"./stage":"src/stage.ts","./states/splash":"src/states/splash.tsx","./states/gameOver":"src/states/gameOver.tsx","./controls/keyboardControls":"src/controls/keyboardControls.ts","./controls/touchControls":"src/controls/touchControls.ts","./controls/gestureControls":"src/controls/gestureControls.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","./stage":"src/stage.ts","./states/splash":"src/states/splash.tsx","./states/gameOver":"src/states/gameOver.tsx","./controls/keyboardControls":"src/controls/keyboardControls.ts","./controls/touchControls":"src/controls/touchControls.ts","./controls/gestureControls":"src/controls/gestureControls.ts","./StarryBackground":"src/StarryBackground.tsx","preact":"node_modules/preact/dist/preact.module.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -6780,7 +6872,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65331" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65418" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -6956,5 +7048,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/tetris.ts"], null)
-//# sourceMappingURL=/tetris.44aabff4.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/tetris.tsx"], null)
+//# sourceMappingURL=/tetris.ac363ac8.js.map

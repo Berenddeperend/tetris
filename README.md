@@ -56,3 +56,11 @@ d3 to preact:
 [x] Game Over
 
 Project started at around 5 januari
+
+
+
+---
+
+
+cant find error 5 of undefined, in 'placeblockingrid'
+Als je een blokje buiten de ding roteert

@@ -1,9 +1,11 @@
 import { times } from "./utils";
 
+const starCount = Math.round(window.innerWidth * window.innerHeight * 0.0005);
+
 export default function StarryBackground() {
   return (
     <div class="starry-background-container">
-      {times(100, () => (
+      {times(starCount, () => (
         <div
           class="star"
           style={{

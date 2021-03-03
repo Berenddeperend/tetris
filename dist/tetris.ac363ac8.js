@@ -6757,11 +6757,13 @@ var jsx_runtime_1 = require("preact/jsx-runtime");
 
 var utils_1 = require("./utils");
 
+var starCount = Math.round(window.innerWidth * window.innerHeight * 0.0005);
+
 function StarryBackground() {
   return jsx_runtime_1.jsx("div", __assign({
     class: "starry-background-container"
   }, {
-    children: utils_1.times(100, function () {
+    children: utils_1.times(starCount, function () {
       return jsx_runtime_1.jsx("div", {
         class: "star",
         style: {
@@ -6930,7 +6932,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63308" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49810" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -2760,7 +2760,8 @@ function () {
 
     var _this = this;
 
-    this.highScores = this.getAllHighScores();
+    this.highScores = this.fetchHighScoresFromBackend();
+    this.highscoresLoaded = false;
     this.newClientScore = newClientScore;
     var self = this; //blegh
 
@@ -2782,7 +2783,7 @@ function () {
           return self.getAllHighScores() // .filter((highScore, index) => index < this )
           .map(function (highScore, index) {
             return jsx_runtime_1.jsxs("tr", __assign({
-              class: highScore.id === newClientScoreId ? "current" : null
+              class: highScore.id == newClientScoreId ? "current" : null
             }, {
               children: [jsx_runtime_1.jsx("td", __assign({
                 class: "rank"
@@ -2849,8 +2850,8 @@ function () {
         children: jsx_runtime_1.jsx("table", __assign({
           class: "highscore-table"
         }, {
-          children: jsx_runtime_1.jsxs("tbody", {
-            children: [jsx_runtime_1.jsx(Entries, {}, void 0), jsx_runtime_1.jsx(Placeholders, {}, void 0)]
+          children: jsx_runtime_1.jsx("tbody", {
+            class: "highscore-table-body"
           }, void 0)
         }), void 0)
       }), void 0)]
@@ -2863,7 +2864,7 @@ function () {
       document.querySelector(".highscore-title").classList.add("scroll");
       var rowHeight = 20;
       var rank = self.getAllHighScores().findIndex(function (score) {
-        return score.id === _this.newServerScore.id;
+        return score.id == _this.newServerScore.id;
       });
       var targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
@@ -2880,15 +2881,8 @@ function () {
     window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   };
 
-  HighScores.prototype.removeHighScoreById = function (id) {
-    var newHighScores = this.getAllHighScores().filter(function (score) {
-      return score.id !== id;
-    });
-    window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
-  };
-
   HighScores.prototype.setScore = function (highScore) {
-    fetch("http://www.berendswennenhuis.nl" + "/score", {
+    fetch("http://localhost:8000" + "/score", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -2897,7 +2891,7 @@ function () {
     }).then(function (response) {
       return response.json();
     }).then(function (score) {
-      console.log('score from backend: ', score);
+      console.log("score from backend: ", score);
       return score;
     }); // const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
     // const newClientScores = prevScores
@@ -2908,6 +2902,18 @@ function () {
     // window.localStorage.setItem("highScore", JSON.stringify(newClientScores));
 
     return;
+  }; // async fetchHighScoresFromBackend(): ServerHighScore[] {
+
+
+  HighScores.prototype.fetchHighScoresFromBackend = function () {
+    var _this = this;
+
+    return fetch("http://localhost:8000" + "/scores").then(function (res) {
+      return res.json();
+    }).then(function (scores) {
+      _this.highscoresLoaded = true;
+      _this.serverHighScores = scores;
+    });
   };
 
   HighScores.prototype.getAllHighScores = function () {
@@ -3787,6 +3793,7 @@ function () {
     var _this = this;
 
     this.game = game;
+    this.fetchHighScoresFromBackend();
     var html = jsx_runtime_1.jsxs(jsx_runtime_1.Fragment, {
       children: [jsx_runtime_1.jsx("div", __assign({
         class: "game-over-container"
@@ -3847,10 +3854,22 @@ function () {
     new highScores_1.default({
       score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
       name: nickName,
-      date: new Date(),
+      timestamp: new Date(),
       v: "0.2",
       mode: 'singlePlayer'
     }, this.game);
+  };
+
+  GameOver.prototype.fetchHighScoresFromBackend = function () {
+    var _this = this;
+
+    return fetch("http://localhost:8000" + "/scores").then(function (res) {
+      return res.json();
+    }).then(function (scores) {
+      console.log(scores); // serverHighScores: ServerHighScore[]
+
+      _this.serverHighScores = scores; // return scores as ServerHighScore[];
+    });
   };
 
   return GameOver;
@@ -7165,7 +7184,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49810" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64212" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,5 +1,5 @@
 import Tetris from "../tetris";
-import HighScores from "../highScores";
+import HighScores, {ServerHighScore} from "../highScores";
 import ThreeLetterInput from './../ThreeLetterInput'
 
 import { render } from "preact";
@@ -8,10 +8,12 @@ import animations, { Animation } from "../animations";
 
 export default class GameOver {
   game: Tetris;
+  serverHighScores: ServerHighScore[]
 
   constructor(game: Tetris) {
     this.game = game;
-
+    this.fetchHighScoresFromBackend();
+    
     const html = (
       <>
         <div class="game-over-container">
@@ -61,9 +63,20 @@ export default class GameOver {
     new HighScores({
       score: this.game?.stage?.score,
       name: nickName,
-      date: new Date(),
+      timestamp: new Date(),
       v: process.env.VERSION,
       mode: 'singlePlayer'
     }, this.game);
+  }
+
+  fetchHighScoresFromBackend(): any {
+    return fetch(`${process.env.API_URL}/scores`)
+      .then((res) => res.json())
+      .then((scores) => {
+        console.log(scores);
+  // serverHighScores: ServerHighScore[]
+        this.serverHighScores = scores;
+        // return scores as ServerHighScore[];
+      });
   }
 }

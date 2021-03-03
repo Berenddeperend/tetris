@@ -8,24 +8,27 @@ import Tetris, { GameMode } from "./tetris";
 export type ClientHighScore = {
   name: string;
   score: number;
-  date: Date;
+  timestamp: Date;
   v: string;
   mode: GameMode;
-}
+};
 
 export type ServerHighScore = {
   name: string;
   score: number;
-  date: Date;
-  id?: number;
+  timestamp: Date;
+  id: string;
   v: string;
   mode: GameMode;
-}
+};
+
 export default class HighScores {
-  highScores = this.getAllHighScores();
+  highScores = this.fetchHighScoresFromBackend();
   newClientScore: ClientHighScore;
   newServerScore: ServerHighScore;
   game: Tetris;
+  highscoresLoaded = false;
+  serverHighScores: ServerHighScore[];
 
   constructor(newClientScore: ClientHighScore, game: Tetris) {
     this.newClientScore = newClientScore;
@@ -34,7 +37,6 @@ export default class HighScores {
     const newClientScoreId = null; //todo: remove
     this.newServerScore = this.setScore(newClientScore);
     this.removeDeprecatedHighScores();
-
 
     class Entries extends Component<{}, { limit: number }> {
       constructor() {
@@ -51,7 +53,7 @@ export default class HighScores {
             // .filter((highScore, index) => index < this )
             .map((highScore, index) => {
               return (
-                <tr class={highScore.id === newClientScoreId ? "current" : null}>
+                <tr class={highScore.id == newClientScoreId ? "current" : null}>
                   <td class="rank">{index + 1}</td>
                   <td class="name">{highScore.name}</td>
                   <td class="score">{highScore.score}</td>
@@ -68,9 +70,7 @@ export default class HighScores {
           {new Array(20).fill("").map((d, i) => {
             return (
               <tr class="placeholder">
-                <td class="rank">
-                  {i + this.getAllHighScores().length + 1}
-                </td>
+                <td class="rank">{i + this.getAllHighScores().length + 1}</td>
                 <td class="name">-</td>
                 <td class="score">-</td>
               </tr>
@@ -87,9 +87,8 @@ export default class HighScores {
         </div>
         <div class="highscore-table-container">
           <table class="highscore-table">
-            <tbody>
-              <Entries />
-              <Placeholders />
+            <tbody class="highscore-table-body">
+              
             </tbody>
           </table>
         </div>
@@ -107,7 +106,7 @@ export default class HighScores {
       const rowHeight = 20;
       const rank = self
         .getAllHighScores()
-        .findIndex((score) => score.id === this.newServerScore.id);
+        .findIndex((score) => score.id == this.newServerScore.id);
       const targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
       if (this.game.gameState === "highScore" && targetScrollDistance) {
@@ -126,14 +125,6 @@ export default class HighScores {
     window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   }
 
-  removeHighScoreById(id: number) {
-    const newHighScores = this.getAllHighScores().filter(
-      (score) => score.id !== id
-    );
-
-    window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
-  }
-
   setScore(highScore: ClientHighScore): ServerHighScore {
     fetch(`${process.env.API_URL}/score`, {
       method: "POST",
@@ -141,12 +132,14 @@ export default class HighScores {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(highScore),
-    }).then((response) => {
-      return response.json();
-    }).then(score => {
-      console.log('score from backend: ', score);
-      return score as ServerHighScore
-    });
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((score) => {
+        console.log("score from backend: ", score);
+        return score as ServerHighScore;
+      });
 
     // const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
     // const newClientScores = prevScores
@@ -160,11 +153,23 @@ export default class HighScores {
     return;
   }
 
+  // async fetchHighScoresFromBackend(): ServerHighScore[] {
+  fetchHighScoresFromBackend(): any {
+    return fetch(`${process.env.API_URL}/scores`)
+      .then((res) => res.json())
+      .then((scores) => {
+        this.highscoresLoaded = true;
+        this.serverHighScores = scores;
+      });
+  }
+
   getAllHighScores(): ServerHighScore[] {
     const scores = JSON.parse(window.localStorage.getItem("highScore"));
 
     return scores
-      ? (JSON.parse(window.localStorage.getItem("highScore")) as ServerHighScore[])
+      ? (JSON.parse(
+          window.localStorage.getItem("highScore")
+        ) as ServerHighScore[])
       : [];
   }
 
@@ -172,7 +177,9 @@ export default class HighScores {
     const scores = JSON.parse(window.localStorage.getItem("highScore"));
 
     return scores
-      ? (JSON.parse(window.localStorage.getItem("highScore")) as ServerHighScore[])[0]
+      ? (JSON.parse(
+          window.localStorage.getItem("highScore")
+        ) as ServerHighScore[])[0]
       : null;
   }
 }

@@ -1,16 +1,19 @@
 import { times } from "./utils";
+import { useState, useEffect } from 'preact/hooks';
 
 const starCount = Math.round(window.innerWidth * window.innerHeight * 0.0001);
 
 export default function StarryBackground() {
+  const size = useWindowSize();
+
   return (
     <div class="starry-background-container">
       {times(starCount, () => (
         <div
           class="star"
           style={{
-            left: randomXPos(),
-            top: randomYPos(),
+            left: randomXPos(size.width),
+            top: randomYPos(size.height),
             animationDelay: randomAnimationDelay(),
             transform: randomScale(),
           }}
@@ -22,12 +25,35 @@ export default function StarryBackground() {
 
 const starSize = 2;
 
-function randomXPos() {
-  return Math.floor(Math.random() * window.innerWidth - starSize);
+function useWindowSize() { //https://usehooks.com/useWindowSize/
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined,
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+    
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    
+    return () => window.removeEventListener("resize", handleResize);
+  }, []); // Empty array ensures that effect is only run on mount
+
+  return windowSize;
 }
 
-function randomYPos() {
-  return Math.floor(Math.random() * window.innerHeight - starSize);
+function randomXPos(windowWidth) {
+  return Math.floor(Math.random() * windowWidth - starSize);
+}
+
+function randomYPos(windowHeight) {
+  return Math.floor(Math.random() * windowHeight - starSize);
 }
 
 function randomScale() {

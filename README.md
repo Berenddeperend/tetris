@@ -1,13 +1,7 @@
-WIP: 
-- Touch/gesture controls -> 70%
-- Highscores -> 70%
-
 Bugs:
-- Can't rotate block sticky to left side
-- SVG 'next' viewbox
+-  Mark's 'placeblockingrid' bug when rotating just before the block settles on the grond
 
 Features:
-- input name niet in modal maar in stage. gameover -> nameinput -> highscore is swipeleft zoals die video
 - Reset tick after last-minute rotate
 - UI
   - Responsive position
@@ -49,18 +43,4 @@ On release:
 - Write blog post
 - Ask Daniel to hack the highscore
 
-d3 to preact:
-[x] Splash
-[ ] Stage
-[ ] Block
-[x] Game Over
-
 Project started at around 5 januari
-
-
-
----
-
-
-cant find error 5 of undefined, in 'placeblockingrid'
-Als je een blokje buiten de ding roteert

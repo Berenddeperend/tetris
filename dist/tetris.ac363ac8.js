@@ -6730,7 +6730,184 @@ function () {
 }();
 
 exports.default = GestureControls;
-},{"hammerjs":"node_modules/hammerjs/hammer.js"}],"src/StarryBackground.tsx":[function(require,module,exports) {
+},{"hammerjs":"node_modules/hammerjs/hammer.js"}],"node_modules/preact/hooks/dist/hooks.module.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.useState = l;
+exports.useReducer = p;
+exports.useEffect = y;
+exports.useLayoutEffect = h;
+exports.useRef = s;
+exports.useImperativeHandle = _;
+exports.useMemo = d;
+exports.useCallback = A;
+exports.useContext = F;
+exports.useDebugValue = T;
+exports.useErrorBoundary = q;
+
+var _preact = require("preact");
+
+var t,
+    u,
+    r,
+    o = 0,
+    i = [],
+    c = _preact.options.__b,
+    f = _preact.options.__r,
+    e = _preact.options.diffed,
+    a = _preact.options.__c,
+    v = _preact.options.unmount;
+
+function m(t, r) {
+  _preact.options.__h && _preact.options.__h(u, t, o || r), o = 0;
+  var i = u.__H || (u.__H = {
+    __: [],
+    __h: []
+  });
+  return t >= i.__.length && i.__.push({}), i.__[t];
+}
+
+function l(n) {
+  return o = 1, p(w, n);
+}
+
+function p(n, r, o) {
+  var i = m(t++, 2);
+  return i.t = n, i.__c || (i.__ = [o ? o(r) : w(void 0, r), function (n) {
+    var t = i.t(i.__[0], n);
+    i.__[0] !== t && (i.__ = [t, i.__[1]], i.__c.setState({}));
+  }], i.__c = u), i.__;
+}
+
+function y(r, o) {
+  var i = m(t++, 3);
+  !_preact.options.__s && k(i.__H, o) && (i.__ = r, i.__H = o, u.__H.__h.push(i));
+}
+
+function h(r, o) {
+  var i = m(t++, 4);
+  !_preact.options.__s && k(i.__H, o) && (i.__ = r, i.__H = o, u.__h.push(i));
+}
+
+function s(n) {
+  return o = 5, d(function () {
+    return {
+      current: n
+    };
+  }, []);
+}
+
+function _(n, t, u) {
+  o = 6, h(function () {
+    "function" == typeof n ? n(t()) : n && (n.current = t());
+  }, null == u ? u : u.concat(n));
+}
+
+function d(n, u) {
+  var r = m(t++, 7);
+  return k(r.__H, u) && (r.__ = n(), r.__H = u, r.__h = n), r.__;
+}
+
+function A(n, t) {
+  return o = 8, d(function () {
+    return n;
+  }, t);
+}
+
+function F(n) {
+  var r = u.context[n.__c],
+      o = m(t++, 9);
+  return o.__c = n, r ? (null == o.__ && (o.__ = !0, r.sub(u)), r.props.value) : n.__;
+}
+
+function T(t, u) {
+  _preact.options.useDebugValue && _preact.options.useDebugValue(u ? u(t) : t);
+}
+
+function q(n) {
+  var r = m(t++, 10),
+      o = l();
+  return r.__ = n, u.componentDidCatch || (u.componentDidCatch = function (n) {
+    r.__ && r.__(n), o[1](n);
+  }), [o[0], function () {
+    o[1](void 0);
+  }];
+}
+
+function x() {
+  i.forEach(function (t) {
+    if (t.__P) try {
+      t.__H.__h.forEach(g), t.__H.__h.forEach(j), t.__H.__h = [];
+    } catch (u) {
+      t.__H.__h = [], _preact.options.__e(u, t.__v);
+    }
+  }), i = [];
+}
+
+_preact.options.__b = function (n) {
+  u = null, c && c(n);
+}, _preact.options.__r = function (n) {
+  f && f(n), t = 0;
+  var r = (u = n.__c).__H;
+  r && (r.__h.forEach(g), r.__h.forEach(j), r.__h = []);
+}, _preact.options.diffed = function (t) {
+  e && e(t);
+  var o = t.__c;
+  o && o.__H && o.__H.__h.length && (1 !== i.push(o) && r === _preact.options.requestAnimationFrame || ((r = _preact.options.requestAnimationFrame) || function (n) {
+    var t,
+        u = function () {
+      clearTimeout(r), b && cancelAnimationFrame(t), setTimeout(n);
+    },
+        r = setTimeout(u, 100);
+
+    b && (t = requestAnimationFrame(u));
+  })(x)), u = void 0;
+}, _preact.options.__c = function (t, u) {
+  u.some(function (t) {
+    try {
+      t.__h.forEach(g), t.__h = t.__h.filter(function (n) {
+        return !n.__ || j(n);
+      });
+    } catch (r) {
+      u.some(function (n) {
+        n.__h && (n.__h = []);
+      }), u = [], _preact.options.__e(r, t.__v);
+    }
+  }), a && a(t, u);
+}, _preact.options.unmount = function (t) {
+  v && v(t);
+  var u = t.__c;
+  if (u && u.__H) try {
+    u.__H.__.forEach(g);
+  } catch (t) {
+    _preact.options.__e(t, u.__v);
+  }
+};
+var b = "function" == typeof requestAnimationFrame;
+
+function g(n) {
+  var t = u;
+  "function" == typeof n.__c && n.__c(), u = t;
+}
+
+function j(n) {
+  var t = u;
+  n.__c = n.__(), u = t;
+}
+
+function k(n, t) {
+  return !n || n.length !== t.length || t.some(function (t, u) {
+    return t !== n[u];
+  });
+}
+
+function w(n, t) {
+  return "function" == typeof t ? t(n) : t;
+}
+},{"preact":"node_modules/preact/dist/preact.module.js"}],"src/StarryBackground.tsx":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -6749,6 +6926,33 @@ var __assign = this && this.__assign || function () {
   return __assign.apply(this, arguments);
 };
 
+var __read = this && this.__read || function (o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o),
+      r,
+      ar = [],
+      e;
+
+  try {
+    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
+      ar.push(r.value);
+    }
+  } catch (error) {
+    e = {
+      error: error
+    };
+  } finally {
+    try {
+      if (r && !r.done && (m = i["return"])) m.call(i);
+    } finally {
+      if (e) throw e.error;
+    }
+  }
+
+  return ar;
+};
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -6757,9 +6961,12 @@ var jsx_runtime_1 = require("preact/jsx-runtime");
 
 var utils_1 = require("./utils");
 
+var hooks_1 = require("preact/hooks");
+
 var starCount = Math.round(window.innerWidth * window.innerHeight * 0.0001);
 
 function StarryBackground() {
+  var size = useWindowSize();
   return jsx_runtime_1.jsx("div", __assign({
     class: "starry-background-container"
   }, {
@@ -6767,8 +6974,8 @@ function StarryBackground() {
       return jsx_runtime_1.jsx("div", {
         class: "star",
         style: {
-          left: randomXPos(),
-          top: randomYPos(),
+          left: randomXPos(size.width),
+          top: randomYPos(size.height),
           animationDelay: randomAnimationDelay(),
           transform: randomScale()
         }
@@ -6780,12 +6987,38 @@ function StarryBackground() {
 exports.default = StarryBackground;
 var starSize = 2;
 
-function randomXPos() {
-  return Math.floor(Math.random() * window.innerWidth - starSize);
+function useWindowSize() {
+  var _a = __read(hooks_1.useState({
+    width: undefined,
+    height: undefined
+  }), 2),
+      windowSize = _a[0],
+      setWindowSize = _a[1];
+
+  hooks_1.useEffect(function () {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return function () {
+      return window.removeEventListener("resize", handleResize);
+    };
+  }, []); // Empty array ensures that effect is only run on mount
+
+  return windowSize;
 }
 
-function randomYPos() {
-  return Math.floor(Math.random() * window.innerHeight - starSize);
+function randomXPos(windowWidth) {
+  return Math.floor(Math.random() * windowWidth - starSize);
+}
+
+function randomYPos(windowHeight) {
+  return Math.floor(Math.random() * windowHeight - starSize);
 }
 
 function randomScale() {
@@ -6795,7 +7028,7 @@ function randomScale() {
 function randomAnimationDelay() {
   return Math.floor(Math.random() * 10) / 10 + "s";
 }
-},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","./utils":"src/utils.tsx"}],"src/tetris.tsx":[function(require,module,exports) {
+},{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","./utils":"src/utils.tsx","preact/hooks":"node_modules/preact/hooks/dist/hooks.module.js"}],"src/tetris.tsx":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {

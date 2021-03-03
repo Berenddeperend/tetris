@@ -642,8 +642,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.rollingText = exports.times = exports.explodeText = exports.cloneDeep = exports.uniq = void 0;
 
-var jsx_runtime_1 = require("preact/jsx-runtime"); // import {rollingText, Animation} from './animations'
-
+var jsx_runtime_1 = require("preact/jsx-runtime");
 
 function uniq(arr) {
   return __spread(new Set(arr));
@@ -2756,84 +2755,21 @@ var HighScores =
 /** @class */
 function () {
   function HighScores(newClientScore, game) {
-    var _a;
-
     var _this = this;
 
-    this.highScores = this.fetchHighScoresFromBackend();
     this.highscoresLoaded = false;
     this.newClientScore = newClientScore;
-    var self = this; //blegh
-
     this.game = game;
-    var newClientScoreId = null; //todo: remove
+    Promise.all([this.setScore(newClientScore), this.fetchHighScoresFromBackend()]).then(function () {
+      _this.draw();
+    });
+  }
 
-    this.newServerScore = this.setScore(newClientScore);
-    this.removeDeprecatedHighScores();
+  HighScores.prototype.draw = function () {
+    var _a;
 
-    var Entries =
-    /** @class */
-    function (_super) {
-      __extends(Entries, _super);
+    var _this = this; //please don't judge me for this naming...
 
-      function Entries() {
-        var _this = _super.call(this) || this;
-
-        _this.render = function () {
-          return self.getAllHighScores() // .filter((highScore, index) => index < this )
-          .map(function (highScore, index) {
-            return jsx_runtime_1.jsxs("tr", __assign({
-              class: highScore.id == newClientScoreId ? "current" : null
-            }, {
-              children: [jsx_runtime_1.jsx("td", __assign({
-                class: "rank"
-              }, {
-                children: index + 1
-              }), void 0), jsx_runtime_1.jsx("td", __assign({
-                class: "name"
-              }, {
-                children: highScore.name
-              }), void 0), jsx_runtime_1.jsx("td", __assign({
-                class: "score"
-              }, {
-                children: highScore.score
-              }), void 0)]
-            }), void 0);
-          });
-        };
-
-        _this.state = {
-          limit: 5
-        };
-        return _this;
-      }
-
-      return Entries;
-    }(preact_1.Component);
-
-    var Placeholders = function Placeholders() {
-      return jsx_runtime_1.jsx(jsx_runtime_1.Fragment, {
-        children: new Array(20).fill("").map(function (d, i) {
-          return jsx_runtime_1.jsxs("tr", __assign({
-            class: "placeholder"
-          }, {
-            children: [jsx_runtime_1.jsx("td", __assign({
-              class: "rank"
-            }, {
-              children: i + _this.getAllHighScores().length + 1
-            }), void 0), jsx_runtime_1.jsx("td", __assign({
-              class: "name"
-            }, {
-              children: "-"
-            }), void 0), jsx_runtime_1.jsx("td", __assign({
-              class: "score"
-            }, {
-              children: "-"
-            }), void 0)]
-          }), void 0);
-        })
-      }, void 0);
-    };
 
     var html = jsx_runtime_1.jsxs(jsx_runtime_1.Fragment, {
       children: [jsx_runtime_1.jsx("div", __assign({
@@ -2850,9 +2786,16 @@ function () {
         children: jsx_runtime_1.jsx("table", __assign({
           class: "highscore-table"
         }, {
-          children: jsx_runtime_1.jsx("tbody", {
+          children: jsx_runtime_1.jsxs("tbody", __assign({
             class: "highscore-table-body"
-          }, void 0)
+          }, {
+            children: [jsx_runtime_1.jsx(Entries, {
+              entries: this.serverHighScores,
+              newScore: this.newServerScore
+            }, void 0), jsx_runtime_1.jsx(Placeholders, {
+              entries: this.serverHighScores
+            }, void 0)]
+          }), void 0)
         }), void 0)
       }), void 0)]
     }, void 0);
@@ -2863,63 +2806,61 @@ function () {
     setTimeout(function () {
       document.querySelector(".highscore-title").classList.add("scroll");
       var rowHeight = 20;
-      var rank = self.getAllHighScores().findIndex(function (score) {
+
+      var rank = _this.serverHighScores.findIndex(function (score) {
         return score.id == _this.newServerScore.id;
       });
+
       var targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
       if (_this.game.gameState === "highScore" && targetScrollDistance) {
         document.querySelector(".highscore-table").style.transform = "translateY(-" + targetScrollDistance + "px)";
       }
     }, 2000);
-  }
-
-  HighScores.prototype.removeDeprecatedHighScores = function () {
-    var newHighScores = this.getAllHighScores().filter(function (score) {
-      return score.hasOwnProperty("v");
-    });
-    window.localStorage.setItem("highScore", JSON.stringify(newHighScores));
   };
 
   HighScores.prototype.setScore = function (highScore) {
-    fetch("http://localhost:8000" + "/score", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(highScore)
-    }).then(function (response) {
-      return response.json();
-    }).then(function (score) {
-      console.log("score from backend: ", score);
-      return score;
-    }); // const prevScores = JSON.parse(window.localStorage.getItem("highScore"));
-    // const newClientScores = prevScores
-    //   ? [...(prevScores as ClientHighScore[]), highScore].sort(
-    //       (a, b) => b.score - a.score
-    //     )
-    //   : [highScore];
-    // window.localStorage.setItem("highScore", JSON.stringify(newClientScores));
+    var _this = this;
 
-    return;
+    return new Promise(function (resolve) {
+      fetch("http://localhost:8000" + "/score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(highScore)
+      }).then(function (res) {
+        return res.json();
+      }).then(function (score) {
+        _this.newServerScore = score;
+        resolve(null);
+      });
+    }); // const score = await response.json();
+    // return score as ServerHighScore;
   }; // async fetchHighScoresFromBackend(): ServerHighScore[] {
 
 
   HighScores.prototype.fetchHighScoresFromBackend = function () {
     var _this = this;
 
-    return fetch("http://localhost:8000" + "/scores").then(function (res) {
-      return res.json();
-    }).then(function (scores) {
-      _this.highscoresLoaded = true;
-      _this.serverHighScores = scores;
+    return new Promise(function (resolve) {
+      fetch("http://localhost:8000" + "/scores").then(function (res) {
+        return res.json();
+      }).then(function (scores) {
+        _this.highscoresLoaded = true;
+        _this.serverHighScores = scores;
+        resolve(null);
+      });
     });
-  };
+  }; // getAllHighScores(): ServerHighScore[] {
+  //   const scores = JSON.parse(window.localStorage.getItem("highScore"));
+  //   return scores
+  //     ? (JSON.parse(
+  //         window.localStorage.getItem("highScore")
+  //       ) as ServerHighScore[])
+  //     : [];
+  // }
 
-  HighScores.prototype.getAllHighScores = function () {
-    var scores = JSON.parse(window.localStorage.getItem("highScore"));
-    return scores ? JSON.parse(window.localStorage.getItem("highScore")) : [];
-  };
 
   HighScores.getLocalHighScore = function () {
     var scores = JSON.parse(window.localStorage.getItem("highScore"));
@@ -2930,6 +2871,84 @@ function () {
 }();
 
 exports.default = HighScores;
+
+var Entries =
+/** @class */
+function (_super) {
+  __extends(Entries, _super);
+
+  function Entries() {
+    var _this = _super.call(this) || this;
+
+    _this.render = function () {
+      return _this.props.entries // .filter((highScore, index) => index < this )
+      .map(function (highScore, index) {
+        return jsx_runtime_1.jsxs("tr", __assign({
+          class: highScore.id == _this.props.newScore.id ? "current" : null
+        }, {
+          children: [jsx_runtime_1.jsx("td", __assign({
+            class: "rank"
+          }, {
+            children: index + 1
+          }), void 0), jsx_runtime_1.jsx("td", __assign({
+            class: "name"
+          }, {
+            children: highScore.name
+          }), void 0), jsx_runtime_1.jsx("td", __assign({
+            class: "score"
+          }, {
+            children: highScore.score
+          }), void 0)]
+        }), void 0);
+      });
+    };
+
+    _this.state = {
+      limit: 5
+    };
+    return _this;
+  }
+
+  return Entries;
+}(preact_1.Component); // function Placeholders(entries: ServerHighScore[]) {
+//   return times(20, ()=> {
+//     <div>hi</div>
+//   })
+// })
+// return new Array(20).fill("").map((d, i) => {
+//     return (
+//       <tr class="placeholder">
+//         <td class="rank">{i + entries.length + 1}</td>
+//         <td class="name">-</td>
+//         <td class="score">-</td>
+//       </tr>
+//     );
+//   })}
+
+
+function Placeholders(props) {
+  return jsx_runtime_1.jsx(jsx_runtime_1.Fragment, {
+    children: new Array(20).fill("").map(function (d, i) {
+      return jsx_runtime_1.jsxs("tr", __assign({
+        class: "placeholder"
+      }, {
+        children: [jsx_runtime_1.jsx("td", __assign({
+          class: "rank"
+        }, {
+          children: i + props.entries.length + 1
+        }), void 0), jsx_runtime_1.jsx("td", __assign({
+          class: "name"
+        }, {
+          children: "-"
+        }), void 0), jsx_runtime_1.jsx("td", __assign({
+          class: "score"
+        }, {
+          children: "-"
+        }), void 0)]
+      }), void 0);
+    })
+  }, void 0);
+}
 },{"preact/jsx-runtime":"node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js","./dom":"src/dom.ts","preact":"node_modules/preact/dist/preact.module.js","./animations":"src/animations.ts"}],"src/states/pause.tsx":[function(require,module,exports) {
 "use strict";
 

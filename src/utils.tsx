@@ -1,5 +1,7 @@
 // import {rollingText, Animation} from './animations'
 
+import { JSX } from "preact/jsx-runtime";
+
 export function uniq(arr: any[]): any[] {
   return [...new Set(arr)];
 }
@@ -22,7 +24,7 @@ export function explodeText(text: string) {
 }
 
 // export function times(times: number, fn:<T>() => T) {
-export function times(times: number, fn:() => any) {
+export function times(times: number, fn:() => ) {
   const arr = [];
   for (let i = 0; i < times; i++) {
     arr.push(fn());

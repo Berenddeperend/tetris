@@ -6757,7 +6757,7 @@ var jsx_runtime_1 = require("preact/jsx-runtime");
 
 var utils_1 = require("./utils");
 
-var starCount = Math.round(window.innerWidth * window.innerHeight * 0.0005);
+var starCount = Math.round(window.innerWidth * window.innerHeight * 0.0001);
 
 function StarryBackground() {
   return jsx_runtime_1.jsx("div", __assign({

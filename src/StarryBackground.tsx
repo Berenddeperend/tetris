@@ -1,6 +1,6 @@
 import { times } from "./utils";
 
-const starCount = Math.round(window.innerWidth * window.innerHeight * 0.0005);
+const starCount = Math.round(window.innerWidth * window.innerHeight * 0.0001);
 
 export default function StarryBackground() {
   return (

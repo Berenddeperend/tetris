@@ -1,8 +1,6 @@
-import Stage from "./stage";
 import { html, render, PreactNode } from "./dom";
-import { Component, FunctionComponent } from "preact";
+import { Component } from "preact";
 import animations, { Animation } from "./animations";
-import { times } from "./utils";
 import Tetris, { GameMode } from "./tetris";
 
 export type ClientHighScore = {
@@ -33,12 +31,9 @@ export default class HighScores {
     this.newClientScore = newClientScore;
     this.game = game;
 
-    Promise.all([
-      this.setScore(newClientScore),
-      this.fetchHighScoresFromBackend(),
-    ]).then(() => {
-      this.draw();
-    });
+    this.setScore(newClientScore)
+      .then(()=> this.fetchHighScoresFromBackend())
+      .then(()=> this.draw());
   }
 
   draw() {
@@ -99,14 +94,10 @@ export default class HighScores {
           resolve(null);
         });
     });
-
-    // const score = await response.json();
-    // return score as ServerHighScore;
   }
 
-  // async fetchHighScoresFromBackend(): ServerHighScore[] {
   fetchHighScoresFromBackend(): Promise<null> {
-    return new Promise((resolve) => {
+    return new Promise((resolve) => { 
       fetch(`${process.env.API_URL}/scores`)
         .then((res) => res.json())
         .then((scores) => {
@@ -117,15 +108,6 @@ export default class HighScores {
     });
   }
 
-  // getAllHighScores(): ServerHighScore[] {
-  //   const scores = JSON.parse(window.localStorage.getItem("highScore"));
-
-  //   return scores
-  //     ? (JSON.parse(
-  //         window.localStorage.getItem("highScore")
-  //       ) as ServerHighScore[])
-  //     : [];
-  // }
 
   static getLocalHighScore(): ServerHighScore | null {
     const scores = JSON.parse(window.localStorage.getItem("highScore"));
@@ -168,21 +150,6 @@ class Entries extends Component<
   };
 }
 
-// function Placeholders(entries: ServerHighScore[]) {
-//   return times(20, ()=> {
-//     <div>hi</div>
-//   })
-// })
-// return new Array(20).fill("").map((d, i) => {
-//     return (
-//       <tr class="placeholder">
-//         <td class="rank">{i + entries.length + 1}</td>
-//         <td class="name">-</td>
-//         <td class="score">-</td>
-//       </tr>
-//     );
-//   })}
-
 function Placeholders(props: { entries: ServerHighScore[] }) {
   return (
     <>
@@ -198,19 +165,3 @@ function Placeholders(props: { entries: ServerHighScore[] }) {
     </>
   );
 }
-
-// const Placeholders = (entries: ServerHighScore[]) => {
-//   return (
-//     <>
-//       {new Array(20).fill("").map((d, i) => {
-//         return (
-//           <tr class="placeholder">
-//             <td class="rank">{i + entries.length + 1}</td>
-//             <td class="name">-</td>
-//             <td class="score">-</td>
-//           </tr>
-//         );
-//       })}
-//     </>
-//   );
-// };

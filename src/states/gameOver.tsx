@@ -12,7 +12,7 @@ export default class GameOver {
 
   constructor(game: Tetris) {
     this.game = game;
-    this.fetchHighScoresFromBackend();
+    // this.fetchHighScoresFromBackend();
     
     const html = (
       <>
@@ -69,14 +69,12 @@ export default class GameOver {
     }, this.game);
   }
 
-  fetchHighScoresFromBackend(): any {
-    return fetch(`${process.env.API_URL}/scores`)
-      .then((res) => res.json())
-      .then((scores) => {
-        console.log(scores);
-  // serverHighScores: ServerHighScore[]
-        this.serverHighScores = scores;
-        // return scores as ServerHighScore[];
-      });
-  }
+  // fetchHighScoresFromBackend(): any {
+  //   return fetch(`${process.env.API_URL}/scores`)
+  //     .then((res) => res.json())
+  //     .then((scores) => {
+  //       console.log(scores);
+  //       this.serverHighScores = scores;
+  //     });
+  // }
 }

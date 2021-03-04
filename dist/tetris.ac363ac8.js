@@ -2760,8 +2760,10 @@ function () {
     this.highscoresLoaded = false;
     this.newClientScore = newClientScore;
     this.game = game;
-    Promise.all([this.setScore(newClientScore), this.fetchHighScoresFromBackend()]).then(function () {
-      _this.draw();
+    this.setScore(newClientScore).then(function () {
+      return _this.fetchHighScoresFromBackend();
+    }).then(function () {
+      return _this.draw();
     });
   }
 
@@ -2835,10 +2837,8 @@ function () {
         _this.newServerScore = score;
         resolve(null);
       });
-    }); // const score = await response.json();
-    // return score as ServerHighScore;
-  }; // async fetchHighScoresFromBackend(): ServerHighScore[] {
-
+    });
+  };
 
   HighScores.prototype.fetchHighScoresFromBackend = function () {
     var _this = this;
@@ -2852,15 +2852,7 @@ function () {
         resolve(null);
       });
     });
-  }; // getAllHighScores(): ServerHighScore[] {
-  //   const scores = JSON.parse(window.localStorage.getItem("highScore"));
-  //   return scores
-  //     ? (JSON.parse(
-  //         window.localStorage.getItem("highScore")
-  //       ) as ServerHighScore[])
-  //     : [];
-  // }
-
+  };
 
   HighScores.getLocalHighScore = function () {
     var scores = JSON.parse(window.localStorage.getItem("highScore"));
@@ -2910,21 +2902,7 @@ function (_super) {
   }
 
   return Entries;
-}(preact_1.Component); // function Placeholders(entries: ServerHighScore[]) {
-//   return times(20, ()=> {
-//     <div>hi</div>
-//   })
-// })
-// return new Array(20).fill("").map((d, i) => {
-//     return (
-//       <tr class="placeholder">
-//         <td class="rank">{i + entries.length + 1}</td>
-//         <td class="name">-</td>
-//         <td class="score">-</td>
-//       </tr>
-//     );
-//   })}
-
+}(preact_1.Component);
 
 function Placeholders(props) {
   return jsx_runtime_1.jsx(jsx_runtime_1.Fragment, {
@@ -3811,8 +3789,8 @@ function () {
   function GameOver(game) {
     var _this = this;
 
-    this.game = game;
-    this.fetchHighScoresFromBackend();
+    this.game = game; // this.fetchHighScoresFromBackend();
+
     var html = jsx_runtime_1.jsxs(jsx_runtime_1.Fragment, {
       children: [jsx_runtime_1.jsx("div", __assign({
         class: "game-over-container"
@@ -3877,18 +3855,6 @@ function () {
       v: "0.2",
       mode: 'singlePlayer'
     }, this.game);
-  };
-
-  GameOver.prototype.fetchHighScoresFromBackend = function () {
-    var _this = this;
-
-    return fetch("http://localhost:8000" + "/scores").then(function (res) {
-      return res.json();
-    }).then(function (scores) {
-      console.log(scores); // serverHighScores: ServerHighScore[]
-
-      _this.serverHighScores = scores; // return scores as ServerHighScore[];
-    });
   };
 
   return GameOver;

@@ -2825,7 +2825,7 @@ function () {
     var _this = this;
 
     return new Promise(function (resolve) {
-      fetch("http://localhost:8000" + "/score", {
+      fetch("http://berendswennenhuis.nl" + "/score", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -2844,7 +2844,7 @@ function () {
     var _this = this;
 
     return new Promise(function (resolve) {
-      fetch("http://localhost:8000" + "/scores").then(function (res) {
+      fetch("http://berendswennenhuis.nl" + "/scores").then(function (res) {
         return res.json();
       }).then(function (scores) {
         _this.highscoresLoaded = true;
@@ -7169,7 +7169,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64212" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65171" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

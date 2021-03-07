@@ -24,7 +24,7 @@ export function explodeText(text: string) {
 }
 
 // export function times(times: number, fn:<T>() => T) {
-export function times(times: number, fn:() => ) {
+export function times(times: number, fn:() => any) {
   const arr = [];
   for (let i = 0; i < times; i++) {
     arr.push(fn());

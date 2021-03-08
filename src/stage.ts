@@ -154,6 +154,10 @@ export default class Stage {
     }
     this.settledBlocks.push(block);
     this.placeBlockInGrid(block);
+    this.activeBlock.hasShadow = false;
+    this.activeBlock.removeShadow();
+    this.activeBlock.d3Shadow.selectAll("rect").remove(); //don't do this here
+
 
     this.activeBlock = this.queue.pop();
     this.activeBlock.init("stage");

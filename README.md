@@ -1,5 +1,8 @@
 Bugs:
--  Mark's 'placeblockingrid' bug when rotating just before the block settles on the grond
+- Mark's 'placeblockingrid' bug when rotating just before the block settles on the grond
+- Can't rotate block sticky to left side
+- SVG 'next' viewbox
+- Sometimes shadow bugs out, can't reproduce yet
 
 Features:
 - Reset tick after last-minute rotate
@@ -11,7 +14,6 @@ Features:
   - Level
   - Score
 - Cool effect on line clear, extra effect on Tetris
-- Show block shadow
 - Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
 - Favicon
 - Drought, blocks since tallblock (Joost)

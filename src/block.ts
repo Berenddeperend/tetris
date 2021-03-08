@@ -12,11 +12,12 @@ export default class Block {
   y: number = 0;
   id: number;
   d3Self: any;
+  d3Shadow: any;
   stage: Stage;
   renderTo: renderBlockTo;
+  hasShadow: boolean;
 
   constructor(id: number = 0, stage: Stage, renderTo: renderBlockTo) {
-    this.renderTo = renderTo;
     this.stage = stage;
     const randomBlock =
       possibleForms[Math.floor(Math.random() * possibleForms.length)];
@@ -31,9 +32,11 @@ export default class Block {
     this.renderTo = renderTo;
     let d3RenderTarget;
     if (renderTo === "stage") {
+      this.hasShadow = true;
       this.x = Math.floor((this.stage.gridWidth - this.shape[0].length) / 2);
       d3RenderTarget = this.stage.d3Stage;
     } else if ((renderTo = "queue")) {
+      this.hasShadow = false;
       this.x = (4 - this.shape[0].length) / 2; //align center
       // this.x = 4 - this.shape[0].length; //align right
       d3RenderTarget = this.stage.d3Queue;
@@ -43,15 +46,28 @@ export default class Block {
       this.d3Self.remove();
     }
 
+    if (renderTo === "stage") {
+      this.d3Shadow = d3RenderTarget
+        .select("svg")
+        .insert("g", this.stage.gridOverBlocks ? ".gridlines" : null)
+        .attr("class", `block ${this.color} shadow`);
+    }
+
+
     this.d3Self = d3RenderTarget
       .select("svg")
       .insert("g", this.stage.gridOverBlocks ? ".gridlines" : null)
       .attr("class", `block ${this.color}`);
+
+
     this.draw();
   }
 
   draw() {
     this.d3Self.selectAll("rect").remove();
+    if (this.hasShadow) {
+      this.d3Shadow.selectAll("rect").remove();
+    }
     this.shape.map((y, yI) => {
       y.map((x, xI) => {
         if (x && y) {
@@ -62,6 +78,16 @@ export default class Block {
             .attr("x", xI * this.stage.blockSize)
             .attr("y", yI * this.stage.blockSize)
             .attr("class", "atom");
+
+          if (this.hasShadow) {
+            this.d3Shadow
+              .append("rect")
+              .attr("width", this.stage.blockSize)
+              .attr("height", this.stage.blockSize)
+              .attr("x", xI * this.stage.blockSize)
+              .attr("y", yI * this.stage.blockSize)
+              .attr("class", "atom shadow");
+          }
         }
       });
     });
@@ -162,6 +188,41 @@ export default class Block {
     this.updateGroupPosition();
   }
 
+  getShadowYPos(): number {
+    let yOffsetFromShape = 0;
+    const blockWillCollideYAfterNSteps = (yOffsetFromShape): boolean => {
+      return this.shape
+        .map((row, rowIndex) => {
+          return row.map((atom, columnIndex) => {
+            if (!atom) return false; //Empty atom in this slot
+
+            if (this.y + rowIndex + yOffsetFromShape >= this.stage.gridHeight) {
+              return true; //Block reached bottom of stage
+            }
+
+            return (
+              //returns the value of the target spot in the internal grid for the atom
+              this.stage.internalGrid[this.y + rowIndex + yOffsetFromShape] &&
+              this.stage.internalGrid[this.y + rowIndex + yOffsetFromShape][
+                this.x + columnIndex
+              ]
+            );
+          });
+        })
+        .flat()
+        .some((d) => d);
+    };
+    while (!blockWillCollideYAfterNSteps(yOffsetFromShape)) {
+      yOffsetFromShape++;
+    }
+
+    return yOffsetFromShape;
+  }
+
+  removeShadow() {
+    this.d3Shadow.remove();
+  }
+
   updateGroupPosition() {
     const scale = this.renderTo === "queue" ? this.stage.queueScaleFactor : 1;
     this.d3Self.attr(
@@ -170,5 +231,17 @@ export default class Block {
         this.y * this.stage.blockSize * scale
       }) scale(${scale})`
     );
+
+    if (this.hasShadow) {
+      const targetYPos = this.getShadowYPos();
+      console.log("targetYPos: ", targetYPos);
+
+      this.d3Shadow.attr(
+        "transform",
+        `translate(${this.x * this.stage.blockSize * scale}, ${
+          (this.y + targetYPos - 1) * this.stage.blockSize * scale //todo: improve
+        }) scale(${scale})`
+      );
+    }
   }
 }

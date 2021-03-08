@@ -5,6 +5,7 @@ WIP:
 Bugs:
 - Can't rotate block sticky to left side
 - SVG 'next' viewbox
+- Sometimes shadow bugs out, can't reproduce yet
 
 Features:
 - input name niet in modal maar in stage. gameover -> nameinput -> highscore is swipeleft zoals die video
@@ -17,7 +18,6 @@ Features:
   - Level
   - Score
 - Cool effect on line clear, extra effect on Tetris
-- Show block shadow
 - Rotation origin (super rotation system, https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris)
 - Favicon
 - Drought, blocks since tallblock (Joost)

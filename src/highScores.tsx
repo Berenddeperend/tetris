@@ -32,8 +32,8 @@ export default class HighScores {
     this.game = game;
 
     this.setScore(newClientScore)
-      .then(()=> this.fetchHighScoresFromBackend())
-      .then(()=> this.draw());
+      .then(() => this.fetchHighScoresFromBackend())
+      .then(() => this.draw());
   }
 
   draw() {
@@ -97,7 +97,7 @@ export default class HighScores {
   }
 
   fetchHighScoresFromBackend(): Promise<null> {
-    return new Promise((resolve) => { 
+    return new Promise((resolve) => {
       fetch(`${process.env.API_URL}/scores`)
         .then((res) => res.json())
         .then((scores) => {
@@ -107,7 +107,6 @@ export default class HighScores {
         });
     });
   }
-
 
   static getLocalHighScore(): ServerHighScore | null {
     const scores = JSON.parse(window.localStorage.getItem("highScore"));

@@ -20,22 +20,23 @@
   &.red { fill: $red; }
 
   .atom.shadow {
-    fill: none;
+    // fill: none;
+    opacity: 0.3;
   }
 
   &.shadow {
-    stroke: $light-blue;
-    stroke-width: 2px;
+    // stroke: $light-blue;
+    // stroke-width: 1px;
     // opacity:  0.5;
-    // &.black { stroke: $black; }
-    // &.light-blue { stroke: $light-blue; }
-    // &.light-blue { stroke: $light-blue; }
-    // &.dark-blue { stroke: $dark-blue; }
-    // &.orange { stroke: $orange; }
-    // &.yellow { stroke: $yellow; }
-    // &.green { stroke: $green; }
-    // &.purple { stroke: $purple; }
-    // &.red { stroke: $red; }
+    // // &.black { stroke: $black; }
+    // // &.light-blue { stroke: $light-blue; }
+    // // &.light-blue { stroke: $light-blue; }
+    // // &.dark-blue { stroke: $dark-blue; }
+    // // &.orange { stroke: $orange; }
+    // // &.yellow { stroke: $yellow; }
+    // // &.green { stroke: $green; }
+    // // &.purple { stroke: $purple; }
+    // // &.red { stroke: $red; }
 
   }
 }

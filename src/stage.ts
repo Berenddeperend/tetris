@@ -158,7 +158,6 @@ export default class Stage {
     this.activeBlock.removeShadow();
     this.activeBlock.d3Shadow.selectAll("rect").remove(); //don't do this here
 
-
     this.activeBlock = this.queue.pop();
     this.activeBlock.init("stage");
     this.queue.push(new Block(++this.blockIndex, this, "queue"));
@@ -197,6 +196,8 @@ export default class Stage {
       this.internalGrid.splice(rowIndex, 1);
       this.internalGrid.unshift(new Array(this.gridWidth).fill(0));
     });
+
+
   }
 
   updateScoreUI() {

@@ -170,7 +170,7 @@ export default class ThreeLetterInput extends Component<
     const localStorageNickname = window.localStorage.getItem("lastUsedNickname");
     if( localStorageNickname ) {
       this.setState({
-        nickName: localStorageNickname
+        nickName: localStorageNickname.substring(0,3)
       });
     }
   };

@@ -2,7 +2,7 @@ Bugs:
 - Mark's 'placeblockingrid' bug when rotating just before the block settles on the grond
 - Can't rotate block sticky to left side
 - SVG 'next' viewbox
-- Sometimes shadow bugs out, can't reproduce yet
+- Shadow bugs out after line clear
 
 Features:
 - Reset tick after last-minute rotate

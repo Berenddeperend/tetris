@@ -6,7 +6,6 @@ import Tetris, { GameMode } from "./tetris";
 export type ClientHighScore = {
   name: string;
   score: number;
-  timestamp: Date;
   v: string;
   mode: GameMode;
 };
@@ -37,7 +36,6 @@ export default class HighScores {
   }
 
   draw() {
-    //please don't judge me for this naming...
     const html = (
       <>
         <div class="highscore-title-container">
@@ -63,6 +61,7 @@ export default class HighScores {
       .animate(...(animations.fadeIn as Animation));
 
     setTimeout(() => {
+      if(this.game.gameState !== 'highScore') return;
       document.querySelector(".highscore-title").classList.add("scroll");
 
       const rowHeight = 20;
@@ -71,7 +70,7 @@ export default class HighScores {
       );
       const targetScrollDistance = Math.max(0, (rank - 9) * rowHeight);
 
-      if (this.game.gameState === "highScore" && targetScrollDistance) {
+      if (targetScrollDistance) {
         (document.querySelector(
           ".highscore-table"
         ) as HTMLElement).style.transform = `translateY(-${targetScrollDistance}px)`;

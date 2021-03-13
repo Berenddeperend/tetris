@@ -7,7 +7,7 @@ export default class Splash {
 
   constructor(game: Tetris) {
     this.game = game;
-
+        
     const html = (
       <div class="splash">
         <div class="title">Tetris
@@ -46,4 +46,6 @@ export default class Splash {
       },
     };
   }
+
+  
 }

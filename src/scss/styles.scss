@@ -238,4 +238,8 @@ svg {
     background: mix(lighten($black, 10%), $black);
     padding: 0 0.1rem 0 0.5rem;
   }
+
+  &.queue {
+    justify-content: center;
+  }
 }

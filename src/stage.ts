@@ -276,11 +276,6 @@ export default class Stage {
           (this.gridHeight * this.blockSize) / 10
         }rem`
       )
-      // .append("rect")
-      // .attr("class", "berend")
-      // .attr("width", `${(this.gridWidth * this.blockSize)}`)
-      // .attr("height", `${(this.gridHeight * this.blockSize)}`)
-
 
     this.d3UI = select("body").append("div").attr("class", "ui");
 
@@ -290,8 +285,6 @@ export default class Stage {
       .append("div")
       .attr("class", "value")
       .append("svg")
-      // .attr('viewbox', "0 0 100 100")
-      // .attr('perserveAspectRatio', true)
       .attr("width", this.blockSize * 4 * this.queueScaleFactor)
       .attr("height", this.blockSize * 2 * this.queueScaleFactor);
 
@@ -308,7 +301,9 @@ export default class Stage {
     highScore
       .append("div")
       .attr("class", "value")
-      .text(HighScores.getLocalHighScore()?.score || 0);
+      .text(this.game.serverHighScore?.score);
+
+    
 
     this.drawGridLines();
     this.updateScoreUI();

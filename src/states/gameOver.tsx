@@ -12,7 +12,6 @@ export default class GameOver {
 
   constructor(game: Tetris) {
     this.game = game;
-    // this.fetchHighScoresFromBackend();
     
     const html = (
       <>
@@ -20,14 +19,11 @@ export default class GameOver {
           <div class="game-over">{explodeText("game over")}</div>
         </div>
         <div className="three-letter-input-container"></div>
-        {/* <ThreeLetterInput /> */}
         <div class="highscore-list"></div>
       </>
     );
 
     render(html, document.querySelector(".stage"));
-
-    // render(<ThreeLetterInput />, document.querySelector('.three-letter-input-container'));
 
     const gameOverContainer = document.querySelector(".game-over-container");
     gameOverContainer.animate(...animations.fadeIn as Animation);
@@ -39,12 +35,6 @@ export default class GameOver {
         render(<ThreeLetterInput parent={this} />, document.querySelector('.three-letter-input-container'));
       };
     }, 2000);
-
-
-    // window.setTimeout(() => {
-    //   // prevent user from closing gameover screen instantly while still trying to rotate
-    //   window.addEventListener("keydown", onKeyDown);
-    // }, 500);
   }
 
   get controls() {
@@ -63,18 +53,8 @@ export default class GameOver {
     new HighScores({
       score: this.game?.stage?.score,
       name: nickName,
-      timestamp: new Date(),
       v: process.env.VERSION,
       mode: 'singlePlayer'
     }, this.game);
   }
-
-  // fetchHighScoresFromBackend(): any {
-  //   return fetch(`${process.env.API_URL}/scores`)
-  //     .then((res) => res.json())
-  //     .then((scores) => {
-  //       console.log(scores);
-  //       this.serverHighScores = scores;
-  //     });
-  // }
 }

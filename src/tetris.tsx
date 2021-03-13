@@ -6,6 +6,7 @@ import TouchControls from "./controls/touchControls";
 import GestureControls from "./controls/gestureControls";
 import StarryBackground from './StarryBackground';
 import { render } from "preact";
+import { ServerHighScore } from './highScores';
 
 export type GameState = "splash" | "playing" | "gameOver" | "highScore";
 export type GameMode = "singlePlayer";
@@ -16,8 +17,11 @@ export default class Tetris {
   stage: Stage;
   splash: Splash;
   gameOver: GameOver;
+  serverHighScore: ServerHighScore;
 
   constructor() {
+    this.fetchHighScore();
+
     render(
     <div class="tetris-container">
       <StarryBackground />
@@ -34,10 +38,7 @@ export default class Tetris {
     }
     window.addEventListener('resize', setVH);
     setVH();
-
   }
-
-
 
   setGameState(gameState: GameState) {
     this.gameState = gameState;
@@ -63,6 +64,17 @@ export default class Tetris {
   get isDesktop() {
     return !this.isMobile;
   }
+
+  fetchHighScore() {
+    fetch(`${process.env.API_URL}/scores`)
+      .then((res) => res.json())
+      .then((scores) => {
+        this.serverHighScore = scores[0];
+      });
+  }
+
 }
+
+
 
 new Tetris();

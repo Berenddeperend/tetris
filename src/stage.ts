@@ -158,16 +158,7 @@ export default class Stage {
     this.activeBlock.removeShadow();
     this.activeBlock.d3Shadow.selectAll("rect").remove(); //don't do this here
 
-    this.activeBlock = this.queue.pop();
-    this.activeBlock.init("stage");
-    this.queue.push(new Block(++this.blockIndex, this, "queue"));
-
-    //if the block spawned invalidly, instant game over
-    if (!this.activeBlock.blockPositionIsValid) {
-      this.isGameOver = true;
-      this.beforeDestroy();
-      return this.game.setGameState("gameOver");
-    }
+    
 
     this.completedRows.map((rowIndex) => {
       this.clearedLines++;
@@ -197,6 +188,16 @@ export default class Stage {
       this.internalGrid.unshift(new Array(this.gridWidth).fill(0));
     });
 
+    this.activeBlock = this.queue.pop();
+    this.activeBlock.init("stage");
+    this.queue.push(new Block(++this.blockIndex, this, "queue"));
+
+    //if the block spawned invalidly, instant game over
+    if (!this.activeBlock.blockPositionIsValid) {
+      this.isGameOver = true;
+      this.beforeDestroy();
+      return this.game.setGameState("gameOver");
+    }
 
   }
 

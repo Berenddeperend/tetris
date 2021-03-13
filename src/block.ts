@@ -153,6 +153,7 @@ export default class Block {
         return row.map((atom, columnIndex) => {
           if (!atom) return true;
           return (
+            this.stage.internalGrid[this.y + rowIndex] &&
             this.stage.internalGrid[this.y + rowIndex][this.x + columnIndex] ===
             0
           );
@@ -234,7 +235,6 @@ export default class Block {
 
     if (this.hasShadow) {
       const targetYPos = this.getShadowYPos();
-      console.log("targetYPos: ", targetYPos);
 
       this.d3Shadow.attr(
         "transform",

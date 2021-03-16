@@ -8,6 +8,12 @@ html {
   background: radial-gradient(ellipse at bottom, lighten($black, 15%), darken($black, 2%));
 }
 
+pre {
+  display: inline-block;
+  font-size: 20px;
+  margin: 0;
+}
+
 a {
   color: white;
   text-decoration: none;

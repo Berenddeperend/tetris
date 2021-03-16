@@ -26,6 +26,10 @@ export default class KeyboardControls {
         switch (e.code) {
           case "Space":
             return game.splash.controls.continue();
+            case "KeyG":
+            return game.splash.controls.openGithub();
+            case "KeyH":
+            return game.splash.controls.openHighscores();
         }
       }
 

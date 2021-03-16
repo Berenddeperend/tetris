@@ -26,6 +26,10 @@ export default class KeyboardControls {
         switch (e.code) {
           case "Space":
             return game.splash.controls.continue();
+          case "ArrowUp":
+            return game.splash.controls.up();
+          case "ArrowDown":
+            return game.splash.controls.down();
         }
       }
 

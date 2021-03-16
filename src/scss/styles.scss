@@ -5,6 +5,8 @@
 @import "./inputName.scss";
 @import "./pause.scss";
 @import "./rollingText.scss";
+@import "./splash.scss";
+
 @import "./starrybackground.scss";
 
 // prettier-ignore
@@ -132,8 +134,22 @@
     }
   }
 
-  .begin {
+  .menu {
     margin-top: 4rem;
+    list-style-type: none;
+
+    padding-left: 0;
+
+    .menu-item {
+      margin-bottom: 10px;
+
+
+      &.active {
+        color: green;
+      }
+    }
+
+
     .letter {
       @include text-shadow(0.1em, false);
 

@@ -4,12 +4,16 @@ import { uniq } from "./utils";
 import Tetris from "./tetris";
 import HighScores from "./highScores";
 import Pause from "./states/pause";
+import VirtualClock from 'virtual-clock';
+
 
 import { html, render, PreactNode } from "./dom";
 
 export default class Stage {
   game: Tetris;
   pause: Pause;
+  
+  clock: VirtualClock;
 
   gridWidth: number;
   gridHeight: number;
@@ -66,9 +70,19 @@ export default class Stage {
       `${(this.gridWidth * this.blockSize) / 10}rem`
     );
 
-    this.tickInterval = window.setInterval(() => {
+
+
+    this.clock = new VirtualClock;
+    this.clock.minimum = 0;
+    this.clock.maximum = 1000;
+    this.clock.loop = true;
+
+
+    this.clock.alwaysAt(1000, ()=> {
+      // this.clock.time = 0;
       this.tick();
-    }, 1000);
+    });
+    this.clock.start();
   }
 
   initializeInternalGrid() {
@@ -107,10 +121,9 @@ export default class Stage {
         while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
           this.activeBlock.moveDown();
         }
-        clearInterval(this.tickInterval);
-        this.tickInterval = window.setInterval(() => {
-          this.tick();
-        }, 1000);
+
+        this.clock.time = 0;
+
         this.finishBlock(this.activeBlock);
         return "instaFall";
       },
@@ -122,9 +135,11 @@ export default class Stage {
       pause: () => {
         if (this.isPaused) {
           this.isPaused = false;
+          this.clock.stop()
           Pause.removePause();
         } else {
           this.isPaused = true;
+          this.clock.start();
           this.pause = new Pause();
         }
       },
@@ -137,8 +152,6 @@ export default class Stage {
       this.game.setGameState("gameOver");
       return;
     }
-
-    if (this.isPaused) return;
 
     if (this.blockWillCollideYOnNextTick(this.activeBlock)) {
       this.finishBlock(this.activeBlock);
@@ -163,6 +176,9 @@ export default class Stage {
     this.completedRows.map((rowIndex) => {
       this.clearedLines++;
       this.updateScoreUI();
+
+      const level = Math.floor(this.clearedLines / 3);
+      this.clock.rate = 1 + level / 2;
 
       const uniqueBlockIdsInRow = uniq(this.internalGrid[rowIndex]);
 
@@ -353,6 +369,6 @@ export default class Stage {
 
   beforeDestroy() {
     this.d3Stage.attr("class", "stage is-game-over");
-    clearInterval(this.tickInterval);
+    this.clock.stop();
   }
 }

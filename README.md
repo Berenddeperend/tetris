@@ -1,6 +1,5 @@
 Bugs:
 - Can't rotate block sticky to left side
-- SVG 'next' viewbox
 
 Features:
 - Reset tick after last-minute rotate
@@ -23,7 +22,6 @@ Maintenance:
 
 Future:
 - 2 player mode (one client)
-- Backend for highscores (rpi or firebase)
 - Validate highscore by saving game history (Erik S)
 - Touchscreen support through hammer.js
 - Stats

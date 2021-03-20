@@ -3917,7 +3917,7 @@ function () {
             children: "]"
           }, void 0), "ighscores"]
         }), void 0), jsx_runtime_1.jsxs("span", {
-          children: ["version ", "0.3"]
+          children: ["version ", "1"]
         }, void 0)]
       }), void 0)]
     }), void 0);
@@ -4685,7 +4685,7 @@ function () {
     new highScores_1.default({
       score: (_b = (_a = this.game) === null || _a === void 0 ? void 0 : _a.stage) === null || _b === void 0 ? void 0 : _b.score,
       name: nickName,
-      v: "0.3",
+      v: "1",
       mode: 'singlePlayer'
     }, this.game);
   };
@@ -7980,7 +7980,8 @@ function () {
   Tetris.prototype.fetchHighScore = function () {
     var _this = this;
 
-    fetch("https://berendswennenhuis.nl" + "/scores").then(function (res) {
+    fetch("https://berendswennenhuis.nl" + "/scores") // fetch(`https://berendswennenhuis.nl/scores`)
+    .then(function (res) {
       return res.json();
     }).then(function (scores) {
       _this.serverHighScore = scores[0];
@@ -8020,7 +8021,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64775" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59891" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

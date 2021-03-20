@@ -67,6 +67,7 @@ export default class Tetris {
 
   fetchHighScore() {
     fetch(`${process.env.API_URL}/scores`)
+    // fetch(`https://berendswennenhuis.nl/scores`)
       .then((res) => res.json())
       .then((scores) => {
         this.serverHighScore = scores[0];

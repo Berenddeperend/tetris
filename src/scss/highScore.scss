@@ -68,6 +68,10 @@
         padding-left: 0;
       }
 
+      &.name {
+        max-width: 50px;
+      }
+
       &.score {
         text-align: right;
         padding-right: 0;

@@ -171,8 +171,6 @@ export default class Stage {
     this.activeBlock.removeShadow();
     this.activeBlock.d3Shadow.selectAll("rect").remove(); //don't do this here
 
-    
-
     this.completedRows.map((rowIndex) => {
       this.clearedLines++;
       this.updateScoreUI();

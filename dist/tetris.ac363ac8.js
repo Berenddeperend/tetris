@@ -884,8 +884,7 @@ function () {
     var _this = this;
 
     var targetShapeRowIndex = rowIndex - this.y;
-    var rowLength = this.shape[0].length; // console.log(this.d3Self)
-
+    var rowLength = this.shape[0].length;
     var targetAtomsYValue = targetShapeRowIndex * this.stage.blockSize;
     var targetAtoms = this.d3Self.selectAll("rect[y=\"" + targetAtomsYValue + "\"]").attr("class", "atom clear");
     console.log("targetAtoms: ", targetAtoms);
@@ -3560,6 +3559,7 @@ function () {
     this.isGameOver = false;
     this.isPaused = false;
     this.clearedLines = 0;
+    this.freezeInput = false;
     this.game = game;
     this.gridWidth = width;
     this.gridHeight = height; // this.blockSize = this.game.isDesktop ? blockSize : 18;
@@ -3603,7 +3603,7 @@ function () {
 
       return {
         left: function left() {
-          if (_this.isPaused) return;
+          if (_this.isPaused || _this.freezeInput) return;
 
           if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, -1)) {
             _this.activeBlock.moveX(-1);
@@ -3612,7 +3612,7 @@ function () {
           }
         },
         right: function right() {
-          if (_this.isPaused) return;
+          if (_this.isPaused || _this.freezeInput) return;
 
           if (!_this.blockWillCollideXOnNextTick(_this.activeBlock, 1)) {
             _this.activeBlock.moveX(1);
@@ -3621,14 +3621,14 @@ function () {
           }
         },
         down: function down() {
-          if (_this.isPaused) return;
+          if (_this.isPaused || _this.freezeInput) return;
 
           _this.tick();
 
           return "down";
         },
         instaFall: function instaFall() {
-          if (_this.isPaused) return;
+          if (_this.isPaused || _this.freezeInput) return;
 
           while (!_this.blockWillCollideYOnNextTick(_this.activeBlock)) {
             _this.activeBlock.moveDown();
@@ -3641,7 +3641,7 @@ function () {
           return "instaFall";
         },
         rotate: function rotate() {
-          if (_this.isPaused) return;
+          if (_this.isPaused || _this.freezeInput) return;
 
           _this.activeBlock.rotate();
 
@@ -3696,7 +3696,12 @@ function () {
     this.activeBlock.removeShadow();
     this.activeBlock.d3Shadow.selectAll("rect").remove(); //don't do this here
 
+    var hasCompletedRow = !!this.completedRows.length;
     this.completedRows.map(function (rowIndex) {
+      _this.freezeInput = true;
+
+      _this.clock.stop();
+
       _this.clearedLines++;
 
       _this.updateScoreUI();
@@ -3719,22 +3724,41 @@ function () {
         return blockWithClearedRow.clearRow(rowIndex);
       });
 
-      blocksIdsThatShouldFall.forEach(function (blockId) {
-        return _this.settledBlocks[blockId - 1].moveDown();
-      });
+      setTimeout(function () {
+        blocksIdsThatShouldFall.forEach(function (blockId) {
+          return _this.settledBlocks[blockId - 1].moveDown();
+        });
 
-      _this.internalGrid.splice(rowIndex, 1);
+        _this.internalGrid.splice(rowIndex, 1);
 
-      _this.internalGrid.unshift(new Array(_this.gridWidth).fill(0));
+        _this.internalGrid.unshift(new Array(_this.gridWidth).fill(0));
+
+        _this.clock.start();
+
+        _this.freezeInput = false;
+      }, 1000);
     });
-    this.activeBlock = this.queue.pop();
-    this.activeBlock.init("stage");
-    this.queue.push(new block_1.default(++this.blockIndex, this, "queue")); //if the block spawned invalidly, instant game over
 
-    if (!this.activeBlock.blockPositionIsValid) {
-      this.isGameOver = true;
-      this.beforeDestroy();
-      return this.game.setGameState("gameOver");
+    var generateNewBlock = function generateNewBlock() {
+      _this.activeBlock = _this.queue.pop();
+
+      _this.activeBlock.init("stage");
+
+      _this.queue.push(new block_1.default(++_this.blockIndex, _this, "queue"));
+    };
+
+    if (hasCompletedRow) {
+      setTimeout(function () {
+        generateNewBlock();
+      }, 1000);
+    } else {
+      generateNewBlock(); //if the block spawned invalidly, instant game over
+
+      if (!this.activeBlock.blockPositionIsValid) {
+        this.isGameOver = true;
+        this.beforeDestroy();
+        return this.game.setGameState("gameOver");
+      }
     }
   };
 
@@ -3816,7 +3840,7 @@ function () {
     var _a;
 
     this.d3Stage = d3_selection_1.selectAll("body").append("div").attr("class", "stage");
-    this.d3Stage.append("svg").attr('class', 'stage-svg').attr("style", "width: " + this.gridWidth * this.blockSize / 10 + "rem; height: " + this.gridHeight * this.blockSize / 10 + "rem");
+    this.d3Stage.append("svg").attr("class", "stage-svg").attr("style", "width: " + this.gridWidth * this.blockSize / 10 + "rem; height: " + this.gridHeight * this.blockSize / 10 + "rem");
     this.d3UI = d3_selection_1.select("body").append("div").attr("class", "ui");
     var queue = this.d3UI.append("div").attr("class", "queue ui-block");
     queue.append("div").attr("class", "label").text("Next");
@@ -4163,7 +4187,7 @@ function () {
     var _this = this;
 
     return new Promise(function (resolve) {
-      fetch("https://berendswennenhuis.nl" + "/score", {
+      fetch("https://berendswennenhuis.nl/tetris" + "/score", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -4182,7 +4206,7 @@ function () {
     var _this = this;
 
     return new Promise(function (resolve) {
-      fetch("https://berendswennenhuis.nl" + "/scores").then(function (res) {
+      fetch("https://berendswennenhuis.nl/tetris" + "/scores").then(function (res) {
         return res.json();
       }).then(function (scores) {
         _this.highscoresLoaded = true;
@@ -7988,7 +8012,7 @@ function () {
   Tetris.prototype.fetchHighScore = function () {
     var _this = this;
 
-    fetch("https://berendswennenhuis.nl" + "/scores") // fetch(`https://berendswennenhuis.nl/scores`)
+    fetch("https://berendswennenhuis.nl/tetris" + "/scores") // fetch(`https://berendswennenhuis.nl/scores`)
     .then(function (res) {
       return res.json();
     }).then(function (scores) {
@@ -8029,7 +8053,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57340" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49405" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

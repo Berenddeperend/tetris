@@ -37,6 +37,13 @@
   }
 }
 
+@keyframes blink {
+  //usage:   animation: blink 1s steps(2, start) infinite;
+  to {
+    visibility: hidden;
+  }
+}
+
 @keyframes slide-fade-in {
   from {
     opacity: 0;

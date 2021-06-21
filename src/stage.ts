@@ -4,15 +4,14 @@ import { uniq } from "./utils";
 import Tetris from "./tetris";
 import HighScores from "./highScores";
 import Pause from "./states/pause";
-import VirtualClock from 'virtual-clock';
-
+import VirtualClock from "virtual-clock";
 
 import { html, render, PreactNode } from "./dom";
 
 export default class Stage {
   game: Tetris;
   pause: Pause;
-  
+
   clock: VirtualClock;
 
   gridWidth: number;
@@ -31,6 +30,7 @@ export default class Stage {
   isPaused: boolean = false;
   tickInterval: number;
   clearedLines: number = 0;
+  freezeInput: boolean = false;
 
   d3Stage: any; //todo: better typing
   d3UI: any; //todo: better typing
@@ -70,15 +70,12 @@ export default class Stage {
       `${(this.gridWidth * this.blockSize) / 10}rem`
     );
 
-
-
-    this.clock = new VirtualClock;
+    this.clock = new VirtualClock();
     this.clock.minimum = 0;
     this.clock.maximum = 1000;
     this.clock.loop = true;
 
-
-    this.clock.alwaysAt(1000, ()=> {
+    this.clock.alwaysAt(1000, () => {
       // this.clock.time = 0;
       this.tick();
     });
@@ -98,26 +95,26 @@ export default class Stage {
   get controls() {
     return {
       left: () => {
-        if (this.isPaused) return;
+        if (this.isPaused || this.freezeInput) return;
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, -1)) {
           this.activeBlock.moveX(-1);
           return "left";
         }
       },
       right: () => {
-        if (this.isPaused) return;
+        if (this.isPaused || this.freezeInput) return;
         if (!this.blockWillCollideXOnNextTick(this.activeBlock, 1)) {
           this.activeBlock.moveX(1);
           return "right";
         }
       },
       down: () => {
-        if (this.isPaused) return;
+        if (this.isPaused || this.freezeInput) return;
         this.tick();
         return "down";
       },
       instaFall: () => {
-        if (this.isPaused) return;
+        if (this.isPaused || this.freezeInput) return;
         while (!this.blockWillCollideYOnNextTick(this.activeBlock)) {
           this.activeBlock.moveDown();
         }
@@ -128,14 +125,14 @@ export default class Stage {
         return "instaFall";
       },
       rotate: () => {
-        if (this.isPaused) return;
+        if (this.isPaused || this.freezeInput) return;
         this.activeBlock.rotate();
         return "rotate";
       },
       pause: () => {
         if (this.isPaused) {
           this.isPaused = false;
-          this.clock.stop()
+          this.clock.stop();
           Pause.removePause();
         } else {
           this.isPaused = true;
@@ -171,7 +168,11 @@ export default class Stage {
     this.activeBlock.removeShadow();
     this.activeBlock.d3Shadow.selectAll("rect").remove(); //don't do this here
 
+    const hasCompletedRow = !!this.completedRows.length;
+
     this.completedRows.map((rowIndex) => {
+      this.freezeInput = true;
+      this.clock.stop();
       this.clearedLines++;
       this.updateScoreUI();
 
@@ -189,30 +190,44 @@ export default class Stage {
       );
 
       this.settledBlocks
-        .filter((settledBlock) => uniqueBlockIdsInRow.includes(settledBlock.id))
+        .filter((settledBlock) =>
+          uniqueBlockIdsInRow.includes(settledBlock.id)
+        )
         .forEach((blockWithClearedRow) =>
           blockWithClearedRow.clearRow(rowIndex)
         );
-
-      blocksIdsThatShouldFall.forEach((blockId: number) =>
-        this.settledBlocks[blockId - 1].moveDown()
-      );
-
-      this.internalGrid.splice(rowIndex, 1);
-      this.internalGrid.unshift(new Array(this.gridWidth).fill(0));
+      
+      setTimeout(() => {
+        blocksIdsThatShouldFall.forEach((blockId: number) =>
+          this.settledBlocks[blockId - 1].moveDown()
+        );
+        this.internalGrid.splice(rowIndex, 1);
+        this.internalGrid.unshift(new Array(this.gridWidth).fill(0));
+        this.clock.start();
+        this.freezeInput = false;
+      }, 1000);
     });
 
-    this.activeBlock = this.queue.pop();
-    this.activeBlock.init("stage");
-    this.queue.push(new Block(++this.blockIndex, this, "queue"));
-
-    //if the block spawned invalidly, instant game over
-    if (!this.activeBlock.blockPositionIsValid) {
-      this.isGameOver = true;
-      this.beforeDestroy();
-      return this.game.setGameState("gameOver");
+    
+    const generateNewBlock = ()=> {
+      this.activeBlock = this.queue.pop();
+      this.activeBlock.init("stage");
+      this.queue.push(new Block(++this.blockIndex, this, "queue"));
     }
-
+    
+    if(hasCompletedRow) {
+      setTimeout(() => {
+        generateNewBlock()
+      }, 1000)
+    } else {
+      generateNewBlock()
+      //if the block spawned invalidly, instant game over
+      if (!this.activeBlock.blockPositionIsValid) {
+        this.isGameOver = true;
+        this.beforeDestroy();
+        return this.game.setGameState("gameOver");
+      }
+    }
   }
 
   updateScoreUI() {
@@ -283,13 +298,13 @@ export default class Stage {
     this.d3Stage = selectAll("body").append("div").attr("class", "stage");
     this.d3Stage
       .append("svg")
-      .attr('class', 'stage-svg')
+      .attr("class", "stage-svg")
       .attr(
         "style",
         `width: ${(this.gridWidth * this.blockSize) / 10}rem; height: ${
           (this.gridHeight * this.blockSize) / 10
         }rem`
-      )
+      );
 
     this.d3UI = select("body").append("div").attr("class", "ui");
 
@@ -316,8 +331,6 @@ export default class Stage {
       .append("div")
       .attr("class", "value")
       .text(this.game.serverHighScore?.score);
-
-    
 
     this.drawGridLines();
     this.updateScoreUI();

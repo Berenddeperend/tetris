@@ -166,8 +166,6 @@ export default class Block {
     const targetShapeRowIndex = rowIndex - this.y;
     const rowLength = this.shape[0].length;
 
-    // console.log(this.d3Self)
-
     const targetAtomsYValue = targetShapeRowIndex * this.stage.blockSize;
 
     const targetAtoms = this.d3Self

@@ -20,12 +20,11 @@
   &.red { fill: $red; }
 
   .atom {
-    transition: transform 1s;
+    transition: opacity 1s;
     transform-origin: center;
-
+    
     &.clear {
-      // border: 10px solid red;
-      transform: scale(0);
+      animation: blink 0.4s steps(2, start) infinite;
     } 
 
     &.shadow {
@@ -33,6 +32,8 @@
     }
   }
 }
+
+
 
 
 .stage-container {

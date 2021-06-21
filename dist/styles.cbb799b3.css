@@ -101,6 +101,11 @@
     color: #ff4f69;
   }
 }
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
 @keyframes slide-fade-in {
   from {
     opacity: 0;
@@ -370,11 +375,11 @@ body:after {
   fill: #ff4f69;
 }
 .block .atom {
-  transition: transform 1s;
+  transition: opacity 1s;
   transform-origin: center;
 }
 .block .atom.clear {
-  transform: scale(0);
+  animation: blink 0.4s steps(2, start) infinite;
 }
 .block .atom.shadow {
   opacity: 0.3;

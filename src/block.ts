@@ -2,6 +2,7 @@ import { selectAll } from "d3-selection";
 import { possibleBlocks } from "./possibleBlocks";
 import { cloneDeep } from "./utils";
 import Stage from "./stage";
+import animations, { Animation } from "./animations";
 
 export type Shape = number[][];
 export type renderBlockTo = "queue" | "stage";
@@ -53,12 +54,10 @@ export default class Block {
         .attr("class", `block ${this.color} shadow`);
     }
 
-
     this.d3Self = d3RenderTarget
       .select("svg")
       .insert("g", this.stage.gridOverBlocks ? ".gridlines" : null)
       .attr("class", `block ${this.color}`);
-
 
     this.draw();
   }
@@ -155,7 +154,7 @@ export default class Block {
           return (
             this.stage.internalGrid[this.y + rowIndex] &&
             this.stage.internalGrid[this.y + rowIndex][this.x + columnIndex] ===
-            0
+              0
           );
         });
       })
@@ -166,9 +165,23 @@ export default class Block {
   clearRow(rowIndex: number) {
     const targetShapeRowIndex = rowIndex - this.y;
     const rowLength = this.shape[0].length;
+
+    const targetAtomsYValue = targetShapeRowIndex * this.stage.blockSize;
+
+    const targetAtoms = this.d3Self
+      .selectAll(`rect[y="${targetAtomsYValue}"]`)
+      .attr("class", "atom clear");
+
+    console.log("targetAtoms: ", targetAtoms);
+
     this.shape.splice(targetShapeRowIndex, 1);
     this.shape.unshift(new Array(rowLength).fill(0));
-    this.draw();
+
+
+    setTimeout(() => {
+      this.draw();
+    }, this.stage.clearAnimationDuration);
+
   }
 
   moveDown() {

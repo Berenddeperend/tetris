@@ -1,6 +1,11 @@
+require('dotenv').config();
 const ghpages = require('gh-pages');
 ghpages.publish('dist', {
-  repo: "https://github.com/Berenddeperend/tetris.git"
+  repo: `https://${process.env.GH_TOKEN}@github.com/Berenddeperend/tetris.git`
 }, function(err) {
-  console.log('uploaded succesful.')
+  if(err) {
+    console.log('err: ', err);
+  } else {
+    console.log('uploaded succesful.')
+  }
 });

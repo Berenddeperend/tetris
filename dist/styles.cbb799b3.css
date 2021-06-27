@@ -379,7 +379,7 @@ body:after {
   transform-origin: center;
 }
 .block .atom.clear {
-  animation: blink 0.4s steps(2, start) infinite;
+  animation: blink 0.2s steps(2, start) infinite;
 }
 .block .atom.shadow {
   opacity: 0.3;

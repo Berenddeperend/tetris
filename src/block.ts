@@ -180,7 +180,7 @@ export default class Block {
 
     setTimeout(() => {
       this.draw();
-    }, 1000);
+    }, this.stage.clearAnimationDuration);
 
   }
 

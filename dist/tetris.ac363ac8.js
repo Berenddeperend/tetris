@@ -892,7 +892,7 @@ function () {
     this.shape.unshift(new Array(rowLength).fill(0));
     setTimeout(function () {
       _this.draw();
-    }, 1000);
+    }, this.stage.clearAnimationDuration);
   };
 
   Block.prototype.moveDown = function () {
@@ -3560,6 +3560,7 @@ function () {
     this.isPaused = false;
     this.clearedLines = 0;
     this.freezeInput = false;
+    this.clearAnimationDuration = 400;
     this.game = game;
     this.gridWidth = width;
     this.gridHeight = height; // this.blockSize = this.game.isDesktop ? blockSize : 18;
@@ -3736,7 +3737,7 @@ function () {
         _this.clock.start();
 
         _this.freezeInput = false;
-      }, 1000);
+      }, _this.clearAnimationDuration);
     });
 
     var generateNewBlock = function generateNewBlock() {
@@ -3750,7 +3751,7 @@ function () {
     if (hasCompletedRow) {
       setTimeout(function () {
         generateNewBlock();
-      }, 1000);
+      }, this.clearAnimationDuration);
     } else {
       generateNewBlock(); //if the block spawned invalidly, instant game over
 
@@ -8053,7 +8054,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49405" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63597" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

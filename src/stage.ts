@@ -31,6 +31,7 @@ export default class Stage {
   tickInterval: number;
   clearedLines: number = 0;
   freezeInput: boolean = false;
+  clearAnimationDuration: number = 400;
 
   d3Stage: any; //todo: better typing
   d3UI: any; //todo: better typing
@@ -205,7 +206,7 @@ export default class Stage {
         this.internalGrid.unshift(new Array(this.gridWidth).fill(0));
         this.clock.start();
         this.freezeInput = false;
-      }, 1000);
+      }, this.clearAnimationDuration);
     });
 
     
@@ -218,7 +219,7 @@ export default class Stage {
     if(hasCompletedRow) {
       setTimeout(() => {
         generateNewBlock()
-      }, 1000)
+      }, this.clearAnimationDuration)
     } else {
       generateNewBlock()
       //if the block spawned invalidly, instant game over

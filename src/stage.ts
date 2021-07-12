@@ -131,13 +131,14 @@ export default class Stage {
         return "rotate";
       },
       pause: () => {
+        console.log(this.isPaused);
         if (this.isPaused) {
           this.isPaused = false;
-          this.clock.stop();
+          this.clock.start();
           Pause.removePause();
         } else {
           this.isPaused = true;
-          this.clock.start();
+          this.clock.stop();
           this.pause = new Pause();
         }
       },

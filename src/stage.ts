@@ -131,7 +131,6 @@ export default class Stage {
         return "rotate";
       },
       pause: () => {
-        console.log(this.isPaused);
         if (this.isPaused) {
           this.isPaused = false;
           this.clock.start();

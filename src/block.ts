@@ -172,8 +172,6 @@ export default class Block {
       .selectAll(`rect[y="${targetAtomsYValue}"]`)
       .attr("class", "atom clear");
 
-    console.log("targetAtoms: ", targetAtoms);
-
     this.shape.splice(targetShapeRowIndex, 1);
     this.shape.unshift(new Array(rowLength).fill(0));
 

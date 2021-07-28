@@ -2,6 +2,11 @@ import Tetris from "../tetris";
 // import { html, render, PreactNode } from "../dom";
 import { render } from "preact";
 import { explodeText, rollingText } from "../utils";
+
+const links = {
+  github: "https://github.com/Berenddeperend/tetris",
+  highscores: "https://berendswennenhuis.nl/tetris/api/scores"
+}
 export default class Splash {
   game: Tetris;
 
@@ -24,11 +29,11 @@ export default class Splash {
         {/* {rollingText(['1', '2'])} */}
 
         <div class="social-container">
-          <a href="https://github.com/Berenddeperend/tetris" target="_blank">
+          <a href={links.github} target="_blank">
             <pre>[</pre>G<pre>]</pre>ithub
           </a>
 
-          <a href="https://berendswennenhuis.nl/scores" target="_blank">
+          <a href={links.highscores} target="_blank">
             <pre>[</pre>H<pre>]</pre>ighscores
           </a>
 
@@ -47,10 +52,10 @@ export default class Splash {
         this.game.setGameState("playing");
       },
       openGithub: () => {
-        window.open("https://github.com/Berenddeperend/tetris", "_blank");
+        window.open(links.github, "_blank");
       },
       openHighscores: () => {
-        window.open("https://berendswennenhuis.nl/scores", "_blank");
+        window.open(links.highscores, "_blank");
       },
     };
   }

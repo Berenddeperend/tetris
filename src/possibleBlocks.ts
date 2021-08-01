@@ -9,22 +9,22 @@ export const possibleBlocks: { shape: Shape; color: string, id: number }[] = [
       [1, 1, 1],
     ],
   },
-  {
-    id: 2,
-    color: "green",
-    shape: [
-      [0, 1, 1],
-      [1, 1, 0],
-    ],
-  },
-  {
-    id: 3,
-    color: "red",
-    shape: [
-      [1, 1, 0],
-      [0, 1, 1],
-    ],
-  },
+  // {
+  //   id: 2,
+  //   color: "green",
+  //   shape: [
+  //     [0, 1, 1],
+  //     [1, 1, 0],
+  //   ],
+  // },
+  // {
+  //   id: 3,
+  //   color: "red",
+  //   shape: [
+  //     [1, 1, 0],
+  //     [0, 1, 1],
+  //   ],
+  // },
   {
     id: 4,
     color: "yellow",

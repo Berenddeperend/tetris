@@ -32,6 +32,7 @@ export default class Stage {
   clearedLines: number = 0;
   freezeInput: boolean = false;
   clearAnimationDuration: number = 400;
+  // clearAnimationDuration: number = 4000;
 
   d3Stage: any; //todo: better typing
   d3UI: any; //todo: better typing

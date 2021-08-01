@@ -23,18 +23,19 @@
     transition: opacity 1s;
     transform-origin: center;
     
-    &.clear {
+    &.clear-blink-animation {
       animation: blink 0.2s steps(2, start) infinite;
     } 
+
+    &.hibbem {
+      visibility: hidden;
+    }
 
     &.shadow {
       opacity: 0.3;
     }
   }
 }
-
-
-
 
 .stage-container {
   border: 1px solid red;

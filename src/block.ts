@@ -1,4 +1,4 @@
-import { selectAll } from "d3-selection";
+import { select, selectAll } from "d3-selection";
 import { possibleBlocks } from "./possibleBlocks";
 import { cloneDeep } from "./utils";
 import Stage from "./stage";
@@ -165,21 +165,28 @@ export default class Block {
   clearRow(rowIndex: number) {
     const targetShapeRowIndex = rowIndex - this.y;
     const rowLength = this.shape[0].length;
-
     const targetAtomsYValue = targetShapeRowIndex * this.stage.blockSize;
+    const self = this;
+    const targetAtoms = this.d3Self.selectAll(`rect[y="${targetAtomsYValue}"]`);
+    const animationDurationPerAtom = this.stage.clearAnimationDuration / (this.stage.gridWidth / 2);
 
-    const targetAtoms = this.d3Self
-      .selectAll(`rect[y="${targetAtomsYValue}"]`)
-      .attr("class", "atom clear");
-
+    targetAtoms._groups[0].forEach((atom, atomXIndex) => {
+      const internalOffset = this.shape[targetShapeRowIndex].findIndex(a => !!a) //for when the first atom in a row no longer exists.
+      let absX = (atomXIndex + self.x + internalOffset) - 5;
+      
+      if(absX < 0) absX++;
+      
+      setTimeout(() => {
+        select(atom).attr('class', "atom hibbem");
+      }, Math.abs(absX * animationDurationPerAtom));
+    })
+    
     this.shape.splice(targetShapeRowIndex, 1);
     this.shape.unshift(new Array(rowLength).fill(0));
-
 
     setTimeout(() => {
       this.draw();
     }, this.stage.clearAnimationDuration);
-
   }
 
   moveDown() {

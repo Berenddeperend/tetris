@@ -198,6 +198,8 @@ svg {
   width: 100%;
   justify-content: space-evenly;
   display: none;
+  height: var(--stage-height);
+
 
   @media(min-width: $breakpoint) {
     display: block;

@@ -2,6 +2,7 @@ import { times } from "./utils";
 import { useState, useEffect } from 'preact/hooks';
 
 const starCount = Math.round(window.innerWidth * window.innerHeight * 0.0001);
+console.log('starCount: ', starCount);
 
 export default function StarryBackground() {
   const size = useWindowSize();

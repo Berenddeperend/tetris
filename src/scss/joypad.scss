@@ -1,0 +1,67 @@
+.joypad {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  z-index: 3;
+  border: 1px solid orange;
+
+  .directions {
+    position: relative;
+    z-index: 20;
+
+    border: 1px solid red;
+
+    $size: 200px;
+    width: $size;
+    height: $size;
+  }
+  .actions {
+    position: relative;
+    $size: 64px;
+    border: 1px solid green;
+    width: $size;
+    height: $size;
+
+    display: block;
+    z-index: 20;
+  }
+}
+
+.joypad-btn {
+  $size: 64px;
+  width: $size;
+  height: $size;
+  border-radius: $size;
+  position: absolute;
+  opacity: 0.4;
+  background: none;
+  border: 2px solid white;
+  color: white;
+  text-transform: uppercase;
+
+  &.left,
+  &.right,
+  &.down {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &.up {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.down {
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+  }
+
+  &.right {
+    right: 0;
+  }
+
+  //   &.down {
+  //       bottom: 0;
+  //   }
+}

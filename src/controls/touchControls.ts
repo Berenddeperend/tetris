@@ -1,5 +1,10 @@
 import Stage from "../stage";
 import Tetris from "../tetris";
+import { select, selectAll } from "d3-selection";
+
+// const buttons = ['left', 'right', 'up', 'down', 'rotate']
+const actions = ['rotate'];
+const directions = ['up', 'left', 'right', 'down']
 
 export default class TouchControls {
   deviceWidth: number;
@@ -12,60 +17,60 @@ export default class TouchControls {
     this.deviceHeight = document.querySelector("body").clientHeight;
     this.game = game;
 
+    const uiContainer = select('body').append('div').attr('class', 'joypad');
+    
+    const directionsGroup = uiContainer.append('div').attr('class', 'directions')
+    const actionsGroup = uiContainer.append('div').attr('class', 'actions')
+
+    directions.map(direction => {
+      directionsGroup
+        .append('button')
+        .attr('class', `joypad-btn ${direction}`)
+        .text(direction)
+        .attr('direction', direction)
+    })
+
+    actions.map(action => {
+      actionsGroup
+        .append('button')
+        .attr('class', `joypad-btn ${action}`)
+        .text(action)
+        .attr('direction', action)
+    })
+
     this.init();
   }
 
-  onTap: (e: any) => any = (e: TouchEvent) => {
-    e.preventDefault();
+  onTap = (e: TouchEvent) => {
+    // console.log('...args: ', ...args);
+    console.log('e: ', e);
+    // e.preventDefault();
 
     if (this.game.gameState === "splash") {
       this.game.splash.controls.continue();
     }
-
+    
     if (this.game.gameState === "gameOver") {
-      // this.game.gameOver.controls.retry();
+      this.game.gameOver.controls.retry();
     }
-
+    
     if (this.game.gameState === "playing") {
-      if (this.interval) {
-        clearInterval(this.interval);
-      }
-
-      const action = () => {
-        const x = e.touches[e.touches.length - 1].clientX;
-        const y = e.touches[e.touches.length - 1].clientY;
-
-        const xPercentage = (Math.round(x) / this.deviceWidth) * 100;
-        const yPercentage = (Math.round(y) / this.deviceHeight) * 100;
-
-        if (yPercentage > 80) {
-          return this.game.stage.controls.down();
-        }
-
-        if (xPercentage < 25) {
-          return this.game.stage.controls.left();
-        }
-
-        if (xPercentage > 75) {
+      console.log(e.target.getAttribute('direction'))
+      switch (e.target.getAttribute('direction')) {
+        case "right":
           return this.game.stage.controls.right();
-        }
-
-        const activeBlockTapped = this.game.stage.activeBlock.d3Self
-          .node()
-          .contains(e.target);
-
-        if (activeBlockTapped) {
+        case "left":
+          return this.game.stage.controls.left();
+        case "down":
+          return this.game.stage.controls.down();
+        case "up":
+          return this.game.stage.controls.instaFall();
+        case "rotate":
           return this.game.stage.controls.rotate();
-        }
-
-        // return this.game.stage.controls.rotate();
-      };
-
-      const executedAction = action();
-
-      if (["left", "right", "down"].includes(executedAction)) {
-        this.interval = window.setInterval(action, 80);
-      }
+          // case "KeyP": {} //deliberate fallthrough
+          // case "Escape": {
+          //   return this.game.stage.controls.pause();
+          }
     }
   };
 
@@ -74,8 +79,15 @@ export default class TouchControls {
   };
 
   init() {
-    document.addEventListener("touchstart", this.onTap);
-    document.addEventListener("touchend", this.onTapRelease);
+    [...actions, ...directions].map(btn => document.querySelector(`.joypad-btn.${btn}`).addEventListener('click', this.onTap));
+    // document.querySelector('.left').addEventListener('click', this.onTap);
+
+    // document.querySelector('.left').addEventListener('click', () => this.game.stage.controls.left())
+    // document.querySelector('.right').addEventListener('click', ()=> this.game.stage.controls.right())
+
+
+    // document.addEventListener("touchstart", this.onTap);
+    // document.addEventListener("touchend", this.onTapRelease);
   }
 
   destroy() {

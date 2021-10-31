@@ -4886,45 +4886,17 @@ function () {
   function TouchControls(game) {
     var _this = this;
 
-    this.onTap = function (e) {
-      // console.log('...args: ', ...args);
-      console.log('e: ', e); // e.preventDefault();
+    this.onTouchStart = function (e) {
+      _this.preformAction(e);
 
-      if (_this.game.gameState === "splash") {
-        _this.game.splash.controls.continue();
-      }
-
-      if (_this.game.gameState === "gameOver") {
-        _this.game.gameOver.controls.retry();
-      }
-
-      if (_this.game.gameState === "playing") {
-        console.log(e.target.getAttribute('direction'));
-
-        switch (e.target.getAttribute('direction')) {
-          case "right":
-            return _this.game.stage.controls.right();
-
-          case "left":
-            return _this.game.stage.controls.left();
-
-          case "down":
-            return _this.game.stage.controls.down();
-
-          case "up":
-            return _this.game.stage.controls.instaFall();
-
-          case "rotate":
-            return _this.game.stage.controls.rotate();
-          // case "KeyP": {} //deliberate fallthrough
-          // case "Escape": {
-          //   return this.game.stage.controls.pause();
-        }
-      }
+      _this.timeout = setTimeout(function () {
+        _this.interval = setInterval(_this.preformAction.bind(_this, e), 100);
+      }, 100);
     };
 
-    this.onTapRelease = function (e) {
+    this.onTouchEnd = function (e) {
       clearInterval(_this.interval);
+      clearTimeout(_this.timeout);
     };
 
     this.deviceWidth = document.querySelector("body").clientWidth;
@@ -4942,21 +4914,54 @@ function () {
     this.init();
   }
 
+  TouchControls.prototype.preformAction = function (e) {
+    console.log('performing action');
+
+    if (this.game.gameState === "splash") {
+      this.game.splash.controls.continue();
+    }
+
+    if (this.game.gameState === "gameOver") {
+      this.game.gameOver.controls.retry();
+    }
+
+    if (this.game.gameState === "playing") {
+      switch (e.target.getAttribute('direction')) {
+        case "right":
+          return this.game.stage.controls.right();
+
+        case "left":
+          return this.game.stage.controls.left();
+
+        case "down":
+          return this.game.stage.controls.down();
+
+        case "up":
+          return this.game.stage.controls.instaFall();
+
+        case "rotate":
+          return this.game.stage.controls.rotate();
+        // case "KeyP": {} //deliberate fallthrough
+        // case "Escape": {
+        //   return this.game.stage.controls.pause();
+      }
+    }
+  };
+
   TouchControls.prototype.init = function () {
     var _this = this;
 
     __spread(actions, directions).map(function (btn) {
-      return document.querySelector(".joypad-btn." + btn).addEventListener('click', _this.onTap);
-    }); // document.querySelector('.left').addEventListener('click', this.onTap);
-    // document.querySelector('.left').addEventListener('click', () => this.game.stage.controls.left())
-    // document.querySelector('.right').addEventListener('click', ()=> this.game.stage.controls.right())
-    // document.addEventListener("touchstart", this.onTap);
-    // document.addEventListener("touchend", this.onTapRelease);
+      return document.querySelector(".joypad-btn." + btn).addEventListener('touchstart', _this.onTouchStart);
+    });
 
+    __spread(actions, directions).map(function (btn) {
+      return document.querySelector(".joypad-btn." + btn).addEventListener('touchend', _this.onTouchEnd);
+    });
   };
 
   TouchControls.prototype.destroy = function () {
-    document.removeEventListener("touchstart", this.onTap);
+    document.removeEventListener("touchstart", this.onTouchStart);
   };
 
   return TouchControls;
@@ -8131,7 +8136,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56188" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53033" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -10,6 +10,7 @@ export default class TouchControls {
   deviceWidth: number;
   deviceHeight: number;
   interval: number;
+  timeout: number;
   game: Tetris;
 
   constructor(game: Tetris) {
@@ -41,11 +42,8 @@ export default class TouchControls {
     this.init();
   }
 
-  onTap = (e: TouchEvent) => {
-    // console.log('...args: ', ...args);
-    console.log('e: ', e);
-    // e.preventDefault();
-
+  preformAction(e:TouchEvent) {
+    console.log('performing action')
     if (this.game.gameState === "splash") {
       this.game.splash.controls.continue();
     }
@@ -55,7 +53,6 @@ export default class TouchControls {
     }
     
     if (this.game.gameState === "playing") {
-      console.log(e.target.getAttribute('direction'))
       switch (e.target.getAttribute('direction')) {
         case "right":
           return this.game.stage.controls.right();
@@ -72,25 +69,27 @@ export default class TouchControls {
           //   return this.game.stage.controls.pause();
           }
     }
+  }
+
+
+  onTouchStart = (e: TouchEvent) => {
+    this.preformAction(e);
+    this.timeout = setTimeout(()=>{
+      this.interval = setInterval(this.preformAction.bind(this, e), 100)
+    }, 100);
   };
 
-  onTapRelease: (e: any) => any = (e: TouchEvent) => {
+  onTouchEnd: (e: any) => any = (e: TouchEvent) => {
     clearInterval(this.interval);
+    clearTimeout(this.timeout);
   };
 
   init() {
-    [...actions, ...directions].map(btn => document.querySelector(`.joypad-btn.${btn}`).addEventListener('click', this.onTap));
-    // document.querySelector('.left').addEventListener('click', this.onTap);
-
-    // document.querySelector('.left').addEventListener('click', () => this.game.stage.controls.left())
-    // document.querySelector('.right').addEventListener('click', ()=> this.game.stage.controls.right())
-
-
-    // document.addEventListener("touchstart", this.onTap);
-    // document.addEventListener("touchend", this.onTapRelease);
+    [...actions, ...directions].map(btn => document.querySelector(`.joypad-btn.${btn}`).addEventListener('touchstart', this.onTouchStart));
+    [...actions, ...directions].map(btn => document.querySelector(`.joypad-btn.${btn}`).addEventListener('touchend', this.onTouchEnd));
   }
 
   destroy() {
-    document.removeEventListener("touchstart", this.onTap);
+    document.removeEventListener("touchstart", this.onTouchStart);
   }
 }

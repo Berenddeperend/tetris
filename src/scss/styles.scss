@@ -150,6 +150,7 @@
     text-align: center;
     width: 100%;
     left: 0;
+    display: none;
     
     > * {
       transition: opacity 0.4s;
@@ -164,6 +165,10 @@
       }
     }
 
+
+    @media (min-width: $breakpoint) {
+      display: block;
+    }
   }
 
   // .social {

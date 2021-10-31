@@ -350,23 +350,22 @@ body:after {
 .joypad {
   position: fixed;
   display: flex;
+  flex-direction: row-reverse;
   width: 100%;
   justify-content: space-between;
   z-index: 3;
-  border: 1px solid orange;
+  bottom: -60px;
 }
 .joypad .directions {
   position: relative;
   z-index: 20;
-  border: 1px solid red;
   width: 200px;
   height: 200px;
 }
 .joypad .actions {
   position: relative;
-  border: 1px solid green;
   width: 64px;
-  height: 64px;
+  height: 200px;
   display: block;
   z-index: 20;
 }
@@ -396,6 +395,11 @@ body:after {
 }
 .joypad-btn.right {
   right: 0;
+}
+.joypad-btn.rotate {
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
 }
 
 .block.black {
@@ -539,6 +543,7 @@ body:after {
   text-align: center;
   width: 100%;
   left: 0;
+  display: none;
 }
 .splash .social-container > * {
   transition: opacity 0.4s;
@@ -548,6 +553,11 @@ body:after {
 }
 .splash .social-container > a:hover {
   opacity: 1;
+}
+@media (min-width: 500px) {
+  .splash .social-container {
+    display: block;
+  }
 }
 
 svg {

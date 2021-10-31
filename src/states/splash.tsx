@@ -23,7 +23,7 @@ export default class Splash {
         <div class="begin">
           {game.isDesktop
             ? explodeText("Press space to start")
-            : explodeText("Touch here to start")}
+            : explodeText("Press any key to start")}
         </div>
 
         {/* {rollingText(['1', '2'])} */}

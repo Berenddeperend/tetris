@@ -43,6 +43,7 @@ export default class TouchControls {
   }
 
   preformAction(e:TouchEvent) {
+    e.preventDefault()
     console.log('performing action')
     if (this.game.gameState === "splash") {
       this.game.splash.controls.continue();

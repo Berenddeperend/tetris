@@ -3957,7 +3957,7 @@ function () {
       }), void 0), jsx_runtime_1.jsx("div", __assign({
         class: "begin"
       }, {
-        children: game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Touch here to start")
+        children: game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Press any key to start")
       }), void 0), jsx_runtime_1.jsxs("div", __assign({
         class: "social-container"
       }, {
@@ -4915,6 +4915,7 @@ function () {
   }
 
   TouchControls.prototype.preformAction = function (e) {
+    e.preventDefault();
     console.log('performing action');
 
     if (this.game.gameState === "splash") {
@@ -8048,8 +8049,11 @@ function () {
     }), void 0), document.body);
     this.setGameState("splash");
     new keyboardControls_1.default(this);
-    new touchControls_1.default(this);
     new gestureControls_1.default(this);
+
+    if (this.isMobile) {
+      new touchControls_1.default(this);
+    }
 
     function setVH() {
       document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + "px"); //https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
@@ -8136,7 +8140,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53033" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54406" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

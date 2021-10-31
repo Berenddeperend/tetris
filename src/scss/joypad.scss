@@ -1,16 +1,18 @@
 .joypad {
   position: fixed;
   display: flex;
+  flex-direction: row-reverse;
   width: 100%;
   justify-content: space-between;
   z-index: 3;
-  border: 1px solid orange;
+  // border: 1px solid orange;
+  bottom: -60px;
 
   .directions {
     position: relative;
     z-index: 20;
 
-    border: 1px solid red;
+    // border: 1px solid red;
 
     $size: 200px;
     width: $size;
@@ -18,9 +20,10 @@
   }
   .actions {
     position: relative;
-    $size: 64px;
-    border: 1px solid green;
-    width: $size;
+    // $size: 64px;
+    $size: 200px;
+    // width: $size;
+    width: 64px;
     height: $size;
 
     display: block;
@@ -59,6 +62,12 @@
 
   &.right {
     right: 0;
+  }
+
+  &.rotate {
+    left: 50%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
   }
 
   //   &.down {

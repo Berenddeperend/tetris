@@ -30,8 +30,12 @@ export default class Tetris {
     , document.body);
     this.setGameState("splash");
     new KeyboardControls(this);
-    new TouchControls(this);
     new GestureControls(this);
+    
+    if(this.isMobile) {
+      new TouchControls(this);
+    }
+    
 
     function setVH() {
       document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`); //https://css-tricks.com/the-trick-to-viewport-units-on-mobile/

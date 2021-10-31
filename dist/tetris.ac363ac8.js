@@ -3957,7 +3957,7 @@ function () {
       }), void 0), jsx_runtime_1.jsx("div", __assign({
         class: "begin"
       }, {
-        children: game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Press any key to start")
+        children: game.isDesktop ? utils_1.explodeText("Press space to start") : utils_1.explodeText("Touch any key to start")
       }), void 0), jsx_runtime_1.jsxs("div", __assign({
         class: "social-container"
       }, {

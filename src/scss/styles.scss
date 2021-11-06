@@ -42,6 +42,10 @@
   border: 1px solid red;
 }
 
+.tetris-container {
+  align-self: center; //hueeeul
+}
+
 .stage {
   position: relative;
   transition: opacity 2s;

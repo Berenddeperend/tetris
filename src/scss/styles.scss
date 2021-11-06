@@ -45,17 +45,11 @@
 .stage {
   position: relative;
   transition: opacity 2s;
-  order: 2;
   border: 1px solid $orange;
   width: var(--stage-width);
   height: var(--stage-height);
   overflow: hidden;
-  // filter: drop-shadow(0 0 0.2rem $orange);
-  // box-shadow: $box-shadow;
-
-  @media(min-width: $breakpoint) { 
-    order: 1;
-  }
+  order: 1;
 
   &:after {
     content: "";
@@ -197,23 +191,15 @@ svg {
 }
 
 .ui {
-  order: 0;
-  margin-top: 2rem;
   text-align: right;
   display: flex;
-  width: 100%;
   justify-content: space-evenly;
-  display: none;
   height: var(--stage-height);
-
-
-  @media(min-width: $breakpoint) {
-    display: block;
-    order: 1;
-    flex-direction: column;
-    margin: 0 0 0 2rem;
-    width: auto;
-  }
+  display: block;
+  order: 1;
+  flex-direction: column;
+  margin: 0 0 0 2rem;
+  width: auto;
 }
 
 .ui-block {
@@ -221,7 +207,6 @@ svg {
   border: 0.1rem solid $orange;
   padding: 1rem;
   position: relative;
-  // min-width: 75px;
   box-shadow: 0 0 0.2rem $orange;
   user-select: none;
   display: flex;

@@ -28,9 +28,9 @@ body {
   height: calc(var(--vh, 1vh) * 100); //https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
   margin: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 30px;
 
   &:after {
     //scanlines
@@ -58,7 +58,8 @@ body {
   }
 
   @media(min-width: $breakpoint) {
-    flex-direction: row;
+    align-items: center;
+    padding-top: 0;
   }
 }
 

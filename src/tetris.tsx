@@ -28,7 +28,7 @@ export default class Tetris {
       <div class="tetris"></div>
     </div>
     , document.body);
-    this.setGameState("splash");
+    this.setGameState("playing");
     new KeyboardControls(this);
     new GestureControls(this);
     
